@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button"
 
 export default function FlourishSection() {
   return (
-    <section className="py-24 px-6 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+    <section className="py-24 px-6 bg-white max-w-full overflow-hidden">
+      <div className="w-full mx-auto">
+        <div className="grid lg:grid-cols-2 max-w-full gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-6">
+          <div className="space-y-6 w-full wrap-break-word whitespace-normal">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
               We're known for learning,
               <br />
@@ -29,13 +29,13 @@ export default function FlourishSection() {
           </div>
 
           {/* Right Image */}
-          <div className="relative">
+          <div className="relative max-w-full">
             <Image
               src="/images/image-2010.png"
               alt="Flourish team members in navy hoodies"
               width={700}
               height={500}
-              className="rounded-2xl shadow-xl"
+              className="rounded-2xl shadow-xl w-full h-auto object-cover"
             />
           </div>
         </div>

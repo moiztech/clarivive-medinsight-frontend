@@ -2,9 +2,9 @@ import { Phone, Mail, Facebook, Instagram } from "lucide-react"
 
 export default function TopBar() {
   return (
-    <div className="bg-primary text-primary-foreground">
+    <div className="bg-primary hidden md:block text-primary-foreground">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-10 text-sm">
+        <div className="flex items-center justify-between  h-10 text-sm">
           {/* Left side - Contact info */}
           <div className="flex items-center gap-6">
             <a href="tel:+1800-001-658" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
