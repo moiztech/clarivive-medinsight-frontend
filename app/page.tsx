@@ -1,3 +1,5 @@
+"use client"
+import React, { useState } from "react"
 import TopBar from "@/components/top-bar"
 import Header from "@/components/header"
 import HeroSection from "@/components/hero-section"
@@ -13,25 +15,36 @@ import CustomersSection from "@/components/customers-section"
 import LMSSection from "@/components/lms-section"
 import TestimonialsSection from "@/components/testimonials-section"
 import { Footer } from "@/components/footer"
+import LoadingSkeleton from "@/components/LoadingSkeleton"
+import { LoadingSkeletonProps } from "@/components/LoadingSkeleton"
 
 export default function HomePage() {
+  const [loadingFinished, setLoadingFinished] = useState(false)
+
+  const loadingSkeletonProps: LoadingSkeletonProps = {
+    minDuration: 1500,
+    onFinish: () => setLoadingFinished(true),
+  };
+
   return (
-    <div className="min-h-screen">
-      <TopBar />
-      <Header />
-      <HeroSection />
-      <AboutSection />
-      <FlourishSection />
-      <TrainingDeliverySection />
-      <FeaturesSection />
-      <BusinessOutcomesSection />
-      <StatsSection />
-      <AudiencesSection />
-      <TestimonialCardSection />
-      <CustomersSection />
-      <LMSSection />
-      <TestimonialsSection />
-      <Footer />
-    </div>
+    <LoadingSkeleton {...loadingSkeletonProps}>
+      <div className="min-h-screen">
+        <TopBar />
+        <Header />
+        <HeroSection />
+        <AboutSection />
+        <FlourishSection />
+        <TrainingDeliverySection />
+        <FeaturesSection />
+        <BusinessOutcomesSection />
+        <StatsSection />
+        <AudiencesSection />
+        <TestimonialCardSection />
+        <CustomersSection />
+        <LMSSection />
+        <TestimonialsSection />
+        <Footer />
+      </div>
+    </LoadingSkeleton>
   )
 }
