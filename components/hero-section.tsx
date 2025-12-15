@@ -11,11 +11,11 @@ export default function HeroSection() {
           {/* Left content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance">
-                Get where you&apos;re going faster with{" "}
-                <span className="relative inline-block">
-                  <span className="relative z-10 text-accent-foreground">Grapeslab</span>
-                  <span className="absolute inset-0 bg-accent rounded-full -skew-x-12 -rotate-1"></span>
+              <h1 className="text-4xl  lg:text-5xl font-bold text-foreground leading-tight text-balance">
+                Get where you&apos;re going faster with{" "}<br/>
+                <span className="relative inline-block md:text-6xl -rotate-5 mt-2">
+                  <span className="relative z-10 text-white px-8 py-6">Grapeslab</span>
+                  <span className="absolute inset-0 bg-accent rounded-full"></span>
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
@@ -25,11 +25,11 @@ export default function HeroSection() {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-2">
-              <Button size="xl" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8">
+              <Button size="xl" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-10">
                 Get Started
               </Button>
               <Button variant="ghost" size="xl" className="gap-2">
-                <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-white shadow rounded-full flex items-center justify-center">
                   <Play className="w-4 h-4 text-accent-foreground fill-current" />
                 </div>
                 Watch Video

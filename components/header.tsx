@@ -23,7 +23,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="rounded flex items-center justify-center">
-              <Image src="/Clarivive medinsight logo-01.svg" alt="Logo" width={100} height={32} />
+              <Image src="/Clarivive medinsight logo-01.png" alt="Logo" width={200} height={72} />
             </div>
             {/* <span className="text-xl font-bold text-foreground">Clarivive medinsight</span> */}
           </div>
@@ -40,7 +40,7 @@ export default function Header() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="text-sm font-medium">
                     PAGES
-                    <Badge className="ml-2 bg-secondary text-secondary-foreground text-xs">New</Badge>
+                    <Badge className="ml-2 bg-blue-500 text-secondary-foreground text-xs">New</Badge>
                   </NavigationMenuTrigger>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
@@ -68,11 +68,11 @@ export default function Header() {
             </Button>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-blue-500 text-secondary-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center">
                 0
               </span>
             </Button>
-            <Button className="bg-secondary hover:bg-secondary/90 text-secondary-foreground hidden md:flex">
+            <Button className="bg-blue-500 hover:bg-blue-500/90 px-7 rounded-none text-secondary-foreground hidden md:flex">
               LMS
               <span className="ml-2">+</span>
             </Button>

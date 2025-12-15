@@ -17,6 +17,8 @@ import TestimonialsSection from "@/components/testimonials-section"
 import { Footer } from "@/components/footer"
 import LoadingSkeleton from "@/components/LoadingSkeleton"
 import { LoadingSkeletonProps } from "@/components/LoadingSkeleton"
+import TrustSection from "@/components/trust-section"
+import SignupCTASection from "@/components/signup-cta-section"
 
 export default function HomePage() {
   const [loadingFinished, setLoadingFinished] = useState(false)
@@ -43,6 +45,8 @@ export default function HomePage() {
         <CustomersSection />
         <LMSSection />
         <TestimonialsSection />
+        <TrustSection/>
+        <SignupCTASection/>
         <Footer />
       </div>
     </LoadingSkeleton>
