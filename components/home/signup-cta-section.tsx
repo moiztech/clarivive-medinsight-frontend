@@ -26,12 +26,12 @@ export default function SignupCTASection() {
         </div>
 
         {/* Signup Form */}
-        <div className="bg-white rounded-3xl border-4 border-blue-600 p-8 md:p-12 shadow-xl">
-          <div className="flex flex-col md:flex-row gap-4 items-end">
+        <div className="bg-white rounded-3xl border-4 border-blue-600 p-6 md:p-8 lg:p-12 shadow-xl">
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
             {/* Domain Name Input */}
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-2">Domain name</label>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col md:flex-row items-center gap-2">
                 <div className="relative flex-1">
                   <Input
                     type="text"
@@ -47,7 +47,7 @@ export default function SignupCTASection() {
                     <HelpCircle className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="bg-gray-100 px-6 h-14 flex items-center rounded-lg border-2 border-gray-300 text-gray-700 font-medium whitespace-nowrap">
+                <div className="bg-gray-100 w-full md:w-auto px-6 h-14 flex items-center rounded-lg border-2 border-gray-300 text-gray-700 font-medium whitespace-nowrap">
                   .talentlms.com
                 </div>
               </div>

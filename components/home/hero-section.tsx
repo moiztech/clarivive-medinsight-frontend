@@ -69,7 +69,7 @@ export default function HeroSection() {
             <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-accent/20 rounded-full blur-2xl"></div>
 
             {/* Floating badge - Chrome icon */}
-            <div className="absolute top-8 left-8 bg-card shadow-lg rounded-2xl p-4 animate-float">
+            <div className="absolute top-8 hidden xl:block left-8 bg-card shadow-lg rounded-2xl p-4 animate-float">
               <svg className="w-12 h-12" viewBox="0 0 48 48">
                 <circle cx="24" cy="24" r="20" fill="#4285F4" />
                 <circle cx="24" cy="24" r="12" fill="white" />
@@ -133,7 +133,7 @@ export default function HeroSection() {
 
             {/* Decorative shapes */}
             <div className="absolute top-0 right-1/4 w-24 h-24 bg-accent rounded-full opacity-50 blur-xl"></div>
-            <div className="absolute bottom-1/3 -right-8 w-32 h-32">
+            <div className="absolute bottom-1/3 -right-8 w-32 h-32 hidden xl:block">
               <svg viewBox="0 0 100 100" className="w-full h-full">
                 <path d="M50 10 L90 50 L50 90 L10 50 Z" fill="currentColor" className="text-secondary opacity-30" />
               </svg>
