@@ -91,7 +91,7 @@ export default function BusinessOutcomesSection() {
       headline: "Build a culture of integrity with compliance training",
       description: "Protect your organization from risk and ensure compliance across your entire workforce. Litmos' LMS, with region-specific training courses, makes compliance easier, more cost-effective, and even engaging for your employees.",
       benefits: ["Reduce risk", "Build a culture of integrity", "Report and measure results", "Improve business performance"],
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=800&fit=crop",
+      image: "/home/Image 03.png",
     },
     employee: {
       headline: "Work smarter with impactful employee training and development",

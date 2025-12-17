@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Search, ShoppingCart, Menu } from "lucide-react"
+import { Search, ShoppingCart, Menu, ArrowUpIcon } from "lucide-react"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -82,37 +82,42 @@ export default function Header() {
               className="lg:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <Menu className="w-6 h-6" />
+              {mobileMenuOpen ? <ArrowUpIcon  className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t">
-            <nav className="flex flex-col gap-4">
-              <a href="#" className="text-sm font-medium">
-                HOME
-              </a>
-              <a href="#" className="text-sm font-medium flex items-center gap-2">
-                PAGES
-                <Badge className="bg-secondary text-secondary-foreground text-xs">New</Badge>
-              </a>
-              <a href="#" className="text-sm font-medium">
-                SERVICES
-              </a>
-              <a href="#" className="text-sm font-medium">
-                PROJECTS
-              </a>
-              <a href="#" className="text-sm font-medium">
-                BLOG
-              </a>
-              <a href="#" className="text-sm font-medium">
-                CONTACT US
-              </a>
-            </nav>
-          </div>
-        )}
+        <div
+          className={`lg:hidden border-t overflow-hidden transition-all duration-700 ease-out ${
+            mobileMenuOpen
+              ? "max-h-96 py-4 opacity-100 translate-y-0 pointer-events-auto"
+              : "max-h-0 opacity-0 -translate-y-2 pointer-events-none"
+          }`}
+          aria-hidden={!mobileMenuOpen}
+        >
+          <nav className="flex flex-col gap-4 px-2">
+            <a href="#" className="text-sm font-medium">
+              HOME
+            </a>
+            <a href="#" className="text-sm font-medium flex items-center gap-2">
+              PAGES
+              <Badge className="bg-secondary text-secondary-foreground text-xs">New</Badge>
+            </a>
+            <a href="#" className="text-sm font-medium">
+              SERVICES
+            </a>
+            <a href="#" className="text-sm font-medium">
+              PROJECTS
+            </a>
+            <a href="#" className="text-sm font-medium">
+              BLOG
+            </a>
+            <a href="#" className="text-sm font-medium">
+              CONTACT US
+            </a>
+          </nav>
+        </div>
       </div>
     </header>
   )

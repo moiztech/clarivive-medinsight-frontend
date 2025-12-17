@@ -5,7 +5,7 @@ import { Play } from "lucide-react"
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background py-16 lg:py-24">
+    <section className="relative overflow-hidden bg-background py-14 lg:py-16">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
@@ -58,7 +58,7 @@ export default function HeroSection() {
             {/* Main hero image */}
             <div className="relative z-10">
               <img
-                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&h=800&fit=crop"
+                src="home/Main Image.png"
                 alt="Excited student with coffee and phone"
                 className="w-full h-auto rounded-lg"
               />

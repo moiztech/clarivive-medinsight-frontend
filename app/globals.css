@@ -126,3 +126,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* AOS-like simple animations */
+.aos {
+  opacity: 0;
+  transform: translateY(24px);
+  transition-property: opacity, transform;
+  transition-duration: 700ms;
+  transition-timing-function: cubic-bezier(.2,.8,.2,1);
+  will-change: opacity, transform;
+}
+.aos-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.aos.fade-left { transform: translateX(-20px); }
+.aos.fade-right { transform: translateX(20px); }
+.aos.fade-up { transform: translateY(24px); }
+.aos-in.fade-left,
+.aos-in.fade-right,
+.aos-in.fade-up { transform: translateX(0) translateY(0); }
+

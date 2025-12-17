@@ -10,7 +10,7 @@ export default function TrainingDeliverySection() {
           <div className="relative">
             <div className="relative z-10">
               <Image
-                src="/images/image-2011.png"
+                src="/home/Comp Image.png"
                 alt="Learning platform on multiple devices"
                 width={600}
                 height={400}
@@ -64,7 +64,10 @@ export default function TrainingDeliverySection() {
           </div>
 
           {/* Right - Accreditation Card */}
-          <div className="bg-white rounded-3xl shadow-xl p-12">
+          <div>
+            <Image src="/home/Image Accpet& Approved.png" alt="Accreditation Card" width={600} height={400} className="w-full" />
+          </div>
+          {/* <div className="bg-white rounded-3xl shadow-xl p-12">
             <div className="bg-yellow-400 rounded-2xl p-8 text-center mb-8">
               <h3 className="text-3xl font-bold text-gray-900">APPROVED & ACCREDITED</h3>
             </div>
@@ -98,7 +101,7 @@ export default function TrainingDeliverySection() {
                 className="mx-auto"
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

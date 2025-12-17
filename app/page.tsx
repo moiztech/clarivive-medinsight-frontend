@@ -19,6 +19,7 @@ import LoadingSkeleton from "@/components/home/LoadingSkeleton"
 import { LoadingSkeletonProps } from "@/components/home/LoadingSkeleton"
 import TrustSection from "@/components/home/trust-section"
 import SignupCTASection from "@/components/home/signup-cta-section"
+import AnimateOnScroll from "@/components/ui/animate-on-scroll"
 
 export default function HomePage() {
   const [loadingFinished, setLoadingFinished] = useState(false)
@@ -33,20 +34,61 @@ export default function HomePage() {
       <div className="min-h-screen">
         <TopBar />
         <Header />
-        <HeroSection />
-        <AboutSection />
-        <FlourishSection />
-        <TrainingDeliverySection />
-        <FeaturesSection />
-        <BusinessOutcomesSection />
-        <StatsSection />
-        <AudiencesSection />
-        <TestimonialCardSection />
-        <CustomersSection />
-        <LMSSection />
-        <TestimonialsSection />
-        <TrustSection/>
-        <SignupCTASection/>
+        <AnimateOnScroll>
+          <HeroSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <AboutSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <FlourishSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <TrainingDeliverySection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <FeaturesSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <BusinessOutcomesSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <StatsSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <AudiencesSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <TestimonialCardSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <CustomersSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <LMSSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <TestimonialsSection />
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <TrustSection/>
+        </AnimateOnScroll>
+
+        <AnimateOnScroll>
+          <SignupCTASection/>
+        </AnimateOnScroll>
         <Footer />
       </div>
     </LoadingSkeleton>
