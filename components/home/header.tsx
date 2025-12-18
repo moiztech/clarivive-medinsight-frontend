@@ -12,6 +12,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -23,7 +24,9 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="rounded flex items-center justify-center">
-              <Image src="/Clarivive medinsight logo-01.png" alt="Logo" width={200} height={72} />
+              <Link href={'/'}>
+                <Image src="/Clarivive medinsight logo-01.png" alt="Logo" width={200} height={72} />
+              </Link>
             </div>
             {/* <span className="text-xl font-bold text-foreground">Clarivive medinsight</span> */}
           </div>
@@ -33,8 +36,8 @@ export default function Header() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuLink className="text-sm font-medium text-foreground hover:text-secondary transition-colors cursor-pointer">
-                    HOME
+                  <NavigationMenuLink  asChild href="/" className="text-sm font-medium text-foreground hover:text-secondary transition-colors cursor-pointer">
+                    <Link href={'/'}>HOME</Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
@@ -53,8 +56,8 @@ export default function Header() {
                   <NavigationMenuTrigger className="text-sm font-medium">BLOG</NavigationMenuTrigger>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuLink className="text-sm font-medium text-foreground hover:text-secondary transition-colors cursor-pointer">
-                    CONTACT US
+                  <NavigationMenuLink asChild href="/contact-us" className="text-sm font-medium text-foreground hover:text-secondary transition-colors cursor-pointer">
+                   <Link href={'/contact-us'}>CONTACT US</Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -113,9 +116,9 @@ export default function Header() {
             <a href="#" className="text-sm font-medium">
               BLOG
             </a>
-            <a href="#" className="text-sm font-medium">
+            <Link href={'/contact-us'} className="text-sm font-medium">
               CONTACT US
-            </a>
+            </Link>
           </nav>
         </div>
       </div>
