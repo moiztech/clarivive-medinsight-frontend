@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
+import BreadCrumb from "@/components/BreadCrumb"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -81,24 +82,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="relative lg:h-85 bg-linear-to-r from-blue-600 to-blue-500 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80')] bg-cover bg-center opacity-20" />
-        <div className="container relative px-10 py-12 lg:px-20 lg:py-20 h-full flex items-center">
-          <div>
-            <div className="flex items-center mb-4 gap-2 text-gray-700">
-              <div className="w-8 h-8 bg-cyan-400 rounded flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-white" />
-              </div>
-              <span>Home</span>
-              <span>/</span>
-              <span>Contact us</span>
-            </div>
-            <h1 className="text-5xl font-bold text-white">Contact Us</h1>
-            <hr className="w-10 mt-4 bg-accent"/>
-            <p className="mt-4 text-gray-100 md:max-w-2/3">Credibly innovate granular internal or "organic" sources whereas high standards in web-readiness. Energistically scale future-proof core competencies vis-a-vis impactful experiences.</p>
-          </div>
-        </div> 
-      </div>
+      <BreadCrumb link="Contact Us" title="Contact Us" description='Credibly innovate granular internal or "organic" sources whereas high standards in web-readiness. Energistically scale future-proof core competencies vis-a-vis impactful experiences.'/>
 
       {/* Main Content */}
       <div className="container py-16 md:max-w-6xl mx-auto">
