@@ -129,15 +129,15 @@ export default function BusinessOutcomesSection() {
 
   return (
     <section className="py-24 px-6 bg-gray-50">
-      <div className="max-w-6xl mx-auto space-y-12">
+      <div className="max-w-7xl mx-auto space-y-12">
         {/* Heading */}
         <div className="text-center">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 max-w-4xl mx-auto leading-tight">Drive business outcomes across your entire organization.</h2>
         </div>
 
         {/* Category Tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:px-8 xl:px-10">
-          {categories.map((category) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:px-6 xl:px-6">
+          {categories.map((category, index) => (
             <div key={category.id}>
               <button
                 key={category.id}
@@ -156,9 +156,9 @@ export default function BusinessOutcomesSection() {
                 <h3 className="font-medium text-gray-900 text-md leading-tight">{category.title}</h3>
                 <ChevronDown className={`w-5 h-5 mx-auto text-purple-600 transition-transform duration-300 ${activeTab === category.id ? "rotate-180" : ""}`} />
                 {activeTab === category.id && (
-                  <div className="absolute top-full left-0 right-0 h-11 bg-gray-100 z-0">
-                    <span className="absolute -left-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tl-4xl" />
-                    <span className="absolute -right-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tr-4xl" />
+                  <div className="absolute hidden xl:block top-full left-0 right-0 h-11 bg-gray-100 z-0">
+                    {index === 0 ? ' ' : <span className="absolute -left-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tl-4xl" />}
+                    {index === categories.length - 1 ? ' ' : <span className="absolute -right-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tr-4xl" />}
                   </div>
                 )}
               </button>
@@ -167,7 +167,7 @@ export default function BusinessOutcomesSection() {
         </div>
 
         {/* Content Area with Animation */}
-        <div className="bg-gray-100 rounded-4xl px-8 pt-10 pb-6 lg:px-12 shadow-sm overflow-hidden relative">
+        <div className="bg-gray-100 rounded-4xl px-8 pt-10 pb-6 lg:px-6 shadow-sm overflow-hidden relative">
           <div key={activeTab} className="grid lg:grid-cols-2 gap-12 items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Left Content */}
             <div className="space-y-6">

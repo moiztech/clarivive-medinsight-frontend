@@ -15,6 +15,13 @@ import { Footer } from "@/components/home/footer";
 import TrustSection from "@/components/home/trust-section";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import AnimateOnScroll from "@/components/ui/animate-on-scroll";
+import MedicalServices from "@/components/about/medical-services";
+import LaboratoryAdvantages from "@/components/about/laboratory-advantages";
+import { DoctorsSection } from "@/components/doctors-section";
+import { LogoBar } from "@/components/logo-bar";
+import { TestimonialSection } from "@/components/testimonial-section";
+import { StatsBar } from "@/components/stats-bar";
+import { FaqSection } from "@/components/faq-section";
 
 export default function HomePage() {
   return (
@@ -24,52 +31,59 @@ export default function HomePage() {
       </AnimateOnScroll>
 
       <AnimateOnScroll>
-        <AboutSection />
+        {/* <AboutSection /> */}
+        <MedicalServices/>
       </AnimateOnScroll>
 
       <AnimateOnScroll>
-        <FlourishSection />
+        {/* <FlourishSection /> */}
+        <LaboratoryAdvantages/>
       </AnimateOnScroll>
-
+{/* 
       <AnimateOnScroll>
         <TrainingDeliverySection />
       </AnimateOnScroll>
 
       <AnimateOnScroll>
         <FeaturesSection />
-      </AnimateOnScroll>
+      </AnimateOnScroll> */}
 
       <AnimateOnScroll>
         <BusinessOutcomesSection />
       </AnimateOnScroll>
 
       <AnimateOnScroll>
-        <StatsSection />
+        {/* <StatsSection /> */}
+        <DoctorsSection/>
       </AnimateOnScroll>
 
       <AnimateOnScroll>
-        <AudiencesSection />
+        {/* <AudiencesSection /> */}
+        <LogoBar/>
       </AnimateOnScroll>
 
       <AnimateOnScroll>
-        <TestimonialCardSection />
+        {/* <TestimonialCardSection /> */}
+        <TestimonialSection/>
       </AnimateOnScroll>
 
       <AnimateOnScroll>
-        <CustomersSection />
+        {/* <CustomersSection /> */}
+        <StatsBar/>
       </AnimateOnScroll>
 
       <AnimateOnScroll>
-        <LMSSection />
+        {/* <LMSSection /> */}
+        <FaqSection/>
       </AnimateOnScroll>
 
-      <AnimateOnScroll>
+      {/* <AnimateOnScroll>
         <TestimonialsSection />
       </AnimateOnScroll>
 
       <AnimateOnScroll>
         <TrustSection />
-      </AnimateOnScroll>
+      </AnimateOnScroll> */}
 
       <AnimateOnScroll>
         <SignupCTASection />

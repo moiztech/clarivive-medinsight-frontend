@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Search, ShoppingCart, Menu, ArrowUpIcon, ChevronDown } from "lucide-react"
+import { Search, ShoppingCart, Menu, ArrowUpIcon, ChevronDown, ArrowBigRight, ArrowRight } from "lucide-react"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -95,7 +95,7 @@ export default function Header() {
                         <NavigationMenuTrigger className="text-sm font-medium">
                           {item.label}
                           {item.badge && (
-                            <Badge className="ml-2 bg-blue-500 text-secondary-foreground text-xs">
+                            <Badge className="ml-2 bg-primary text-secondary-foreground rounded-none text-xs">
                               {item.badge}
                             </Badge>
                           )}
@@ -108,7 +108,7 @@ export default function Header() {
                                 <NavigationMenuLink asChild>
                                   <Link
                                     href={sub.href}
-                                    className="block rounded-md px-3 py-2 text-sm hover:bg-muted transition"
+                                    className="block rounded-md px-3 py-2 text-sm hover:bg-muted! transition"
                                   >
                                     {sub.label}
                                   </Link>
@@ -150,8 +150,8 @@ export default function Header() {
               </span>
             </Button>
 
-            <Button className="bg-blue-500 hover:bg-blue-500/90 px-7 rounded-none text-secondary-foreground hidden md:flex">
-              LMS <span className="ml-2">+</span>
+            <Button size={'lg'} className="bg-blue-500 py-4! hover:bg-blue-500/90 ps-3! pe-1! text-md group rounded-md text-secondary-foreground hidden md:flex">
+              Appointment <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><ArrowRight className="w-5 h-5 relative z-2" /></span>
             </Button>
 
             <Button

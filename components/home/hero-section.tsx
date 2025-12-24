@@ -1,31 +1,48 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Play } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-background py-14 lg:py-16">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-4 xl:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 xl:gap-14 items-center">
           {/* Left content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl  lg:text-5xl font-bold text-foreground leading-tight text-balance">
-                Get where you&apos;re going faster with{" "}<br/>
-                <span className="relative inline-block md:text-6xl -rotate-5 mt-2">
-                  <span className="relative z-10 text-white px-8 py-6">Grapeslab</span>
-                  <span className="absolute inset-0 bg-accent rounded-full"></span>
-                </span>
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Expand your skills in development, testing, analysis, and designing.
-              </p>
+              <section className="max-w-3xl mx-auto px-1">
+                <h1 className="text-4xl sm:text-5xl font-semibold leading-tight text-gray-900">
+                  Your
+                  <span className="text-blue-600 font-bold"> trusted partner</span>
+                  <br />
+                  in 
+                  <span className="text-blue-400 font-bold"> digital healthcare.</span>
+                </h1>
+
+                <p className="mt-6 text-lg text-gray-600 leading-relaxed">
+                  <span className="text-blue-600 font-semibold">
+                    Empowering Your Health at Every Step.
+                  </span>
+                  Experience personalized medical care from the comfort of your
+                  home. Connect with
+                  <span className="text-blue-500 font-semibold cursor-pointer hover:underline">
+                    certified doctors
+                  </span>
+                  , or manage prescriptions, and schedule appointments with
+                  ease. Ready to take control of your health?
+                  <span className="text-blue-600 font-semibold cursor-pointer hover:underline"> Get Started
+                  </span> or Book an Appointment today.
+                </p>
+              </section>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-2">
-              <Button size="xl" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-10">
+              <Button
+                size="xl"
+                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-10"
+              >
                 Get Started
               </Button>
               <Button variant="ghost" size="xl" className="gap-2">
@@ -37,7 +54,7 @@ export default function HeroSection() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 pt-8">
+            {/* <div className="grid grid-cols-3 gap-8 pt-8">
               <div>
                 <div className="text-3xl md:text-4xl font-bold text-secondary">20M</div>
                 <div className="text-sm text-muted-foreground mt-1">Views</div>
@@ -50,7 +67,7 @@ export default function HeroSection() {
                 <div className="text-3xl md:text-4xl font-bold text-secondary">4K</div>
                 <div className="text-sm text-muted-foreground mt-1">Certificates</div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Right content - Hero Image */}
@@ -58,14 +75,14 @@ export default function HeroSection() {
             {/* Main hero image */}
             <div className="relative z-10">
               <img
-                src="home/Main Image.png"
+                src="home/hero-main.jpeg"
                 alt="Excited student with coffee and phone"
                 className="w-full h-auto rounded-lg"
               />
             </div>
 
             {/* Decorative elements */}
-            <div className="absolute -top-8 -left-8 w-32 h-32 bg-secondary/20 rounded-full blur-2xl"></div>
+            {/* <div className="absolute -top-8 -left-8 w-32 h-32 bg-secondary/20 rounded-full blur-2xl"></div> */}
             <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-accent/20 rounded-full blur-2xl"></div>
 
             {/* Floating badge - Chrome icon */}
@@ -89,10 +106,16 @@ export default function HeroSection() {
               />
               <div>
                 <div className="text-sm font-semibold">Anik Deb</div>
-                <div className="text-xs text-muted-foreground">UX/UI Designer</div>
+                <div className="text-xs text-muted-foreground">
+                  UX/UI Designer
+                </div>
                 <div className="flex gap-0.5 mt-1">
                   {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-3 h-3 fill-accent" viewBox="0 0 20 20">
+                    <svg
+                      key={i}
+                      className="w-3 h-3 fill-accent"
+                      viewBox="0 0 20 20"
+                    >
                       <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                     </svg>
                   ))}
@@ -135,7 +158,11 @@ export default function HeroSection() {
             <div className="absolute top-0 right-1/4 w-24 h-24 bg-accent rounded-full opacity-50 blur-xl"></div>
             <div className="absolute bottom-1/3 -right-8 w-32 h-32 hidden xl:block">
               <svg viewBox="0 0 100 100" className="w-full h-full">
-                <path d="M50 10 L90 50 L50 90 L10 50 Z" fill="currentColor" className="text-secondary opacity-30" />
+                <path
+                  d="M50 10 L90 50 L50 90 L10 50 Z"
+                  fill="currentColor"
+                  className="text-secondary opacity-30"
+                />
               </svg>
             </div>
           </div>
@@ -144,7 +171,8 @@ export default function HeroSection() {
 
       <style jsx>{`
         @keyframes float {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px);
           }
           50% {
@@ -156,5 +184,5 @@ export default function HeroSection() {
         }
       `}</style>
     </section>
-  )
+  );
 }
