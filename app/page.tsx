@@ -29,7 +29,7 @@ export default function HomePage() {
       <AnimateOnScroll>
         <HeroSection />
       </AnimateOnScroll>
-      <section className="text-center max-w-full px-5 lg:px-10 font-bold text-2xl text-center py-20 lg:max-w-5xl">
+      <section className="text-center max-w-full px-5 lg:px-10 mx-auto font-bold text-3xl text-center py-20 lg:max-w-5xl">
         Our flexible team 🧑‍⚕️🧑‍💻👩‍💻🧑‍🎨
         has a wide range of
         skills, which lets us look at projects from a complete point of view that combines creativity 🎨 and usefulness ✨
