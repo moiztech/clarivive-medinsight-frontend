@@ -1,18 +1,18 @@
 import React from "react";
 import HeroSection from "@/components/home/hero-section";
-import AboutSection from "@/components/home/about-section";
-import FlourishSection from "@/components/home/flourish-section";
-import TrainingDeliverySection from "@/components/home/training-delivery-section";
-import FeaturesSection from "@/components/home/features-section";
+// import AboutSection from "@/components/home/about-section";
+// import FlourishSection from "@/components/home/flourish-section";
+// import TrainingDeliverySection from "@/components/home/training-delivery-section";
+// import FeaturesSection from "@/components/home/features-section";
 import BusinessOutcomesSection from "@/components/home/business-outcomes-section";
-import StatsSection from "@/components/home/stats-section";
-import AudiencesSection from "@/components/home/audiences-section";
-import TestimonialCardSection from "@/components/home/testimonial-card-section";
-import CustomersSection from "@/components/home/customers-section";
-import LMSSection from "@/components/home/lms-section";
-import TestimonialsSection from "@/components/home/testimonials-section";
-import { Footer } from "@/components/home/footer";
-import TrustSection from "@/components/home/trust-section";
+// import StatsSection from "@/components/home/stats-section";
+// import AudiencesSection from "@/components/home/audiences-section";
+// import TestimonialCardSection from "@/components/home/testimonial-card-section";
+// import CustomersSection from "@/components/home/customers-section";
+// import LMSSection from "@/components/home/lms-section";
+// import TestimonialsSection from "@/components/home/testimonials-section";
+// import { Footer } from "@/components/home/footer";
+// import TrustSection from "@/components/home/trust-section";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import AnimateOnScroll from "@/components/ui/animate-on-scroll";
 import MedicalServices from "@/components/about/medical-services";
@@ -32,14 +32,14 @@ export default function HomePage() {
 
       <AnimateOnScroll>
         {/* <AboutSection /> */}
-        <MedicalServices/>
+        <MedicalServices />
       </AnimateOnScroll>
 
       <AnimateOnScroll>
         {/* <FlourishSection /> */}
-        <LaboratoryAdvantages/>
+        <LaboratoryAdvantages />
       </AnimateOnScroll>
-{/* 
+      {/* 
       <AnimateOnScroll>
         <TrainingDeliverySection />
       </AnimateOnScroll>
@@ -52,29 +52,23 @@ export default function HomePage() {
         <BusinessOutcomesSection />
       </AnimateOnScroll>
 
-      <AnimateOnScroll>
-        {/* <StatsSection /> */}
-        <DoctorsSection/>
-      </AnimateOnScroll>
+      {/* <StatsSection /> */}
+      <DoctorsSection />
 
-      <AnimateOnScroll>
-        {/* <AudiencesSection /> */}
-        <LogoBar/>
-      </AnimateOnScroll>
+      {/* <AudiencesSection /> */}
+      <LogoBar />
 
       <AnimateOnScroll>
         {/* <TestimonialCardSection /> */}
-        <TestimonialSection/>
+        <TestimonialSection />
       </AnimateOnScroll>
 
-      <AnimateOnScroll>
-        {/* <CustomersSection /> */}
-        <StatsBar/>
-      </AnimateOnScroll>
+      {/* <CustomersSection /> */}
+      <StatsBar />
 
       <AnimateOnScroll>
         {/* <LMSSection /> */}
-        <FaqSection/>
+        <FaqSection />
       </AnimateOnScroll>
 
       {/* <AnimateOnScroll>

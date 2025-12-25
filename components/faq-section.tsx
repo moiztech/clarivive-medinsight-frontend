@@ -27,15 +27,15 @@ const faqs = [
 
 export function FaqSection() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-white lg:px-10 2xl:px-15">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Left Column: Image & Contact */}
           <div className="space-y-8">
-            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-              <Image src="/placeholder.svg" alt="Doctor and patient" fill className="object-cover" />
+            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden">
+              <Image src="/home/doctor-consult.jpg" alt="Doctor and patient" fill className="object-cover" />
             </div>
-            <div className="bg-emerald-50 rounded-2xl p-8 flex items-center gap-6 shadow-sm border border-emerald-100">
+            <div className="bg-emerald-50 rounded-2xl p-8 flex items-center gap-6 border border-emerald-100">
               <div className="p-4 bg-indigo-600 rounded-full text-white shadow-lg">
                 <Phone className="size-8" />
               </div>
@@ -68,9 +68,9 @@ export function FaqSection() {
                 <AccordionItem
                   key={index}
                   value={`item-${index}`}
-                  className="bg-white border border-slate-200 rounded-xl px-6 data-[state=open]:ring-2 data-[state=open]:ring-indigo-600/10 data-[state=open]:border-indigo-600 transition-all"
+                  className="bg-white hover:bg-indigo-50 border cursor-pointer group border-slate-200 rounded-xl px-6 data-[state=open]:bg-indigo-50 data-[state=open]:ring-2 data-[state=open]:ring-indigo-600/10 data-[state=open]:border-indigo-600 transition-all"
                 >
-                  <AccordionTrigger className="hover:no-underline font-bold text-slate-900 py-6">
+                  <AccordionTrigger className="hover:no-underline  cursor-pointer font-bold text-slate-900 py-6">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-slate-600 pb-6 text-base">{faq.answer}</AccordionContent>

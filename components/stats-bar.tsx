@@ -1,9 +1,32 @@
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import CountUp from 'react-countup'
+import { useEffect, useRef, useState } from 'react'
 
 export function StatsBar() {
+  const ref = useRef<HTMLElement | null>(null)
+  const [started, setStarted] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setStarted(true)
+            obs.disconnect()
+          }
+        })
+      },
+      { threshold: 0.2 }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
   return (
-    <section className="bg-indigo-600 py-10">
-      <div className="container mx-auto px-4">
+    <section ref={ref} className="bg-indigo-600 py-10 lg:px-10 2xl:px-15">
+      <div className="container mx-auto px-2">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 md:gap-0">
           {/* Appointments Stat */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 px-8">
@@ -26,7 +49,7 @@ export function StatsBar() {
 
           {/* Doctors Stat */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 px-8">
-            <h3 className="text-white text-4xl font-bold mb-2">200+</h3>
+            <h3 className="text-white text-4xl font-bold mb-2">{started ? <CountUp delay={0.2} start={0} duration={1} end={200} /> : 0}+</h3>
             <p className="text-white/90 font-medium">Specialists Doctors</p>
           </div>
 
@@ -34,7 +57,7 @@ export function StatsBar() {
 
           {/* Customer Stat */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 px-8">
-            <h3 className="text-white text-4xl font-bold mb-2">50K</h3>
+            <h3 className="text-white text-4xl font-bold mb-2">{started ? <CountUp delay={0.4} start={0} duration={1.2} end={50} /> : 0}K</h3>
             <p className="text-white/90 font-medium">Happy Customer</p>
           </div>
 
@@ -42,7 +65,7 @@ export function StatsBar() {
 
           {/* Awards Stat */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 px-8">
-            <h3 className="text-white text-4xl font-bold mb-2">152+</h3>
+            <h3 className="text-white text-4xl font-bold mb-2">{started ? <CountUp delay={0.6} start={0} duration={1.5} end={152} /> : 0}+</h3>
             <p className="text-white/90 font-medium">Winning Awards</p>
           </div>
         </div>

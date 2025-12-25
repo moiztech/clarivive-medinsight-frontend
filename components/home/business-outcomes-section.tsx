@@ -129,7 +129,7 @@ export default function BusinessOutcomesSection() {
 
   return (
     <section className="py-24 px-6 bg-gray-50">
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Heading */}
         <div className="text-center">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 max-w-4xl mx-auto leading-tight">Drive business outcomes across your entire organization.</h2>
@@ -156,7 +156,7 @@ export default function BusinessOutcomesSection() {
                 <h3 className="font-medium text-gray-900 text-md leading-tight">{category.title}</h3>
                 <ChevronDown className={`w-5 h-5 mx-auto text-purple-600 transition-transform duration-300 ${activeTab === category.id ? "rotate-180" : ""}`} />
                 {activeTab === category.id && (
-                  <div className="absolute hidden xl:block top-full left-0 right-0 h-11 bg-gray-100 z-0">
+                  <div className="absolute hidden xl:block top-full left-0 right-0 h-8 bg-gray-100 z-0">
                     {index === 0 ? ' ' : <span className="absolute -left-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tl-4xl" />}
                     {index === categories.length - 1 ? ' ' : <span className="absolute -right-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tr-4xl" />}
                   </div>

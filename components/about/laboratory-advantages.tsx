@@ -1,5 +1,6 @@
 import { Microscope, FlaskConical, UserCheck } from "lucide-react";
 import AnimateOnScroll from "../ui/animate-on-scroll";
+import Image from "next/image";
 
 export default function LaboratoryAdvantages() {
   const advantages = [
@@ -35,26 +36,8 @@ export default function LaboratoryAdvantages() {
               <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
               Why Choose Us
             </div>
-            <div className="relative w-80 h-80">
-              <svg viewBox="0 0 200 200" className="w-full h-full text-gray-200" fill="none" stroke="currentColor" strokeWidth="8">
-                {/* Central circle */}
-                <circle cx="100" cy="100" r="25" />
-                {/* Top circle */}
-                <line x1="100" y1="75" x2="100" y2="40" />
-                <circle cx="100" cy="40" r="20" />
-                {/* Right circle */}
-                <line x1="121.65" y1="112.5" x2="150" y2="130" />
-                <circle cx="150" cy="130" r="20" />
-                {/* Bottom right circle */}
-                <line x1="121.65" y1="137.5" x2="145" y2="165" />
-                <circle cx="145" cy="165" r="20" />
-                {/* Bottom left circle */}
-                <line x1="78.35" y1="137.5" x2="55" y2="165" />
-                <circle cx="55" cy="165" r="20" />
-                {/* Left circle */}
-                <line x1="78.35" y1="112.5" x2="50" y2="130" />
-                <circle cx="50" cy="130" r="20" />
-              </svg>
+            <div className="relative w-80 h-80 text-center mx-auto">
+              <Image src="/atom.png" alt="Molecular Structure" className="w-full! h-full! object-cover opacity-25" width={220} height={220} />
             </div>
           </div>
 
@@ -66,7 +49,7 @@ export default function LaboratoryAdvantages() {
 
             <div className="grid md:grid-cols-2 gap-8 mt-12">
               {advantages.map((advantage, index) => (
-                <AnimateOnScroll key={index} threshold={1}>
+                <AnimateOnScroll key={index} delay={100 + index * 250} threshold={0.8}>
                   <div key={index} className="flex gap-4">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">

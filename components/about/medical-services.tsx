@@ -85,9 +85,9 @@ export default function MedicalServices() {
         </div>
 
         {/* Decorative back to top button */}
-        <button className="fixed bottom-8 right-8 w-12 h-12 bg-white text-blue-600 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+        {/* <button className="fixed bottom-8 right-8 w-12 h-12 bg-white text-blue-600 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
           <ArrowUpRight className="w-6 h-6" />
-        </button>
+        </button> */}
       </div>
     </section>
   );

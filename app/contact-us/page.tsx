@@ -85,7 +85,7 @@ export default function ContactPage() {
       <BreadCrumb link="Contact Us" title="Contact Us" description='Credibly innovate granular internal or "organic" sources whereas high standards in web-readiness. Energistically scale future-proof core competencies vis-a-vis impactful experiences.'/>
 
       {/* Main Content */}
-      <div className="container py-16 md:max-w-6xl mx-auto">
+      <div className="container py-16 md:max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-[420px_1fr] justify-center mx-auto gap-8">
           {/* Left Sidebar - Emergency Info */}
           <div>
@@ -269,7 +269,7 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={(e) => handleInputChange("message", e.target.value)}
                     rows={5}
-                    className="resize-none"
+                    className="resize-none min-h-30!"
                   />
                 </div>
 
@@ -296,7 +296,9 @@ export default function ContactPage() {
             </div>
 
             {/* Map Section */}
-            <div className="mt-8 lg:mb-4 rounded-lg overflow-hidden border shadow-sm h-[400px]">
+          </div>
+        </div>
+        <div className="mt-8 lg:mb-4 rounded-lg overflow-hidden border shadow-sm h-[400px]">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.119763973046!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1639589694088!5m2!1sen!2s"
                 width="100%"
@@ -306,8 +308,6 @@ export default function ContactPage() {
                 loading="lazy"
               ></iframe>
             </div>
-          </div>
-        </div>
       </div>
     </div>
   )

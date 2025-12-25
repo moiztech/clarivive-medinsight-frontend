@@ -27,7 +27,7 @@ export default function HeroSection() {
                   Experience personalized medical care from the comfort of your
                   home. Connect with
                   <span className="text-blue-500 font-semibold cursor-pointer hover:underline">
-                    certified doctors
+                  &nbsp;  certified doctors
                   </span>
                   , or manage prescriptions, and schedule appointments with
                   ease. Ready to take control of your health?

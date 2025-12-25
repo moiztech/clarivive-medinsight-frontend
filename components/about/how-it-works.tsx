@@ -24,7 +24,7 @@ export default function HowItWorks() {
     {
       title: "Best Students",
       description: "Nulla ante eros, venenatis vel malesuada sit amet luctus.",
-      image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
+      image: "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
       rotate: "rotate-3",
     },
   ];
@@ -38,7 +38,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
+    <section className="pt-20  pb-30 bg-white relative overflow-hidden lg:px-10 2xl:px-15 mx-auto">
       {/* Background text */}
       <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
         <span className="text-[20rem] font-bold text-gray-300">Process</span>
@@ -51,7 +51,7 @@ export default function HowItWorks() {
           <p className="text-gray-600 mt-4 max-w-3xl mx-auto">Proin ac lobortis arcu, a vestibulum augue. Vivamus ipsum neque, facilisis vel mollis vitae, mollis nec ante. Quisque aliquam dictum condim.</p>
         </div>
 
-        <div className="relative">
+        <div className="relative lg:px-10">
           {/* Dotted connecting line */}
           <svg className="absolute top-1/2 left-0 w-full h-24 -translate-y-1/2 hidden lg:block" style={{ zIndex: 0 }}>
             <path d="M 50 60 Q 300 20, 550 60 T 1050 60" stroke="#22d3ee" strokeWidth="2" strokeDasharray="8,8" fill="none" />
@@ -84,7 +84,7 @@ export default function HowItWorks() {
                 <div className="text-center">
                   {/* Polaroid-style image */}
                   <div className={`bg-white p-3 shadow-xl inline-block mb-6 ${step.rotate} hover:rotate-0 transition-transform duration-300`} style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.15)" }}>
-                    <div className="relative w-64 h-64 border-4 border-cyan-400 border-dashed">
+                    <div className="relative w-54 h-54 border-4 border-cyan-400 border-dashed">
                       <Image src={step.image || "/placeholder.svg"} alt={step.title} fill className="object-cover" />
                     </div>
                   </div>
