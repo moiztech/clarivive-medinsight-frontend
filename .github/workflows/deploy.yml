@@ -23,9 +23,20 @@ jobs:
       - name: Deploy
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            set -e
+
+            export NVM_DIR="$HOME/.nvm"
+
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+            node -v
+            npm -v
+            pm2 -v
+            
             cd ${{ secrets.APP_PATH }}
+            git reset --hard
             git pull origin master
-            npm install
+            npm ci
             npm run build
             pm2 restart all
           EOF
