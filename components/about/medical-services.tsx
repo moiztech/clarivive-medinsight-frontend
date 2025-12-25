@@ -32,7 +32,7 @@ export default function MedicalServices() {
   ];
 
   return (
-    <section className="py-20 bg-blue-600 relative overflow-hidden">
+    <section className="py-20 bg-blue-600 relative overflow-hidden lg:px-10 2xl:px-15">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-full text-sm text-white mb-6">Our Department</div>
