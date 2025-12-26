@@ -25,39 +25,28 @@ interface NavItem {
 const navigationItems: NavItem[] = [
   { label: "HOME", href: "/" },
   {
-    label: "PAGES",
+    label: "COURSES",
     href: "#",
     badge: "New",
     submenu: [
-      { label: "About Us", href: "/about-us" },
-      { label: "Page 2", href: "/pages/2" },
+      { label: "Course 1", href: "/pages/1" },
+      { label: "Course 2", href: "/pages/2" },
     ],
   },
   {
-    label: "SERVICES",
+    label: "ASSESMET FROMS",
     href: "#",
     submenu: [
-      { label: "Service 1", href: "/services/1" },
-      { label: "Service 2", href: "/services/2" },
+      { label: "Froms 1", href: "/services/1" },
+      { label: "Froms 2", href: "/services/2" },
     ],
   },
   {
-    label: "PROJECTS",
-    href: "#",
-    submenu: [
-      { label: "Project 1", href: "/projects/1" },
-      { label: "Project 2", href: "/projects/2" },
-    ],
-  },
-  {
-    label: "BLOG",
-    href: "#",
-    submenu: [
-      { label: "Blog 1", href: "/blog/1" },
-      { label: "Blog 2", href: "/blog/2" },
-    ],
+    label: "Blogs",
+    href: "/blogs",
   },
   { label: "CONTACT US", href: "/contact-us" },
+  { label: "ABOUT US", href: "/about-us" },
 ]
 
 export default function Header() {
