@@ -198,7 +198,7 @@ export function TestimonialSection() {
             </div>
 
             {/* Indicators (optional) */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {/* <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
               {testimonials.map((_, i) => (
                 <button
                   key={i}
@@ -207,7 +207,7 @@ export function TestimonialSection() {
                   className={`w-2 h-2 rounded-full ${i === index ? "bg-indigo-600" : "bg-indigo-200"}`}
                 />
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
