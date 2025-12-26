@@ -30,31 +30,102 @@ const testimonials = [
 
 export function TestimonialSection() {
   const [index, setIndex] = useState(0)
+  const [dragOffset, setDragOffset] = useState(0) // px offset while dragging
   const startX = useRef<number | null>(null)
+  const isDragging = useRef(false)
   const trackRef = useRef<HTMLDivElement | null>(null)
+  const [paused, setPaused] = useState(false)
 
+  const INTERVAL = 3500 // autoplay interval in ms
+  const THRESHOLD = 50 // px required to trigger slide change
+
+  // Keyboard navigation
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") setIndex((i) => Math.min(i + 1, testimonials.length - 1))
-      if (e.key === "ArrowLeft") setIndex((i) => Math.max(i - 1, 0))
+      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % testimonials.length)
+      if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + testimonials.length) % testimonials.length)
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
   }, [])
 
+  // Autoplay
+  useEffect(() => {
+    if (paused || isDragging.current) return
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % testimonials.length)
+    }, INTERVAL)
+    return () => window.clearInterval(id)
+  }, [paused, index])
+
+  // Pointer (mouse/touch) handlers
+  function onPointerDown(e: React.PointerEvent) {
+    // only left button for mouse
+    if ((e as any).button === 2) return
+    startX.current = e.clientX
+    isDragging.current = true
+    setDragOffset(0)
+    setPaused(true)
+    // try to capture pointer so we continue receiving moves even if pointer leaves element
+    try {
+      ;(e.target as Element).setPointerCapture?.(e.pointerId)
+    } catch (err) {
+      // ignore
+    }
+  }
+
+  function onPointerMove(e: React.PointerEvent) {
+    if (!isDragging.current || startX.current == null) return
+    const diff = e.clientX - startX.current
+    setDragOffset(diff)
+  }
+
+  function finishDrag(clientX?: number) {
+    if (startX.current == null) return
+    const endX = clientX ?? 0
+    const diff = (clientX ?? 0) - startX.current
+
+    if (diff < -THRESHOLD) setIndex((i) => (i + 1) % testimonials.length)
+    else if (diff > THRESHOLD) setIndex((i) => (i - 1 + testimonials.length) % testimonials.length)
+
+    startX.current = null
+    isDragging.current = false
+    setDragOffset(0)
+    // give autoplay a small timeout before resuming to avoid instant slide change
+    setTimeout(() => setPaused(false), 500)
+  }
+
+  function onPointerUp(e: React.PointerEvent) {
+    finishDrag(e.clientX)
+    try {
+      ;(e.target as Element).releasePointerCapture?.(e.pointerId)
+    } catch (err) {
+      // ignore
+    }
+  }
+
+  // Touch fallback (for older browsers without pointer events)
   function onTouchStart(e: React.TouchEvent) {
     startX.current = e.touches[0].clientX
+    isDragging.current = true
+    setDragOffset(0)
+    setPaused(true)
+  }
+
+  function onTouchMove(e: React.TouchEvent) {
+    if (!isDragging.current || startX.current == null) return
+    const diff = e.touches[0].clientX - startX.current
+    setDragOffset(diff)
   }
 
   function onTouchEnd(e: React.TouchEvent) {
     if (startX.current == null) return
     const endX = e.changedTouches[0].clientX
-    const diff = endX - startX.current
-    const threshold = 50
-    if (diff < -threshold) setIndex((i) => Math.min(i + 1, testimonials.length - 1))
-    if (diff > threshold) setIndex((i) => Math.max(i - 1, 0))
-    startX.current = null
+    finishDrag(endX)
   }
+
+  const basePercent = -index * (100 / testimonials.length)
+  const transitionStyle = dragOffset === 0 ? "transform 500ms ease-in-out" : "none"
 
   return (
     <section className="py-24 bg-white overflow-hidden mx-auto lg:px-10 2xl:px-15">
@@ -82,12 +153,25 @@ export function TestimonialSection() {
           </div>
 
           {/* Right column: sliding quotes only */}
-          <div className="overflow-hidden relative touch-pan-right md:touch-none">
+          <div
+            className="overflow-hidden relative touch-pan-right md:touch-none"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+          >
             <div
               ref={trackRef}
-              className="flex transition-transform duration-500 ease-in-out touch-pan-y"
-              style={{ width: `${testimonials.length * 100}%`, transform: `translateX(-${index * (100 / testimonials.length)}%)` }}
+              className="flex touch-pan-y"
+              style={{
+                width: `${testimonials.length * 100}%`,
+                transform: `translateX(calc(${basePercent}% + ${dragOffset}px))`,
+                transition: transitionStyle,
+              }}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={() => finishDrag()}
               onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
             >
               {testimonials.map((t) => (
@@ -97,7 +181,7 @@ export function TestimonialSection() {
                       <Quote className="size-20" strokeWidth={1} />
                     </div>
 
-                    <p className="text-2xl font-normal text-slate-800 leading-relaxed">{`"${t.quote}"`}</p>
+                    <p className="text-2xl font-normal text-slate-800 leading-relaxed">{`\"${t.quote}\"`}</p>
 
                     <div className="flex items-center gap-6">
                       <div className="relative size-16 rounded-full overflow-hidden ring-4 ring-indigo-50 w-16 h-16">
@@ -113,24 +197,16 @@ export function TestimonialSection() {
               ))}
             </div>
 
-            <div className="absolute inset-y-0 left-2 flex items-center">
-              <button
-                onClick={() => setIndex((i) => Math.max(i - 1, 0))}
-                aria-label="Previous testimonial"
-                className="p-2 rounded-full bg-white/80 hover:bg-white"
-              >
-                ‹
-              </button>
-            </div>
-
-            <div className="absolute inset-y-0 right-2 flex items-center">
-              <button
-                onClick={() => setIndex((i) => Math.min(i + 1, testimonials.length - 1))}
-                aria-label="Next testimonial"
-                className="p-2 rounded-full bg-white/80 hover:bg-white"
-              >
-                ›
-              </button>
+            {/* Indicators (optional) */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  aria-label={`Go to slide ${i + 1}`}
+                  onClick={() => setIndex(i)}
+                  className={`w-2 h-2 rounded-full ${i === index ? "bg-indigo-600" : "bg-indigo-200"}`}
+                />
+              ))}
             </div>
           </div>
         </div>
