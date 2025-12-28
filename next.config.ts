@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
     domains: ["images.unsplash.com"],
     remotePatterns: [
        { hostname: "images.unsplash.com"},
-    ]
+    ],
+    unoptimized: true,
   },
 };
 
