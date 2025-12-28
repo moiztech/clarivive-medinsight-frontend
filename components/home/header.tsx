@@ -14,6 +14,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
+import NavOffcanvas from "../nav-offcanvas"
 
 interface NavItem {
   label: string
@@ -150,6 +151,7 @@ export default function Header() {
             >
               {mobileMenuOpen ? <ArrowUpIcon className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
+            <NavOffcanvas/>
           </div>
         </div>
 
