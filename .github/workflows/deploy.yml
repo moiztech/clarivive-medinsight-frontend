@@ -35,7 +35,7 @@ jobs:
             
             cd ${{ secrets.APP_PATH }}
             git reset --hard
-            git pull --rebase origin main
+            git pull --rebase origin master
             npm ci
             npm run build
             pm2 restart all
