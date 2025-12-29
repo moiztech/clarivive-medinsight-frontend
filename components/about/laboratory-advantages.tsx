@@ -28,16 +28,16 @@ export default function LaboratoryAdvantages() {
 
   return (
     <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto lg:px-20 2xl:px-25">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Left side - Molecular graphic */}
           <div className="flex-shrink-0 lg:w-1/3">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-md text-gray-700 mb-8">
-              <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-              Why Choose Us
-            </div>
-            <div className="relative w-85 h-85 text-center mx-auto">
-              <Image src="/atom.png" alt="Molecular Structure" className="w-full! h-full! object-cover opacity-25" width={260} height={260} />
+            <span className="inline-flex items-center rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200 mb-6">
+            <span className="mr-2 h-1.5 w-1.5 rounded-full bg-indigo-600" />
+            Why Choose Us
+          </span>
+            <div className="relative w-80 h-80 text-center mx-auto">
+              <Image src="/atom.png" alt="Molecular Structure" className="w-full! h-full! object-cover opacity-20" width={240} height={240} />
             </div>
           </div>
 

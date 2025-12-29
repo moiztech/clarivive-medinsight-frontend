@@ -1,7 +1,7 @@
-"use client";
 
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import Image from "next/image";
 
 export default function HeroSection() {
   return (
@@ -64,7 +64,7 @@ export default function HeroSection() {
           <div className="relative">
             {/* Main hero image */}
             <div className="relative z-10">
-              <img src="images/Group 32.png" alt="Excited student with coffee and phone" className="w-full h-auto rounded-lg" />
+              <Image width={100} height={100} preload loading="eager" src="images/Group 32.png" alt="Excited student with coffee and phone" className="w-full h-auto rounded-lg" />
             </div>
 
             {/* Decorative elements */}
@@ -151,7 +151,7 @@ export default function HeroSection() {
           </div>
         </div>
         <div className="absolute end-0 max-w-full start-0 bottom-0 xl:start-30 xl:-bottom-1/3">
-              <img src="images/Vector 1.png" alt="Wave Pattern" className="w-full h-auto" />
+              <img loading="eager" src="images/Vector 1.png" alt="Wave Pattern" className="w-full h-auto" />
         </div>
       </div>
 

@@ -82,7 +82,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <BreadCrumb link="Contact Us" title="Contact Us" description='Credibly innovate granular internal or "organic" sources whereas high standards in web-readiness. Energistically scale future-proof core competencies vis-a-vis impactful experiences.'/>
+      <BreadCrumb paths={[{label: 'Contact Us', href: '/contact-us'}]} title="Contact Us" />
 
       {/* Main Content */}
       <div className="container py-16 md:max-w-7xl mx-auto">

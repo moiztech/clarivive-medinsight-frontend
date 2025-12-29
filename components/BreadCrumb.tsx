@@ -1,30 +1,49 @@
-import { MapPin } from "lucide-react";
-import React from "react";
+import { Home } from "lucide-react";
+import Link from "next/link";
 
-function BreadCrumb({ title, description, link, coverImg = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80" }: { title: string; description: string; link: string; coverImg?: string }) {
+interface BreadCrumbProps {
+  title: string;
+  paths: { label: string; href: string }[];
+  coverImg?: string;
+}
+
+export default function BreadCrumb({ title, paths, coverImg = "/breadcrumb-default.jpg" }: BreadCrumbProps) {
   return (
-    <div className="relative lg:h-85 bg-linear-to-r from-blue-600 to-blue-500 overflow-hidden">
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{ backgroundImage: `url(${coverImg})` }}
+    <div className="relative w-full h-[300px] md:h-[400px] md:rounded-b-4xl overflow-hidden flex items-center">
+      {/* Background Image with Blur */}
+      <div
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{
+          backgroundImage: `url('${coverImg}')`,
+          filter: "brightness(0.8)",
+        }}
       />
-      <div className="container relative px-10 py-12 lg:px-20 lg:py-20 h-full flex items-center">
-        <div>
-          <div className="flex items-center mb-4 gap-2 text-gray-700">
-            <div className="w-8 h-8 bg-cyan-400 rounded flex items-center justify-center">
-              <MapPin className="w-4 h-4 text-white" />
-            </div>
-            <span>Home</span>
-            <span>/</span>
-            <span>{link}</span>
+      <div className="absolute inset-0 w-1/2 bg-gradient-to-r from-black/70 0 to-transparent z-1"></div>
+
+      {/* Content Container */}
+      <div className="container mx-auto ps-6 xl:ps-20 relative z-10">
+        <h1 className="text-4xl md:text-6xl font-semibold text-white tracking-tight">{title}</h1>
+      </div>
+
+      {/* Breadcrumb Tab */}  
+      <div className="absolute -bottom-1 left-6 xl:left-20 z-20">
+        <div className="bg-white rounded-t-[20px] px-4 py-3 flex items-center gap-3 shadow-lg">
+          <div className="bg-blue-500 p-1.5 rounded text-white">
+            <Home className="w-4 h-4" />    
           </div>
-          <h1 className="text-5xl font-bold text-white">{title}</h1>
-          <hr className="w-10 mt-4 bg-accent" />
-          <p className="mt-4 text-gray-100 md:max-w-2/3">{description}</p>
+          <div className="flex items-center text-[13px] font-bold tracking-wider text-[#001D3D]">
+            <span className="uppercase">Home</span>
+            {paths.map((path, index) => (
+              <div key={index} className="flex items-center">
+                <span className="mx-2 text-gray-300 font-normal">/</span>
+                <span className="uppercase">
+                  <Link href={path.href}>{path.label}</Link>
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default BreadCrumb;
