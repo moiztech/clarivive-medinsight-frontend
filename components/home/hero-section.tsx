@@ -1,12 +1,11 @@
-
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background py-14 lg:py-16">
-      <div className="container mx-auto px-4 xl:px-8 relative overflow-hidden">
+    <section className="relative  bg-background py-14 lg:py-16">
+      <div className="container mx-auto px-4 xl:px-8 relative">
         <div className="grid lg:grid-cols-2 gap-12 xl:gap-14 items-center">
           {/* Left content */}
           <div className="space-y-8">
@@ -150,8 +149,8 @@ export default function HeroSection() {
             </div> */}
           </div>
         </div>
-        <div className="absolute end-0 max-w-full start-0 bottom-0 xl:start-30 xl:-bottom-1/3">
-              <img loading="eager" src="images/Vector 1.png" alt="Wave Pattern" className="w-full h-auto" />
+        <div className="absolute end-0 pointer-events-none start-0 bottom-0 xl:-bottom-1/3">
+          <img loading="eager" src="images/Vector 1.png" alt="Wave Pattern" className="w-full h-auto" />
         </div>
       </div>
 

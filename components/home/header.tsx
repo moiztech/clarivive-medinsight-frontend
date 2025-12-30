@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Search, ShoppingCart, Menu, ArrowUpIcon, ChevronDown, ArrowBigRight, ArrowRight } from "lucide-react"
+import { Search, ShoppingCart, Menu, ArrowUpIcon, ChevronDown,  Diamond } from "lucide-react"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -28,26 +28,27 @@ const navigationItems: NavItem[] = [
   {
     label: "COURSES",
     href: "#",
-    badge: "New",
+    // badge: "New",
     submenu: [
-      { label: "Course 1", href: "/pages/1" },
-      { label: "Course 2", href: "/pages/2" },
+      { label: "Online", href: "/courses/online" },
+      { label: "Face to Face", href: "/courses/face-to-face" },
     ],
   },
   {
-    label: "ASSESMET FROMS",
+    label: "BRANCHES",
     href: "#",
     submenu: [
-      { label: "Froms 1", href: "/services/1" },
-      { label: "Froms 2", href: "/services/2" },
+      { label: "Branch 1", href: "/services/1" },
+      { label: "Branch 2", href: "/services/2" },
     ],
   },
-  {
-    label: "Blogs",
-    href: "/blogs",
-  },
+  
   { label: "CONTACT US", href: "/contact-us" },
   { label: "ABOUT US", href: "/about-us" },
+  {
+    label: "BLOGS",
+    href: "/blogs",
+  },
 ]
 
 export default function Header() {
@@ -140,7 +141,7 @@ export default function Header() {
             </Button>
 
             <Button size={'lg'} className="bg-blue-500 py-4! hover:bg-blue-500/90 ps-3! pe-1! text-md group rounded-md text-secondary-foreground hidden md:flex">
-              Appointment <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><ArrowRight className="w-5 h-5 relative z-2" /></span>
+              Appointment <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span>
             </Button>
 
             <Button

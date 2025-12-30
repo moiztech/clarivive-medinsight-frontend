@@ -10,7 +10,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   const [loadingFinished, setLoadingFinished] = useState(false);
 
   const loadingSkeletonProps: LoadingSkeletonProps = {
-    minDuration: 1500,
+    minDuration: 1200,
     onFinish: () => setLoadingFinished(true),
   };
 

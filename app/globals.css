@@ -126,7 +126,9 @@
     @apply bg-background text-foreground;
   }
 }
-
+* {
+  scroll-behavior: smooth;
+}
 /* AOS-like simple animations */
 .aos {
   opacity: 0;

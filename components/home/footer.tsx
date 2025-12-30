@@ -1,8 +1,7 @@
-"use client"
-
-import Link from "next/link"
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -31,10 +30,11 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center">
+              <Image src="/Clarivive medinsight logo-01.png" alt="Logo" width={200} height={72} priority />
+              {/* <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center">
                 <div className="w-6 h-6 border-2 border-white rounded" />
               </div>
-              <span className="text-2xl font-bold">Medik</span>
+              <span className="text-2xl font-bold">Medik</span> */}
             </div>
 
             <div className="space-y-3 text-gray-400 text-sm">
@@ -121,9 +121,7 @@ export function Footer() {
 
       {/* Copyright */}
       <div className="relative border-t border-gray-800">
-        <div className="container mx-auto px-4 py-4 text-center text-gray-500 text-sm">
-          Copyright Powered by Designthemes
-        </div>
+        <div className="container mx-auto px-4 py-4 text-center text-gray-500 text-sm">Copyright Powered by Designthemes</div>
       </div>
 
       {/* Back to Top Button */}
@@ -135,5 +133,5 @@ export function Footer() {
         <span className="text-xl">↑</span>
       </Button>
     </footer>
-  )
+  );
 }
