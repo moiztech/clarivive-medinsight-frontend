@@ -15,16 +15,13 @@ export default function HeroSection() {
                   Your
                   <span className="bg-clip-text mb-0 pb-0 text-transparent overflow-hidden bg-linear-to-r from-blue-600 to-blue-300 font-bold"> trusted partner</span>
                   <br />
-                  in
-                  <span> digital healthcare.</span>
+                   for digital healthcare excellence & compliance.
                 </h1>
 
                 <p className="mt-6 text-lg text-gray-600 leading-relaxed">
-                  <span className="text-blue-600 font-semibold">Empowering Your Health at Every Step.</span>
-                  Experience personalized medical care from the comfort of your home. Connect with
-                  <span className="text-blue-500 font-semibold cursor-pointer hover:underline">&nbsp; certified doctors</span>, or manage prescriptions, and schedule appointments
-                  with ease. Ready to take control of your health?
-                  <span className="text-blue-600 font-semibold cursor-pointer hover:underline"> Get Started</span> or Book an Appointment today.
+                  <span className="text-blue-600 font-semibold">Empowering healthcare professionals </span>
+                  at every stage. Access 
+                  <span className="text-blue-500 font-semibold cursor-pointer hover:underline">&nbsp;  expert-led healthcare training</span> anytime, build practical skills, stay compliant, and manage your learning with ease. Ready to advance your career ? Start learning today.
                 </p>
               </section>
             </div>

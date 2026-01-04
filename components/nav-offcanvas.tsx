@@ -45,25 +45,21 @@ export default function NavOffcanvas() {
             <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center">
               <MapPin className="w-5 h-5 text-indigo-400" />
             </div>
-            <p className="text-sm text-gray-300">
-              5th Street, 21st Floor,
-              <br />
-              New York, USA
-            </p>
+            <p className="text-sm text-gray-300">No: 02 Block no : 146, Street 29, Sector G-9-4, Islamabad, ISB, PK 44000</p>
           </div>
 
           <div className="flex gap-4 p-2 items-center duration-100 rounded-2xl hover:shadow-2xl hover:bg-blue-900/30 cursor-pointer">
             <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center">
               <Mail className="w-5 h-5 text-indigo-400" />
             </div>
-            <p className="text-sm text-gray-300">info@example.com</p>
+            <p className="text-sm text-gray-300">info@clarivivemedinsight.com</p>
           </div>
 
           <div className="flex gap-4 p-2 items-center duration-100 rounded-2xl hover:shadow-2xl hover:bg-blue-900/30 cursor-pointer">
             <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center">
               <Phone className="w-5 h-5 text-indigo-400" />
             </div>
-            <p className="text-sm text-gray-300">(888) 456-7890</p>
+            <p className="text-sm text-gray-300">+44 (07345 052986)</p>
           </div>
         </div>
 

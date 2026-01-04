@@ -25,15 +25,12 @@ export function DoctorsSection() {
         <div className="text-center mb-16">
           <span className="inline-flex items-center rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200 mb-6">
             <span className="mr-2 h-1.5 w-1.5 rounded-full bg-indigo-600" />
-            Meet the Dentist
+            Meet our team
           </span>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
-            Meet the Doctor Who Keeps
+            Meet the Experienced Practitioners Behind Our
             <br />
-            Your{" "}
-            <span className="italic font-serif text-indigo-500">
-              Smile Healthy
-            </span>
+            <span className="italic font-serif text-indigo-500">Training Courses</span>
           </h2>
         </div>
 
@@ -42,12 +39,7 @@ export function DoctorsSection() {
             <AnimateOnScroll threshold={0.45} delay={100 + index * 150} key={doctor.name}>
               <div className="group flex flex-col items-center">
                 <div className="relative w-full aspect-[1/1] cursor-pointer group rounded-3xl overflow-hidden mb-5">
-                  <Image
-                    src={doctor.image || "/placeholder.svg"}
-                    alt={doctor.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-108"
-                  />
+                  <Image src={doctor.image || "/placeholder.svg"} alt={doctor.name} fill className="object-cover transition-transform duration-500 group-hover:scale-108" />
                   <div className="absolute -bottom-5 right-3 bg-slate-50 rounded-t-full p-2">
                     <button className="p-2 mb-3 bg-slate-950 cursor-pointer text-white rounded-full group-hover:bg-indigo-600 hover:bg-indigo-600 transition-colors shadow-lg">
                       <Share2 className="size-4" />
@@ -65,9 +57,7 @@ export function DoctorsSection() {
                     </button>
                   </div>
                 </div>
-                <h3 className="text-2xl self-start font-medium text-slate-900">
-                  {doctor.name}
-                </h3>
+                <h3 className="text-2xl self-start font-medium text-slate-900">{doctor.name}</h3>
               </div>
             </AnimateOnScroll>
           ))}

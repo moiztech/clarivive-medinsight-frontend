@@ -46,8 +46,8 @@ const navigationItems: NavItem[] = [
   { label: "CONTACT US", href: "/contact-us" },
   { label: "ABOUT US", href: "/about-us" },
   {
-    label: "BLOGS",
-    href: "/blogs",
+    label: "FOR ORGANIZATIONS",
+    href: "/for-organizations",
   },
 ]
 

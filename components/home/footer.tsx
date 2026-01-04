@@ -40,19 +40,15 @@ export function Footer() {
             <div className="space-y-3 text-gray-400 text-sm">
               <p className="flex items-start gap-2">
                 <span className="mt-1">🏠</span>
-                <span>
-                  No: 58 A, East Madison Street,
-                  <br />
-                  Baltimore, MD, USA 4508
-                </span>
+                <span>No: 02 Block no : 146, Street 29, Sector G-9-4, Islamabad, ISB, PK 44000</span>
               </p>
               <p className="flex items-center gap-2">
                 <span>📞</span>
-                <span>+91 12345678</span>
+                <span> +44 (07345 052986)</span>
               </p>
               <p className="flex items-center gap-2">
                 <span>✉️</span>
-                <span>support@somemail.com</span>
+                <span>info@clarivivemedinsight.com</span>
               </p>
             </div>
 
@@ -77,12 +73,13 @@ export function Footer() {
 
           {/* Help Links */}
           <div>
-            <h3 className="text-xl font-semibold mb-6">Help</h3>
+            <h3 className="text-xl font-semibold mb-6">Company</h3>
             <ul className="space-y-3">
-              {["Scissors", "Glucometer", "Disposable Gloves", "Cleaning Scissor", "Smart Mask"].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                    {item}
+              {[{
+                label:"About us", link:"about-us"}, {label:"Contact Us", link:"contact-us"}, {label:"Training Resources", link:"training-resources"}, {label:"Accreditations", link:"accreditations"}, {label:"Complaint Procedure", link:"complaint-procedure"}].map((item, index) => (
+                <li key={index}>
+                  <Link href={item.link} className="text-gray-400 hover:text-white transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -91,12 +88,12 @@ export function Footer() {
 
           {/* Support Links */}
           <div>
-            <h3 className="text-xl font-semibold mb-6">Support</h3>
+            <h3 className="text-xl font-semibold mb-6">Privacy Policy </h3>
             <ul className="space-y-3">
-              {["Plaster machine", "Pedometer", "Cleaning Scissor", "Smart Mask", "Pedometer"].map((item, index) => (
+              {[{label:"Terms and condition", link:"terms-and-condition"}, {label:"GDPR", link:"gdpr"}, {label:"Cookies", link:""},{label:"User Policies", link:"data-protection"}, {label: "Refund and cancellation policy", link: "refund-policy"}].map((item, index) => (
                 <li key={`${item}-${index}`}>
-                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                    {item}
+                  <Link href={item.link} className="text-gray-400 hover:text-white transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -104,7 +101,7 @@ export function Footer() {
           </div>
 
           {/* Information Links */}
-          <div>
+          {/* <div>
             <h3 className="text-xl font-semibold mb-6">Information</h3>
             <ul className="space-y-3">
               {["Scissors", "Glucometer", "Disposable Gloves", "Cleaning Scissor", "Smart Mask"].map((item) => (
@@ -115,13 +112,13 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
 
       {/* Copyright */}
       <div className="relative border-t border-gray-800">
-        <div className="container mx-auto px-4 py-4 text-center text-gray-500 text-sm">Copyright Powered by Designthemes</div>
+        <div className="container mx-auto px-4 py-4 text-center text-gray-500 text-sm">© 2026 Clarivive MedInsight. All Rights Reserved.</div>
       </div>
 
       {/* Back to Top Button */}
