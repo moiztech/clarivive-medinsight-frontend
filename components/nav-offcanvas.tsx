@@ -10,9 +10,9 @@ export default function NavOffcanvas() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="shadow shadow-blue-200">
-          <Diamond className="w-6 h-6" />
-        </Button>
+        <span className="ml-1 cursor-pointer bg-white p-1.5 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-[#131db3] group-hover:before:translate-x-0 rounded-sm text-secondary">
+          <Diamond className="size-5 relative z-2" />
+        </span>
       </SheetTrigger>
 
       <SheetContent side="right" className="bg-gradient-to-b from-[#08152f] to-[#050d23] p-15 text-white border-none w-[360px]">

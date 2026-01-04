@@ -36,11 +36,11 @@ const navigationItems: NavItem[] = [
   },
   {
     label: "BRANCHES",
-    href: "#",
-    submenu: [
-      { label: "Branch 1", href: "/services/1" },
-      { label: "Branch 2", href: "/services/2" },
-    ],
+    href: "/branches",
+    // submenu: [
+    //   { label: "Branch 1", href: "/services/1" },
+    //   { label: "Branch 2", href: "/services/2" },
+    // ],
   },
   
   { label: "CONTACT US", href: "/contact-us" },
@@ -140,8 +140,9 @@ export default function Header() {
               </span>
             </Button>
 
-            <Button size={'lg'} className="bg-blue-500 py-4! hover:bg-blue-500/90 ps-3! pe-1! text-md group rounded-md text-secondary-foreground hidden md:flex">
-              Appointment <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span>
+            <Button size={'lg'} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 ps-4! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex">
+              LMS <NavOffcanvas/>
+              {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
             </Button>
 
             <Button
@@ -152,7 +153,7 @@ export default function Header() {
             >
               {mobileMenuOpen ? <ArrowUpIcon className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
-            <NavOffcanvas/>
+            {/* <NavOffcanvas/> */}
           </div>
         </div>
 
