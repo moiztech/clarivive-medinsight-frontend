@@ -28,14 +28,14 @@ export default function HeroSection() {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-2">
-              <Button size="xl" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-10">
+              <Button size="xl" className="bg-[#1321F1] hover:bg-[#1321F1]/90 text-secondary-foreground px-10">
                 Get Started
               </Button>
               <Button variant="ghost" size="xl" className="gap-2">
                 <div className="w-10 h-10 bg-white shadow rounded-full flex items-center justify-center">
-                  <Play className="w-4 h-4 text-accent-foreground fill-current" />
+                  <Play className="w-4 h-4 text-[#1321F1] fill-[#1321F1]" />
                 </div>
-                Watch Video
+                <span className="text-[#1321F1]">Watch Video</span>
               </Button>
             </div>
 

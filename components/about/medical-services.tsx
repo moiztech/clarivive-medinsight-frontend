@@ -18,7 +18,8 @@ export default function MedicalServices() {
     {
       icon: Brain,
       title: "Face-to-Face Training",
-      description: "We deliver classroom-based training across the UK, led by experienced trainers. Our face-to-face courses emphasize practical learning, real-life scenarios, and safe skill development.",
+      description:
+        "We deliver classroom-based training across the UK, led by experienced trainers. Our face-to-face courses emphasize practical learning, real-life scenarios, and safe skill development.",
       image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&q=80",
     },
     {
@@ -107,7 +108,7 @@ export default function MedicalServices() {
     isDraggingRef.current = true;
     setIsDragging(true);
     setDragOffset(0);
-    ;(e.target as Element)?.setPointerCapture?.(e.pointerId);
+    (e.target as Element)?.setPointerCapture?.(e.pointerId);
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -132,7 +133,7 @@ export default function MedicalServices() {
     isDraggingRef.current = false;
     setIsDragging(false);
     setDragOffset(0);
-    ;(e.target as Element)?.releasePointerCapture?.(e.pointerId);
+    (e.target as Element)?.releasePointerCapture?.(e.pointerId);
   };
 
   // Autoplay: advance every 2.5s when not paused or dragging
@@ -146,20 +147,21 @@ export default function MedicalServices() {
 
     return () => clearInterval(interval);
   }, [itemsPerSlide, isPaused, services.length]);
+  const shouldCenter = services.length < itemsPerSlide;
   return (
     <section className="py-20 bg-blue-600 relative overflow-hidden lg:px-20 2xl:px-25">
-        <div
-          ref={containerRef}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onDragStart={(e) => e.preventDefault()}
-          className="container mx-auto overflow-hidden max-w-7xl"
-          style={{ touchAction: "pan-y", userSelect: isDragging ? "none" : undefined }}
-        >
+      <div
+        ref={containerRef}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onDragStart={(e) => e.preventDefault()}
+        className="container mx-auto overflow-hidden max-w-7xl"
+        style={{ touchAction: "pan-y", userSelect: isDragging ? "none" : undefined }}
+      >
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-full text-sm text-white mb-6">Our Courses</div>
           <h2 className="text-4l lg:text-6xl font-medium mx-auto max-w-200 text-white">
@@ -170,15 +172,18 @@ export default function MedicalServices() {
         {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"> */}
         {/** Compute centering when fewer than 4 slides, otherwise normal sliding */}
         <div
-          className={`flex ${isDragging ? "" : "transition-transform duration-500 ease-out"} ${services.length < itemsPerSlide ? "w-auto mx-auto" : "w-full"}`}
-          style={{
-            transform: (() => {
-              const shouldCenter = services.length < itemsPerSlide;
-              const base = shouldCenter ? 0 : -currentIndex * (100 / itemsPerSlide);
-              const dragPercent = (dragOffset / (containerRef.current?.clientWidth || 1)) * 100;
-              return `translateX(${base + dragPercent}%)`;
-            })(),
-          }}
+          className={shouldCenter ? "flex justify-center gap-6" : `flex ${isDragging ? "" : "transition-transform duration-500 ease-out"}`}
+          style={
+            shouldCenter
+              ? undefined
+              : {
+                  transform: (() => {
+                    const base = -currentIndex * 100;
+                    const dragPercent = (dragOffset / (containerRef.current?.clientWidth || 1)) * 100;
+                    return `translateX(${base + dragPercent}%)`;
+                  })(),
+                }
+          }
         >
           <svg width="0" height="0" className="absolute">
             <defs>
@@ -199,8 +204,13 @@ export default function MedicalServices() {
             </defs>
           </svg>
           {services.map((service, index) => (
-            <AnimateOnScroll key={index} className="w-full md:w-1/2 xl:w-1/4 shrink-0 px-2 h-full" delay={10 + index * 50}>
-              <div key={index} className="bg-white rounded-3xl overflow-hidden group hover:scale-103 transition-transform duration-300 flex flex-col h-full" style={{ clipPath: "url(#card-br-curve)" }}>
+            <AnimateOnScroll key={index} className={`shrink-0 px-2 ${shouldCenter ? "w-full md:w-[360px]" : "w-full md:w-1/2 xl:w-1/4"}`}>
+              <div
+                className="bg-white rounded-3xl overflow-hidden group
+             transition-transform duration-300
+             flex flex-col h-[520px]"
+                style={{ clipPath: "url(#card-br-curve)" }}
+              >
                 <div className="relative h-90 lg:h-54 2xl:h-60 flex-shrink-0">
                   <Image src={service.image || "/placeholder.svg"} alt={service.title} fill className="object-cover" />
                   <div className="absolute bottom-4 left-4">
