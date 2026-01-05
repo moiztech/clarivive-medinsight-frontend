@@ -6,10 +6,12 @@ export default function ServicesGrid({
   services = [],
   title = "Our Services",
   description = "We provide various directions",
+  cardLinkPrefix = "branches",
 }: {
   services?: Service[];
   title?: string;
   description?: string;
+  cardLinkPrefix?: string;
 }) {
   const defaultServices = [
     { title: "Angioplasty", icon: Heart },
@@ -35,7 +37,7 @@ export default function ServicesGrid({
               ${services.length < 4 ? "grid-cols-1 md:grid-cols-2 justify-center" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"}`}
         >
           {services.map((service, index) => (
-            <ServicesGridCard service={service} key={index} index={index} />
+            <ServicesGridCard linkPrefix={cardLinkPrefix} service={service} key={index} index={index} />
           ))}
         </div>
       </div>

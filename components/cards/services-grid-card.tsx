@@ -2,7 +2,7 @@ import { Service } from "@/lib/types";
 import Link from "next/link";
 import React from "react";
 
-const ServicesGridCard = ({ service, index } : { service: Service; index: number }) => {
+const ServicesGridCard = ({ service, index, showReadMore = true, linkPrefix = "branches" }: { service: Service; index: number; showReadMore?: boolean; linkPrefix?: string }) => {
   return (
     <div
       key={index}
@@ -15,9 +15,11 @@ const ServicesGridCard = ({ service, index } : { service: Service; index: number
         <h3 className="text-2xl font-bold text-medical-navy">{service.title}</h3>
         <p className="text-muted-foreground text-sm leading-relaxed">There are many variations of passages of Lorem Ipsum available.</p>
       </div>
-      <Link href={`/branches/${index}`} className="text-secondary py-2 font-bold text-sm tracking-widest uppercase flex items-center gap-2 group/btn">
-        READ MORE <span className="transition-transform group-hover/btn:translate-x-1">+</span>
-      </Link>
+      {showReadMore && (
+        <Link href={`/${linkPrefix}/${index}`} className="text-secondary py-2 font-bold text-sm tracking-widest uppercase flex items-center gap-2 group/btn">
+          READ MORE <span className="transition-transform group-hover/btn:translate-x-1">+</span>
+        </Link>
+      )}
     </div>
   );
 };

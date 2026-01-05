@@ -10,7 +10,7 @@ export default function NavOffcanvas() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <span className="ml-1 cursor-pointer bg-white p-1.5 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-[#131db3] group-hover:before:translate-x-0 rounded-sm text-secondary">
+        <span className="ml-1 cursor-pointer bg-white p-1.5 hover:shadow-2xl group-hover:rotate-180 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-[#131db3] group-hover:before:translate-x-0 rounded-sm text-secondary">
           <Diamond className="size-5 relative z-2" />
         </span>
       </SheetTrigger>

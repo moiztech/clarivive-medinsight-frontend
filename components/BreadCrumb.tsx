@@ -28,11 +28,11 @@ export default function BreadCrumb({ title, paths, coverImg = "/breadcrumb-defau
       {/* Breadcrumb Tab */}  
       <div className="absolute -bottom-1 left-6 xl:left-20 z-20">
         <div className="bg-white rounded-t-[20px] px-4 py-3 flex items-center gap-3 shadow-lg">
-          <div className="bg-blue-500 p-1.5 rounded text-white">
+          <div className="bg-[#1321F1] p-1.5 rounded text-white">
             <Home className="w-4 h-4" />    
           </div>
           <div className="flex items-center text-[13px] font-bold tracking-wider text-[#001D3D]">
-            <span className="uppercase">Home</span>
+            <Link href="/"><span className="uppercase">Home</span></Link>
             {paths.map((path, index) => (
               <div key={index} className="flex items-center">
                 <span className="mx-2 text-gray-300 font-normal">/</span>
