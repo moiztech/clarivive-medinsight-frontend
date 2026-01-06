@@ -164,7 +164,7 @@ export default function MedicalServices() {
       >
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-full text-sm text-white mb-6">Our Courses</div>
-          <h2 className="text-4l lg:text-6xl font-medium mx-auto max-w-200 text-white">
+          <h2 className="text-4xl lg:text-6xl font-medium mx-auto max-w-3xl text-white">
             Our Training Courses – Expert Learning for <span className="italic font-serif">Every professional</span>
           </h2>
         </div>

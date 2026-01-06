@@ -1,0 +1,62 @@
+// data/dummyCourse.ts
+import { Course } from "../lib/types";
+
+export const dummyCourse: Course = {
+  title: "Ageing",
+  shortDescription:
+    "This excellent training resource guides you through the changes which occur during the ageing process and how you can act appropriately to promote an individual’s wellbeing.",
+  price: 1.49,
+  duration: "70–80m",
+  modules: 25,
+  image:
+    "https://images.unsplash.com/photo-1508963493744-76fce69379c0",
+  about:
+    "From the moment we’re born, we all begin to age. This impacts everybody differently and requires comprehensive training to tackle the physical, emotional and psychological effects of ageing.",
+  whoIsFor:
+    "A ‘must have’ for induction, refresher, management and vocational training.",
+  features: [
+    "CPD Accredited",
+    "Free certification",
+    "Standards compliant",
+    "Access on desktop and mobile",
+    "No time limits, work at your own pace",
+    "Monitor and track staff progress",
+  ],
+  coverage: [
+    "Social changes & ageing",
+    "Family & ageing",
+    "Cancer",
+    "The skin & skin sensitivity",
+    "Nails & hair",
+    "The circulatory system",
+    "Coronary Artery Disease",
+    "Heart attacks & angina",
+    "Hypertension",
+    "Dizziness",
+    "The nervous system",
+    "Parkinson's Disease",
+    "Stroke",
+    "Transient ischaemic Attack",
+    "Speech",
+    "The respiratory system",
+    "Breathing",
+    "Pneumonia",
+    "Infection",
+    "The kidneys",
+    "Medication",
+    "The musculoskeletal system",
+    "Arthritis",
+    "Continence",
+    "Osteoporosis",
+    "Memory",
+    "Dementia",
+    "Depression",
+    "Bereavement & loss",
+    "Hearing & sight",
+    "Taste & smell",
+    "Body temperature",
+    "Exercise & sleep",
+    "Nutrition",
+    "Oral care",
+  ],
+};
