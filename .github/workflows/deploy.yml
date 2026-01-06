@@ -17,27 +17,28 @@ jobs:
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Add VPS host key
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy
         run: |
-            ssh -o StrictHostKeyChecking=no  ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            set -e
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          set -e
 
-            export NVM_DIR="$HOME/.nvm"
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+          node -v
+          npm -v
+          pm2 -v
 
-            node -v
-            npm -v
-            pm2 -v
-            
-            cd ${{ secrets.APP_PATH }}
-            git reset --hard
-            git pull --rebase origin master
-            npm ci
-            npm run build
-            pm2 restart all
-         EOF
+          cd ${{ secrets.APP_PATH }}
+          git reset --hard
+          git pull --rebase origin master
+          npm ci
+          npm run build
+          pm2 restart all
+          EOF
