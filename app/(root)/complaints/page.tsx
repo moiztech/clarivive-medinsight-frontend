@@ -1,6 +1,8 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import { complaintsData } from "@/data/complaintsData";
 
+export const dynamic = 'force-static';
+
 const Complaints = () => {
   return (
     <>

@@ -1,26 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Search, ShoppingCart, Menu, ArrowUpIcon, ChevronDown,  Diamond } from "lucide-react"
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import NavOffcanvas from "../nav-offcanvas"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Search, ShoppingCart, Menu, ArrowUpIcon, ChevronDown, Diamond } from "lucide-react";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import NavOffcanvas from "../nav-offcanvas";
 
 interface NavItem {
-  label: string
-  href: string
-  badge?: string
-  submenu?: NavItem[]
+  label: string;
+  href: string;
+  badge?: string;
+  submenu?: NavItem[];
 }
 
 const navigationItems: NavItem[] = [
@@ -42,18 +35,18 @@ const navigationItems: NavItem[] = [
     //   { label: "Branch 2", href: "/services/2" },
     // ],
   },
-  
+
   { label: "CONTACT US", href: "/contact-us" },
   { label: "ABOUT US", href: "/about-us" },
   {
     label: "FOR ORGANIZATIONS",
     href: "/for-organizations",
   },
-]
+];
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
 
   return (
     <header className="bg-card border-b sticky top-0 z-50">
@@ -63,13 +56,7 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <div className="rounded flex items-center justify-center">
               <Link href="/">
-                <Image
-                  src="/Clarivive medinsight logo-01.png"
-                  alt="Logo"
-                  width={200}
-                  height={72}
-                  priority
-                />
+                <Image src="/Clarivive medinsight logo-01.png" alt="Logo" width={200} height={72} priority />
               </Link>
             </div>
           </div>
@@ -84,11 +71,7 @@ export default function Header() {
                       <>
                         <NavigationMenuTrigger className="text-sm font-medium">
                           {item.label}
-                          {item.badge && (
-                            <Badge className="ml-2 bg-primary text-secondary-foreground rounded-none text-xs">
-                              {item.badge}
-                            </Badge>
-                          )}
+                          {item.badge && <Badge className="ml-2 bg-primary text-secondary-foreground rounded-none text-xs">{item.badge}</Badge>}
                         </NavigationMenuTrigger>
 
                         <NavigationMenuContent className="p-3">
@@ -96,10 +79,7 @@ export default function Header() {
                             {item.submenu.map((sub) => (
                               <li key={sub.label}>
                                 <NavigationMenuLink asChild>
-                                  <Link
-                                    href={sub.href}
-                                    className="block rounded-md px-3 py-2 text-sm hover:bg-muted! transition"
-                                  >
+                                  <Link href={sub.href} className="block rounded-md px-3 py-2 text-sm hover:bg-muted! transition">
                                     {sub.label}
                                   </Link>
                                 </NavigationMenuLink>
@@ -110,10 +90,7 @@ export default function Header() {
                       </>
                     ) : (
                       <NavigationMenuLink asChild>
-                        <Link
-                          href={item.href}
-                          className="text-sm font-medium text-foreground hover:text-secondary transition-colors cursor-pointer"
-                        >
+                        <Link href={item.href} className="text-sm font-medium text-foreground hover:text-secondary transition-colors cursor-pointer">
                           {item.label}
                         </Link>
                       </NavigationMenuLink>
@@ -135,22 +112,21 @@ export default function Header() {
 
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-blue-500 text-secondary-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center">
-                0
-              </span>
+              <span className="absolute -top-1 -right-1 bg-blue-500 text-secondary-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center">0</span>
             </Button>
 
-            <Button size={'lg'} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 ps-4! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex">
-              LMS <NavOffcanvas/>
+            <Link href={"/login"}>
+              <Button size={"lg"} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 px-4 text-md group rounded-md text-secondary-foreground hidden md:flex">
+                Login
+                {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
+              </Button>
+            </Link>
+            <Button size={"lg"} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 ps-4! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex">
+              LMS <NavOffcanvas />
               {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
             </Button>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setMobileMenuOpen((v) => !v)}
-            >
+            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileMenuOpen((v) => !v)}>
               {mobileMenuOpen ? <ArrowUpIcon className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
             {/* <NavOffcanvas/> */}
@@ -160,9 +136,7 @@ export default function Header() {
         {/* Mobile Menu */}
         <div
           className={`lg:hidden border-t overflow-hidden transition-all duration-700 ease-out ${
-            mobileMenuOpen
-              ? "max-h-96 py-4 opacity-100 translate-y-0 pointer-events-auto"
-              : "max-h-0 opacity-0 -translate-y-2 pointer-events-none"
+            mobileMenuOpen ? "max-h-96 py-4 opacity-100 translate-y-0 pointer-events-auto" : "max-h-0 opacity-0 -translate-y-2 pointer-events-none"
           }`}
           aria-hidden={!mobileMenuOpen}
         >
@@ -173,22 +147,12 @@ export default function Header() {
                   <>
                     <button
                       type="button"
-                      onClick={() =>
-                        setMobileSubmenuOpen(mobileSubmenuOpen === item.label ? null : item.label)
-                      }
+                      onClick={() => setMobileSubmenuOpen(mobileSubmenuOpen === item.label ? null : item.label)}
                       className="text-sm font-medium flex items-center gap-2 w-full"
                     >
                       {item.label}
-                      {item.badge && (
-                        <Badge className="bg-secondary text-secondary-foreground text-xs">
-                          {item.badge}
-                        </Badge>
-                      )}
-                      <ChevronDown
-                        className={`w-4 h-4 ml-auto transition-transform ${
-                          mobileSubmenuOpen === item.label ? "rotate-180" : ""
-                        }`}
-                      />
+                      {item.badge && <Badge className="bg-secondary text-secondary-foreground text-xs">{item.badge}</Badge>}
+                      <ChevronDown className={`w-4 h-4 ml-auto transition-transform ${mobileSubmenuOpen === item.label ? "rotate-180" : ""}`} />
                     </button>
 
                     {mobileSubmenuOpen === item.label && (
@@ -200,8 +164,8 @@ export default function Header() {
                             className="text-sm font-medium pl-4 py-1 hover:text-blue-500 transition-colors"
                             onClick={() => {
                               // Optional: close menus after click
-                              setMobileMenuOpen(false)
-                              setMobileSubmenuOpen(null)
+                              setMobileMenuOpen(false);
+                              setMobileSubmenuOpen(null);
                             }}
                           >
                             {subitem.label}
@@ -211,11 +175,7 @@ export default function Header() {
                     )}
                   </>
                 ) : (
-                  <Link
-                    href={item.href}
-                    className="text-sm font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                  <Link href={item.href} className="text-sm font-medium" onClick={() => setMobileMenuOpen(false)}>
                     {item.label}
                   </Link>
                 )}
@@ -225,5 +185,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }

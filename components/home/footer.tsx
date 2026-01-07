@@ -76,7 +76,7 @@ export function Footer() {
             <h3 className="text-xl font-semibold mb-6">Company</h3>
             <ul className="space-y-3">
               {[{
-                label:"About us", link:"about-us"}, {label:"Contact Us", link:"contact-us"}, {label:"Training Resources", link:"training-resources"}, {label:"Accreditations", link:"accreditations"}, {label:"Complaint Procedure", link:"complaints"}].map((item, index) => (
+                label:"About us", link:"/about-us"}, {label:"Contact Us", link:"/contact-us"}, {label:"Training Resources", link:"/training-resources"}, {label:"Accreditations", link:"/accreditations"}, {label:"Complaint Procedure", link:"complaints"}].map((item, index) => (
                 <li key={index}>
                   <Link href={item.link} className="text-gray-400 hover:text-white transition-colors">
                     {item.label}
@@ -90,7 +90,7 @@ export function Footer() {
           <div>
             <h3 className="text-xl font-semibold mb-6">Privacy Policy </h3>
             <ul className="space-y-3">
-              {[{label:"Terms and condition", link:"terms-and-conditions"}, {label:"GDPR", link:"gdpr"}, {label:"Cookies", link:""},{label:"User Policies", link:"data-protection"}, {label: "Refund and cancellation policy", link: "refund-policy"}].map((item, index) => (
+              {[{label:"Terms and condition", link:"/terms-and-conditions"}, {label:"GDPR", link:"/gdpr"}, {label:"Cookies", link:"/cookies"},{label:"User Policies", link:"/data-protection"}, {label: "Refund and cancellation policy", link: "/refund-policy"}].map((item, index) => (
                 <li key={`${item}-${index}`}>
                   <Link href={item.link} className="text-gray-400 hover:text-white transition-colors">
                     {item.label}
