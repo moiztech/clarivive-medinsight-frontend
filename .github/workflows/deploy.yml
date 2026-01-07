@@ -12,6 +12,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Cache npm downloads (runner-side speedup)
+      - name: Cache npm cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
@@ -25,20 +36,32 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
           set -e
 
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
+          cd ${{ secrets.APP_PATH }}
+
+          # Fast, clean code sync
+          git fetch origin
+          git reset --hard origin/master
+
           node -v
           npm -v
           pm2 -v
 
-          cd ${{ secrets.APP_PATH }}
-          git reset --hard
-          git pull --rebase origin master
-          npm ci
-          npm run build
-          pm2 restart all
+          # Dependency install (incremental, fast)
+          if [ ! -d "node_modules" ]; then
+            npm install --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
+          # Build with cache preserved
+          NEXT_TELEMETRY_DISABLED=1 npm run build
+
+          # Zero-downtime restart
+          pm2 reload all
           EOF
