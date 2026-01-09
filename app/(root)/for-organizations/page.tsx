@@ -1,9 +1,9 @@
-"use client"
-import LaboratoryAdvantages from "@/components/about/laboratory-advantages";
+"use client";
+import LaboratoryAdvantages, { LaboratoryAdvantagesProps } from "@/components/about/laboratory-advantages";
 import BreadCrumb from "@/components/BreadCrumb";
 import AboutHero from "@/components/courses/courses-hero";
 import Image from "next/image";
-import { Check, Star } from "lucide-react";
+import { Blend, Check, Pickaxe, RefreshCcw, ScanFace, Star } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FaWhatsapp } from "react-icons/fa";
 import { Heart, Eye, Brain, Activity, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Syringe, ClipboardList, Stethoscope, Microscope } from "lucide-react";
 import React from "react";
+import OurMission from "@/components/about/our-mission";
 
 function page() {
   const services = [
@@ -24,6 +25,34 @@ function page() {
     { title: "Orthopaedics", icon: ClipboardList },
     { title: "RMI", icon: Microscope },
   ];
+  const LaboratoryAdvantagesProps: LaboratoryAdvantagesProps = {
+    badgeText: "What We Offer",
+    heading: "What We ",
+    highlightedText: "offer",
+    headingPost: '',
+    advantages: [
+      {
+        title: 'Face-to-face Training',
+        description: 'Instructor-Led training delivered at your premises or agreed locations by qualified healthcare professionals.',
+        icon: ScanFace
+      },
+      {
+        title: 'Online & Blended Learning',
+        description: 'Flexible at your own pace, online and blended courses accessed through our secure LMS.',
+        icon: Blend
+      },
+      {
+        title: 'Mandatory & Refresher Training',
+        description: 'Compliance-focused training developed in line with healthcare standards and regulatory frameworks .',
+        icon: RefreshCcw
+      },
+      {
+        title: 'Tailored Training Solutions',
+        description: 'Customized programs designed to fit your organization’s size, workforce, and operational needs .',
+        icon: Pickaxe
+      },
+    ]
+  };
   return (
     <div className="min-h-screen bg-white">
       <BreadCrumb
@@ -33,9 +62,14 @@ function page() {
         ]}
         title="For Organizations"
       />
-      <AboutHero />
-      <LaboratoryAdvantages />
+      {/* <AboutHero /> */}
+      <OurMission
+        aboutImages={false}
+        headingHighlight="while employers remain responsible for staff supervision and competency."
+        headingStart="Clarivive MedInsight delivers practical training for health and social care organizations, supporting workforce development, learner safety, and compliance, while employers remain responsible for staff supervision and competency."
+      />
       <QualityGovern />
+      <LaboratoryAdvantages {...LaboratoryAdvantagesProps} />
       <ProcessSection />
       <ContactPage />
     </div>
@@ -386,14 +420,7 @@ function ContactPage() {
   );
 }
 function QualityGovern() {
-  const services = [
-    "Comprehensive Inpatient Services",
-    "Medical And Surgical Services",
-    "Outpatient Services",
-    "Medicine & instrument",
-    "Specialised Support Service",
-    "Instant Operation & Appointment",
-  ];
+  const services = ["Skills for Care guidance", "Core Skills Training Framework (CSTF)", "Health and Safety Executive (HSE) guidance"];
 
   return (
     <section className="py-24 bg-white overflow-hidden lg:px-15 2xl:px-20">
@@ -401,12 +428,12 @@ function QualityGovern() {
         <div className="flex flex-col lg:flex-row items-center gap-16">
           <div className="w-full lg:w-1/2 space-y-8">
             <div className="space-y-4">
-              <span className="inline-block px-4 py-1.5 bg-blue-400/20 text-blue-400 text-sm font-normal rounded-md tracking-wide uppercase">What About Us</span>
+              <span className="inline-block px-4 py-1.5 bg-blue-400/20 text-blue-400 text-sm font-normal rounded-md tracking-wide uppercase">Quality & Governance</span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium text-medical-navy leading-[1.1]">
-                The Heart And Science Of <span className="text-blue-400 font-serif">Medic Test</span>
+                Quality & <span className="text-blue-400 font-serif">Governance</span>
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                It is a long established fact that a reader will be distracted by at its layout. Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Our training is developed and reviewed in line with relevant UK guidance, including where applicable:
               </p>
             </div>
 
@@ -420,10 +447,10 @@ function QualityGovern() {
                 </li>
               ))}
             </ul>
-
-            <Button className="h-14 px-10 bg-blue-400 hover:bg-blue-400/90 text-white rounded-md text-lg font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-blue-400/20">
-              READ MORE +
-            </Button>
+            <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+              Training certificates confirm course completion and learning outcomes achieved. They do not replace employer induction, supervision, or role-specific competency
+              sign-off.
+            </p>
           </div>
           <div className="w-full lg:w-1/2 relative">
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
