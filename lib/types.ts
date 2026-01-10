@@ -11,7 +11,20 @@ type EventType = {
   doctor: string;
 };
 
-export type { Service, EventType };
+type UserType = {
+  id: number;
+  role_id?: number;
+  role?: string;
+  email?: string;
+  name?: string;
+};
+
+type AuthContextType = {
+  user: UserType | null;
+  saveUser: (user: UserType) => void;
+};
+
+export type { Service, EventType, AuthContextType, UserType };
 
 export interface Course {
   title: string;

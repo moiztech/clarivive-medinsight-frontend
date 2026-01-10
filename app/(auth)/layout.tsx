@@ -5,6 +5,8 @@ import { Analytics } from "@vercel/analytics/next";
 import "@/app/globals.css";
 import NextTopLoader from "nextjs-toploader";
 import Image from "next/image";
+import { Toaster } from "@/components/ui/sonner";
+import AuthProvider from "../_contexts/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Clarivive Medinsight  - Your trusted partner for digital healthcare excellence & compliance",
@@ -30,10 +32,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           shadow="0 0 10px #2299DD, 0 0 5px #2299DD"
         />
         <div className="min-h-screen flex items-center justify-between bg-background">
-            {children}
-            <div className="h-screen hidden lg:block lg:w-1/2 overflow-hidden rounded-l-4xl">
-                <Image src={'/images/auth-page-side.jpg'} alt="Auth page side image" height={100} width={400} className="w-full! h-full! object-cover object-center"/>
-            </div>
+          <AuthProvider>{children}</AuthProvider>
+          <div className="h-screen hidden lg:block lg:w-1/2 overflow-hidden rounded-l-4xl">
+            <Image src={"/images/auth-page-side.jpg"} alt="Auth page side image" height={100} width={400} className="w-full! h-full! object-cover object-center" />
+          </div>
+          <Toaster richColors position="bottom-right" />
         </div>
         <Analytics />
       </body>

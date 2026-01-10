@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "@/app/globals.css";
 import MainLayout from "@/components/MainLayout";
 import NextTopLoader from "nextjs-toploader";
+import AuthProvider from "../_contexts/AuthProvider";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -50,7 +51,9 @@ export default function RootLayout({
           speed={200}
           shadow="0 0 10px #2299DD, 0 0 5px #2299DD"
         />
-        <MainLayout>{children}</MainLayout>
+        <AuthProvider>
+          <MainLayout>{children}</MainLayout>
+        </AuthProvider>
 
         <Analytics />
       </body>

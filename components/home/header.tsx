@@ -5,9 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Search, ShoppingCart, Menu, ArrowUpIcon, ChevronDown, Diamond } from "lucide-react";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import NavOffcanvas from "../nav-offcanvas";
+import { useAuth } from "@/app/_hooks/useAuth";
+import { useAuthActions } from "@/app/_hooks/useAuthActions";
 
 interface NavItem {
   label: string;
@@ -47,6 +50,8 @@ const navigationItems: NavItem[] = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
+  const { user } = useAuth();
+  const { logout } = useAuthActions();
 
   return (
     <header className="bg-card border-b sticky top-0 z-50">
@@ -114,13 +119,29 @@ export default function Header() {
               <ShoppingCart className="w-5 h-5" />
               <span className="absolute -top-1 -right-1 bg-blue-500 text-secondary-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center">0</span>
             </Button>
-
-            <Link href={"/login"}>
-              <Button size={"lg"} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 px-4 text-md group rounded-md text-secondary-foreground hidden md:flex">
-                Login
-                {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
-              </Button>
-            </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuItem>
+                    <span className="font-bold">{user?.email}</span> <br/>
+                    {user?.name}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" onClick={() => logout()}>
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href={"/login"}>
+                <Button size={"lg"} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 px-4 text-md group rounded-md text-secondary-foreground hidden md:flex">
+                  Login
+                  {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
+                </Button>
+              </Link>
+            )}
             <Button size={"lg"} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 ps-4! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex">
               LMS <NavOffcanvas />
               {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}

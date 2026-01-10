@@ -1,7 +1,6 @@
 "use client";
 import LaboratoryAdvantages, { LaboratoryAdvantagesProps } from "@/components/about/laboratory-advantages";
 import BreadCrumb from "@/components/BreadCrumb";
-import AboutHero from "@/components/courses/courses-hero";
 import Image from "next/image";
 import { Blend, Check, Pickaxe, RefreshCcw, ScanFace, Star } from "lucide-react";
 import { useState } from "react";
