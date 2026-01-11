@@ -116,15 +116,21 @@ export default page;
 
 function ContactPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    organizationName: "",
+    organizationTypes: [] as string[],
+    otherOrganizationType: "",
+    contactName: "",
+    jobTitle: "",
     email: "",
     phone: "",
-    department: "",
-    doctor: "",
-    date: "",
+    staffCount: "",
+    trainingRequirements: [] as string[],
     message: "",
+    consent: false,
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [submitStatus, setSubmitStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
@@ -132,54 +138,63 @@ function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.consent) {
+      setSubmitStatus({
+        type: "error",
+        message: "You must provide consent before submitting the enquiry.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: "" });
 
-    // Simulate API call
     try {
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Mock successful response
+      // Mock response aligned with enquiry context
       const mockResponse = {
         success: true,
-        appointmentId: "APT" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-        message: "Your appointment has been successfully booked!",
-        details: {
-          patientName: formData.name,
-          department: formData.department,
-          doctor: formData.doctor,
-          date: formData.date,
-          confirmationSent: formData.email,
-        },
+        enquiryId: "ENQ-" + Math.random().toString(36).slice(2, 10).toUpperCase(),
+        message: "Your enquiry has been successfully submitted.",
       };
 
       setSubmitStatus({
         type: "success",
-        message: `${mockResponse.message} Confirmation ID: ${mockResponse.appointmentId}`,
+        message: `${mockResponse.message} Reference ID: ${mockResponse.enquiryId}`,
       });
 
       // Reset form
       setFormData({
-        name: "",
+        organizationName: "",
+        organizationTypes: [],
+        otherOrganizationType: "",
+        contactName: "",
+        jobTitle: "",
         email: "",
         phone: "",
-        department: "",
-        doctor: "",
-        date: "",
+        staffCount: "",
+        trainingRequirements: [],
         message: "",
+        consent: false,
       });
     } catch (error) {
       setSubmitStatus({
         type: "error",
-        message: "Failed to book appointment. Please try again.",
+        message: "Failed to submit enquiry. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   return (
