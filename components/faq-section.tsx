@@ -1,6 +1,8 @@
-import Image from "next/image"
-import { Phone } from "lucide-react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import Image from "next/image";
+import { Phone } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 const faqs = [
   {
@@ -78,7 +80,7 @@ const faqs = [
     answer:
       "Organizations are responsible for keeping staff records up to date, including removing leavers. Charges incurred due to outdated records remain the organization’s responsibility. Inactive user accounts may be suspended or removed in line with our data retention and security policies.",
   },
-]
+];
 
 export function FaqSection() {
   return (
@@ -90,14 +92,17 @@ export function FaqSection() {
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden">
               <Image src="/home/doctor-consult.jpg" alt="Doctor and patient" fill className="object-cover" />
             </div>
-            <div className="bg-emerald-50 rounded-2xl p-8 flex items-center gap-6 border border-emerald-100">
-              <div className="p-4 bg-indigo-600 rounded-full text-white shadow-lg">
+            <div className="rounded-2xl inline-block xl:ps-5">
+              {/* <div className="p-4 bg-indigo-600 rounded-full text-white shadow-lg">
                 <Phone className="size-8" />
-              </div>
-              <div>
-                <p className="text-slate-500 font-medium">Emergency Call</p>
-                <p className="text-2xl font-bold text-slate-900">+1-868-842-7758</p>
-              </div>
+              </div> */}
+              <Link href={'/for-organizations'}>
+                <Button variant={"primary"} size={"xl"}>
+                  Learn More..
+                </Button>
+              </Link>
+              {/* <p className="text-slate-500 font-medium">Emergency Call</p>
+                <p className="text-2xl font-bold text-slate-900">+1-868-842-7758</p> */}
             </div>
           </div>
 
@@ -113,9 +118,7 @@ export function FaqSection() {
                 <br />
                 You Need to Know
               </h2>
-              <p className="text-slate-600 text-lg">
-                Get answers to common medical questions, treatments & healthcare services for informed decision-making.
-              </p>
+              <p className="text-slate-600 text-lg">Get answers to common medical questions, treatments & healthcare services for informed decision-making.</p>
             </div>
 
             <Accordion type="single" collapsible className="space-y-4 my-1 py-1">
@@ -125,9 +128,7 @@ export function FaqSection() {
                   value={`item-${index}`}
                   className="bg-white hover:bg-indigo-50 border cursor-pointer group border-slate-200 rounded-xl px-6 data-[state=open]:bg-indigo-50 data-[state=open]:ring-2 data-[state=open]:ring-indigo-600/10 data-[state=open]:border-indigo-600 transition-all"
                 >
-                  <AccordionTrigger className="hover:no-underline  cursor-pointer font-bold text-slate-900 py-6">
-                    {faq.question}
-                  </AccordionTrigger>
+                  <AccordionTrigger className="hover:no-underline  cursor-pointer font-bold text-slate-900 py-6">{faq.question}</AccordionTrigger>
                   <AccordionContent className="text-slate-600 pb-6 text-base">{faq.answer}</AccordionContent>
                 </AccordionItem>
               ))}
@@ -136,5 +137,5 @@ export function FaqSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

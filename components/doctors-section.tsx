@@ -5,15 +5,15 @@ import AnimateOnScroll from "./ui/animate-on-scroll";
 
 const doctors = [
   {
-    name: "Dr. Lawson Bourne",
+    name: "CEO",
     image: "/male-doctor-smiling.jpg",
   },
   {
-    name: "Dr. Hailey Marie",
+    name: "Dr. 1",
     image: "/female-doctor-smiling.png",
   },
   {
-    name: "Dr. Jayne Adams",
+    name: "Dr. 2",
     image: "/older-male-doctor-smiling.jpg",
   },
 ];

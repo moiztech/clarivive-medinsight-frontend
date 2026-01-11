@@ -2,21 +2,21 @@ import { Phone, Mail, Facebook, Instagram } from "lucide-react"
 
 export default function TopBar() {
   return (
-    <div className="bg-primary hidden md:block text-primary-foreground">
+    <div className="bg-primary-blue hidden md:block text-primary-foreground">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between  h-10 text-sm">
           {/* Left side - Contact info */}
           <div className="flex items-center gap-6">
-            <a href="tel:+1800-001-658" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <a href="tel: +4407345052986" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <Phone className="w-4 h-4" />
-              <span>+1800-001-658</span>
+              <span> +44 (07345 052986)</span>
             </a>
             <a
-              href="mailto:info@spaceofallthemes.com"
+              href="mailto:info@clarivivemedinsight.com"
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <Mail className="w-4 h-4" />
-              <span>info@spaceofallthemes.com</span>
+              <span>info@clarivivemedinsight.com</span>
             </a>
           </div>
 

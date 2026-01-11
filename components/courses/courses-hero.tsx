@@ -17,6 +17,7 @@ export type CoursesHeroProps = {
   services?: string[];
   buttonText?: string;
   showReadMore?: boolean;
+  order?: 0 | 1,
 };
 
 export default function CoursesHero(props: CoursesHeroProps) {
@@ -41,12 +42,13 @@ export default function CoursesHero(props: CoursesHeroProps) {
     ],
     buttonText = "READ MORE +",
     showReadMore = true,
+    order = 0,
   } = props;
 
   return (
     <section className="py-24 bg-white overflow-hidden lg:px-15 2xl:px-20">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
+        <div className={`flex flex-col  ${order ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-16`}>
           <div className="w-full lg:w-1/2 relative">
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
               <Image src={imageSrc} alt={imageAlt} width={imageWidth} height={imageHeight} className="w-full h-auto object-cover aspect-4/4" />

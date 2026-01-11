@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import AnimateOnScroll from "../ui/animate-on-scroll";
 import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 
 export default function MedicalServices() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -21,12 +22,14 @@ export default function MedicalServices() {
       description:
         "We deliver classroom-based training across the UK, led by experienced trainers. Our face-to-face courses emphasize practical learning, real-life scenarios, and safe skill development.",
       image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&q=80",
+      href: "/courses/face-to-face",
     },
     {
       icon: Flower2,
       title: "Online Learning",
       description: "For organizations requiring flexibility, we offer professionally developed online training that can be completed anytime and anywhere.",
       image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80",
+      href: "/courses/online",
     },
     // {
     //   icon: Bone,
@@ -185,31 +188,11 @@ export default function MedicalServices() {
                 }
           }
         >
-          <svg width="0" height="0" className="absolute">
-            <defs>
-              {/* This path creates a “bite” / concave curve at bottom-right */}
-              <clipPath id="card-br-curve" clipPathUnits="objectBoundingBox">
-                {/* objectBoundingBox uses 0..1 coords */}
-                <path
-                  d="
-            M 0 0
-            H 1
-            V 0.78
-            C 1 0.92, 0.92 1, 0.78 1
-            H 0
-            Z
-          "
-                />
-              </clipPath>
-            </defs>
-          </svg>
           {services.map((service, index) => (
             <AnimateOnScroll key={index} className={`shrink-0 px-2 ${shouldCenter ? "w-full md:w-[360px]" : "w-full md:w-1/2 xl:w-1/4"}`}>
               <div
-                className="bg-white rounded-3xl overflow-hidden group
-             transition-transform duration-300
-             flex flex-col h-[520px]"
-                style={{ clipPath: "url(#card-br-curve)" }}
+                className="bg-white rounded-3xl rounded-br-2xl overflow-hidden group
+             transition-transform duration-300 flex flex-col h-[520px] relative border-0 [transform:translateZ(0)]"
               >
                 <div className="relative h-90 lg:h-54 2xl:h-60 flex-shrink-0">
                   <Image src={service.image || "/placeholder.svg"} alt={service.title} fill className="object-cover" />
@@ -222,18 +205,31 @@ export default function MedicalServices() {
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="text-2xl font-semibold text-gray-900 mb-3">{service.title}</h3>
-                    <p className="text-gray-600 leading-relaxed mb-4">{service.description}</p>
-                  </div>
-                  <div className="mt-4">
-                    <Button
-                      variant="ghost"
-                      size="icon-lg"
-                      className="ml-auto shadow-xl me-4 mb-0 xl:me-1 flex rounded-xl bg-gray-100 hover:bg-blue-600 hover:text-white transition-colors"
-                    >
-                      <ArrowUpRight className="w-8 h-8" />
-                    </Button>
+                    <p className="text-gray-600 leading-relaxed mb-4 line-clamp-4" title={service.description}>
+                      {service.description}
+                    </p>
                   </div>
                 </div>
+                <Link href={service.href}>
+                  <Button
+                    variant="ghost"
+                    size="icon-lg"
+                    className="shadow-xl absolute end-0 bottom-0 z-4 flex rounded-2xl transition-all hover:rounded-lg bg-gray-100 hover:bg-gray-200 hover:text-white"
+                  >
+                    <ArrowUpRight className="w-8 h-8 text-primary-blue" />
+                  </Button>
+                </Link>
+                {/* <!-- Main cut --> */}
+                <span
+                  className="absolute bottom-0 right-0
+              w-36 h-36
+              bg-blue-600 rounded-full
+              translate-x-[52%] translate-y-[52%]"
+                ></span>
+
+                {/* <!-- Vertical smoothing --> */}
+
+                {/* <span className="absolute -bottom-1 -right-1 w-35 h-35 bg-blue-600 rounded-full translate-x-1/2 translate-y-1/2"></span> */}
               </div>
             </AnimateOnScroll>
           ))}

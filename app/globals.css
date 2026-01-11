@@ -151,3 +151,35 @@
 .aos-in.fade-right,
 .aos-in.fade-up { transform: translateX(0) translateY(0); }
 
+/* .card-with-cut {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: white;
+}
+
+.card-with-cut::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -80px;
+  width: 120px;
+  height: 120px;
+  background: #2563eb;          /* blue-600 
+  border-radius: 50%;
+  z-index: 0;
+}
+
+/* Optional: softer edge 
+.card-with-cut::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: 0 0 30px 15px rgba(255,255,255,0.95);
+} */

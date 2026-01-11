@@ -39,8 +39,8 @@ const navigationItems: NavItem[] = [
     // ],
   },
 
-  { label: "CONTACT US", href: "/contact-us" },
   { label: "ABOUT US", href: "/about-us" },
+  { label: "CONTACT US", href: "/contact-us" },
   {
     label: "FOR ORGANIZATIONS",
     href: "/for-organizations",
@@ -125,7 +125,7 @@ export default function Header() {
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuItem>
-                    <span className="font-bold">{user?.email}</span> <br/>
+                    <span className="font-bold">{user?.email}</span> <br />
                     {user?.name}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -137,7 +137,7 @@ export default function Header() {
             ) : (
               <Link href={"/login"}>
                 <Button size={"lg"} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 px-4 text-md group rounded-md text-secondary-foreground hidden md:flex">
-                  Login
+                  Login / Signup
                   {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
                 </Button>
               </Link>
@@ -202,6 +202,31 @@ export default function Header() {
                 )}
               </div>
             ))}
+            {user ? (
+              <div className="flex md:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuItem>
+                      <span className="font-bold">{user?.email}</span> <br />
+                      {user?.name}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive" onClick={() => logout()}>
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <Link href={"/login"}>
+                <Button size={"lg"} className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 px-4 text-md group rounded-md text-secondary-foreground flex md:hidden">
+                  Login / Signup
+                  {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
+                </Button>
+              </Link>
+            )}
           </nav>
         </div>
       </div>

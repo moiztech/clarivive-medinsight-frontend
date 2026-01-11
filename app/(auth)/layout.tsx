@@ -7,6 +7,9 @@ import NextTopLoader from "nextjs-toploader";
 import Image from "next/image";
 import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "../_contexts/AuthProvider";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Clarivive Medinsight  - Your trusted partner for digital healthcare excellence & compliance",
@@ -21,7 +24,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`font-sans antialiased`}>
         <NextTopLoader
-          color="#1321f1"
+          color="#000066"
           initialPosition={0.08}
           crawlSpeed={200}
           height={3}
@@ -31,7 +34,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           speed={200}
           shadow="0 0 10px #2299DD, 0 0 5px #2299DD"
         />
-        <div className="min-h-screen flex items-center justify-between bg-background">
+        <div className="min-h-screen flex items-center relative justify-between bg-background">
+          <div className="absolute top-10 left-10">
+            <Link href={'/'}>
+              <Button variant={'link'} size={'icon-lg'} className="text-primary-blue">
+                <ArrowLeft className="size-6"/>
+              </Button>
+            </Link>
+          </div>
           <AuthProvider>{children}</AuthProvider>
           <div className="h-screen hidden lg:block lg:w-1/2 overflow-hidden rounded-l-4xl">
             <Image src={"/images/auth-page-side.jpg"} alt="Auth page side image" height={100} width={400} className="w-full! h-full! object-cover object-center" />

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { User, Building2, Stethoscope, HeartHandshake, Users, ShieldCheck, ChevronDown } from "lucide-react";
 
 export default function BusinessOutcomesSection() {
   const [activeTab, setActiveTab] = useState("compliance");
@@ -10,89 +10,51 @@ export default function BusinessOutcomesSection() {
   const categories = [
     {
       id: "compliance",
-      icon: (
-        <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="12" cy="12" r="10" strokeWidth="2" />
-          <path d="M9 12l2 2 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ),
+      icon: <User className="w-full h-full" />,
       title: "Individual Learners",
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      hoverBg: "hover:bg-purple-100",
+      color: "text-primary-blue",
+      bgColor: "bg-blue-50",
+      hoverBg: "hover:bg-blue-100",
     },
     {
       id: "employee",
-      icon: (
-        <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ),
+      icon: <Building2 className="w-full h-full" />,
       title: "For Organizations",
-      color: "text-blue-600",
+      color: "text-primary-blue",
       bgColor: "bg-blue-50",
       hoverBg: "hover:bg-blue-100",
     },
     {
       id: "onboarding",
-      icon: (
-        <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <rect x="3" y="3" width="7" height="7" rx="1" strokeWidth="2" />
-          <rect x="14" y="3" width="7" height="7" rx="1" strokeWidth="2" />
-          <rect x="14" y="14" width="7" height="7" rx="1" strokeWidth="2" />
-          <rect x="3" y="14" width="7" height="7" rx="1" strokeWidth="2" />
-        </svg>
-      ),
+      icon: <Stethoscope className="w-full h-full" />,
       title: "Health Care Providers",
-      color: "text-teal-600",
-      bgColor: "bg-teal-50",
-      hoverBg: "hover:bg-teal-100",
+      color: "text-primary-blue",
+      bgColor: "bg-blue-50",
+      hoverBg: "hover:bg-blue-100",
     },
     {
       id: "revenue",
-      icon: (
-        <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      ),
+      icon: <HeartHandshake className="w-full h-full" />,
       title: "Social Care Organizations",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-      hoverBg: "hover:bg-green-100",
+      color: "text-primary-blue",
+      bgColor: "bg-blue-50",
+      hoverBg: "hover:bg-blue-100",
     },
     {
       id: "customer",
-      icon: (
-        <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path
-            d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
+      icon: <Users className="w-full h-full" />,
       title: "Healthcare Agencies & Workforce Providers",
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-50",
-      hoverBg: "hover:bg-yellow-100",
+      color: "text-primary-blue",
+      bgColor: "bg-blue-50",
+      hoverBg: "hover:bg-blue-100",
     },
     {
       id: "member",
-      icon: (
-        <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <polygon
-            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
+      icon: <ShieldCheck className="w-full h-full" />,
       title: "Independent & Specialist Care Services",
-      color: "text-pink-600",
-      bgColor: "bg-pink-50",
-      hoverBg: "hover:bg-pink-100",
+      color: "text-primary-blue",
+      bgColor: "bg-blue-50",
+      hoverBg: "hover:bg-blue-100",
     },
   ];
 
@@ -109,12 +71,12 @@ export default function BusinessOutcomesSection() {
       ],
       ctas: [
         {
-          label: "View Course 1",
-          href: "/courses/course-1",
+          label: "Online Courses",
+          href: "/courses/online",
         },
         {
-          label: "View Course 2",
-          href: "/courses/course-2",
+          label: "Face-to-Face Courses",
+          href: "/courses/face-to-face",
         },
       ],
       image: "/home/Image 03.png",
@@ -217,7 +179,7 @@ export default function BusinessOutcomesSection() {
                   `}
               >
                 <div
-                  className={`${category.color} flex justify-center mb-3 w-14 h-14 items-center mx-auto transition-transform duration-300 py-2 ${
+                  className={`${category.color} flex justify-center mb-3 w-14 h-14 items-center mx-auto transition-transform duration-200 py-2 ${
                     activeTab === category.id ? "scale-120" : ""
                   }`}
                 >
