@@ -16,7 +16,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <LoadingSkeleton {...loadingSkeletonProps}>
-      <div className="min-h-screen">
+      <div className="min-h-screen" >
         <TopBar />
         <Header />
         {children}

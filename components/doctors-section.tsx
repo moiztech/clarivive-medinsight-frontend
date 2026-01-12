@@ -5,16 +5,16 @@ import AnimateOnScroll from "./ui/animate-on-scroll";
 
 const doctors = [
   {
-    name: "CEO",
-    image: "/male-doctor-smiling.jpg",
+    name: "CEO M . Ameer Hamza",
+    image: "/team/ceo.jpeg",
   },
   {
-    name: "Dr. 1",
-    image: "/female-doctor-smiling.png",
+    name: "Trainer 1 Malik Arsalan Ahmed ",
+    image: "/team/trainer-1.jpeg",
   },
   {
-    name: "Dr. 2",
-    image: "/older-male-doctor-smiling.jpg",
+    name: "Trainer 2 Mubashir Iqbal ",
+    image: "/team/trainer-2.jpeg",
   },
 ];
 

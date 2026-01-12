@@ -19,19 +19,19 @@ export default function OurMissionSection() {
           <div className="space-y-12 lg:pt-8">
             {/* Stat 1 */}
             <div className="space-y-2">
-              <h3 className="text-5xl sm:text-7xl font-bold text-slate-900">More than 75 </h3>
+              <h3 className="text-xl sm:text-6xl font-bold text-slate-900">More than 75 </h3>
               <p className="text-lg text-slate-600">e learinign trianingis</p>
             </div>
 
             {/* Stat 2 */}
             <div className="space-y-2">
-              <h3 className="text-5xl sm:text-7xl font-bold text-slate-900">Upto 6</h3>
+              <h3 className="text-xl sm:text-6xl font-bold text-slate-900">Upto 6</h3>
               <p className="text-lg text-slate-600">Assets under holding</p>
             </div>
 
             {/* Stat 3 */}
             <div className="space-y-2">
-              <h3 className="text-5xl sm:text-7xl font-bold text-slate-900">Only 1 </h3>
+              <h3 className="text-xl sm:text-6xl font-bold text-slate-900">Only 1 </h3>
               <p className="text-lg text-slate-600">Centralized platform</p>
             </div>
           </div>

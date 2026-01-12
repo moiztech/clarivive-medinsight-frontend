@@ -66,7 +66,7 @@ export default function LaboratoryAdvantages({
           {/* Right side */}
           <div className="flex-1">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              {heading} <span className="text-green-600 italic font-serif">{highlightedText}</span> {headingPost}
+              {heading} <span className="text-primary-blue italic font-serif">{highlightedText}</span> {headingPost}
             </h2>
 
             <div className="grid md:grid-cols-2 gap-8 mt-12">
@@ -75,7 +75,7 @@ export default function LaboratoryAdvantages({
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
-                        <advantage.icon className="w-6 h-6 text-green-600" />
+                        <advantage.icon className="w-6 h-6 text-primary-blue" />
                       </div>
                     </div>
 

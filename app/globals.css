@@ -130,6 +130,12 @@
 * {
   scroll-behavior: smooth;
 }
+.modal-overlay {
+  @apply fixed inset-0 bg-black/70 flex items-center justify-center z-50;
+}
+.modal-content {
+  @apply relative outline-none;
+}
 /* AOS-like simple animations */
 .aos {
   opacity: 0;

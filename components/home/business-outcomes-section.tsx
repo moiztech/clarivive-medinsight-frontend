@@ -94,7 +94,7 @@ export default function BusinessOutcomesSection() {
       ],
       ctas: [
         {
-          label: "For organizations",
+          label: "Learn more",
           href: "/for-organizations",
         },
       ],
@@ -111,7 +111,12 @@ export default function BusinessOutcomesSection() {
         "Secure records to support audit and assurance",
         "Delivery aligned with service environments",
       ],
-      ctas: [],
+      ctas: [
+        {
+          label: "Learn more",
+          href: "/for-organizations",
+        },
+      ],
       image: "/home/Image 03.png",
     },
 
@@ -125,7 +130,12 @@ export default function BusinessOutcomesSection() {
         "Blended learning to support flexible teams",
         "Support for internal governance processes",
       ],
-      ctas: [],
+      ctas: [
+        {
+          label: "Learn more",
+          href: "/for-organizations",
+        },
+      ],
       image: "/home/Image 03.png",
     },
 
@@ -138,7 +148,12 @@ export default function BusinessOutcomesSection() {
         "Organizational visibility of training status",
         "Centralized records for compliance support",
       ],
-      ctas: [],
+      ctas: [
+        {
+          label: "Learn more",
+          href: "/for-organizations",
+        },
+      ],
       image: "/home/Image 03.png",
     },
 
@@ -146,7 +161,7 @@ export default function BusinessOutcomesSection() {
       headline: "Independent & Specialist Care Services",
       description: "Tailored training support for independent providers and specialist services operating under their own policies, risk frameworks, and service models.",
       points: ["Bespoke training discussions", "Site-specific delivery where appropriate", "Alignment with local service needs", "Clear professional and governance boundaries"],
-      ctas: [],
+      
       image: "/home/Image 03.png",
     },
   };

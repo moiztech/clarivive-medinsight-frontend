@@ -1,6 +1,10 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog"; // assuming shadcn/ui installed
 import { Play } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 
 export default function HeroSection() {
   return (
@@ -15,13 +19,14 @@ export default function HeroSection() {
                   Your
                   <span className="bg-clip-text mb-0 pb-0 text-transparent overflow-hidden bg-linear-to-r from-blue-600 to-blue-300 font-bold"> trusted partner</span>
                   <br />
-                   for digital healthcare excellence & compliance.
+                  for digital healthcare excellence & compliance.
                 </h1>
 
                 <p className="mt-6 text-lg text-gray-600 leading-relaxed">
                   <span className="text-blue-600 font-semibold">Empowering healthcare professionals </span>
-                  at every stage. Access 
-                  <span className="text-blue-500 font-semibold cursor-pointer hover:underline">&nbsp;  expert-led healthcare training</span> anytime, build practical skills, stay compliant, and manage your learning with ease. Ready to advance your career ? Start learning today.
+                  at every stage. Access
+                  <span className="text-blue-500 font-semibold cursor-pointer hover:underline">&nbsp; expert-led healthcare training</span> anytime, build practical skills, stay
+                  compliant, and manage your learning with ease. Ready to advance your career ? Start learning today.
                 </p>
               </section>
             </div>
@@ -31,12 +36,7 @@ export default function HeroSection() {
               <Button size="xl" className="bg-[#1321F1] hover:bg-[#1321F1]/90 text-secondary-foreground px-10">
                 Get Started
               </Button>
-              <Button variant="ghost" size="xl" className="gap-2">
-                <div className="w-10 h-10 bg-white shadow rounded-full flex items-center justify-center">
-                  <Play className="w-4 h-4 text-[#1321F1] fill-[#1321F1]" />
-                </div>
-                <span className="text-[#1321F1]">Watch Video</span>
-              </Button>
+              <VideoButton />
             </div>
 
             {/* Stats */}
@@ -166,5 +166,41 @@ export default function HeroSection() {
         }
       `}</style> */}
     </section>
+  );
+}
+
+function VideoButton() {
+  const videoId = "JygUacpeBjk";
+  const [open, setOpen] = useState(false);
+  const videoSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0`;
+
+  return (
+    <>
+      <Button variant="ghost" size="xl" className="gap-2" onClick={() => setOpen(true)}>
+        <div className="w-10 h-10 bg-white shadow rounded-full flex items-center justify-center">
+          <Play className="w-4 h-4 text-[#1321F1] fill-[#1321F1]" />
+        </div>
+        <span className="text-[#1321F1]">Watch Video</span>
+      </Button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent  className="max-w-5xl! p-0 bg-black border-none focus:outline-none">
+          <div className="relative pt-[56.25%]">
+            {" "}
+            {/* 16:9 aspect ratio */}
+            <iframe
+              className="absolute inset-0 w-full h-full rounded-xl"
+              src={videoSrc}
+              title="Clarivive MedInsight – Home Page Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+          <DialogClose asChild>
+            <button className="absolute cursor-pointer -top-4 -right-4 bg-white rounded-full p-2 shadow-lg text-black z-50">✕</button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
