@@ -92,17 +92,14 @@ export function FaqSection() {
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden">
               <Image src="/home/doctor-consult.jpg" alt="Doctor and patient" fill className="object-cover" />
             </div>
-            <div className="rounded-2xl inline-block xl:ps-5">
-              {/* <div className="p-4 bg-indigo-600 rounded-full text-white shadow-lg">
+            <div className="bg-emerald-50 rounded-2xl p-8 flex items-center gap-6 border border-emerald-100">
+              <div className="p-4 bg-indigo-600 rounded-full text-white shadow-lg">
                 <Phone className="size-8" />
-              </div> */}
-              <Link href={'/for-organizations'}>
-                <Button variant={"primary"} size={"xl"}>
-                  Learn More..
-                </Button>
-              </Link>
-              {/* <p className="text-slate-500 font-medium">Emergency Call</p>
-                <p className="text-2xl font-bold text-slate-900">+1-868-842-7758</p> */}
+              </div>
+              <div>
+                <p className="text-slate-500 font-medium">Emergency Call</p>
+                <p className="text-2xl font-bold text-slate-900">+44 (07345 052986)</p>
+              </div>
             </div>
           </div>
 
