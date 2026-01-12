@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog"; // 
 import { Play } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 
 export default function HeroSection() {
   return (
