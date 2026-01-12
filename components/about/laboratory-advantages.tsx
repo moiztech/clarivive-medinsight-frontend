@@ -74,7 +74,7 @@ export default function LaboratoryAdvantages({
                 <AnimateOnScroll key={index} delay={100 + index * 250} threshold={0.8}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
+                      <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
                         <advantage.icon className="w-6 h-6 text-primary-blue" />
                       </div>
                     </div>

@@ -42,7 +42,7 @@ const navigationItems: NavItem[] = [
   { label: "ABOUT US", href: "/about-us" },
   { label: "CONTACT US", href: "/contact-us" },
   {
-    label: "FOR ORGANIZATIONS",
+    label: "ORGANIZATIONS",
     href: "/for-organizations",
   },
 ];

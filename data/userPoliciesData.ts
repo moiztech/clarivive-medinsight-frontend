@@ -1,6 +1,6 @@
 // data/policiesData.ts
 export const policiesData = {
-  title: "POLICIES",
+  title: "USER POLICIES",
   company: "Clarivive MedInsight",
   intro:
     "Clarivive MedInsight operates a structured set of policies to support safe, ethical, and effective delivery of health and social care training. These policies describe our internal approach to quality, governance, safety, and professional conduct. They do not replace employer governance, supervision, or professional judgement.",
