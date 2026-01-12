@@ -162,6 +162,12 @@ export default function BusinessOutcomesSection() {
       description: "Tailored training support for independent providers and specialist services operating under their own policies, risk frameworks, and service models.",
       points: ["Bespoke training discussions", "Site-specific delivery where appropriate", "Alignment with local service needs", "Clear professional and governance boundaries"],
       
+      ctas: [
+        {
+          label: "Learn more",
+          href: "/for-organizations",
+        },
+      ],
       image: "/home/Image 03.png",
     },
   };
