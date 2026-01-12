@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { User, Building2, Stethoscope, HeartHandshake, Users, ShieldCheck, ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 export default function BusinessOutcomesSection() {
   const [activeTab, setActiveTab] = useState("compliance");
@@ -79,7 +80,7 @@ export default function BusinessOutcomesSection() {
           href: "/courses/face-to-face",
         },
       ],
-      image: "/home/Image 03.png",
+      image: "/INDIVIDUAL-LARNER-ICON.svg",
     },
 
     employee: {
@@ -161,7 +162,7 @@ export default function BusinessOutcomesSection() {
       headline: "Independent & Specialist Care Services",
       description: "Tailored training support for independent providers and specialist services operating under their own policies, risk frameworks, and service models.",
       points: ["Bespoke training discussions", "Site-specific delivery where appropriate", "Alignment with local service needs", "Clear professional and governance boundaries"],
-      
+
       ctas: [
         {
           label: "Learn more",
@@ -235,17 +236,20 @@ export default function BusinessOutcomesSection() {
                 ))}
               </ul>
               {activeContent.ctas.length > 0 && (
-                <div className="flex flex-wrap gap-4 pt-4">
+                <div className="flex flex-wrap gap-8 pt-4">
                   {activeContent.ctas.map((cta, index) => (
-                    <a
-                      key={index}
-                      href={cta.href}
-                      className="inline-flex items-center px-6 py-3 rounded-full
-                   bg-purple-600 text-white font-semibold
-                   hover:bg-purple-700 transition-all"
-                    >
-                      {cta.label}
-                    </a>
+                    //   <a
+                    //     key={index}
+                    //     href={cta.href}
+                    //     className="inline-flex items-center px-6 py-3 rounded-full
+                    //  bg-purple-600 text-white font-semibold
+                    //  hover:bg-purple-700 transition-all"
+                    //   >
+                    //     {cta.label}
+                    //   </a>
+                    <Link key={index} href={`${cta.href}`} className="text-primary-blue  underline-offset-2 py-2 font-bold text-sm tracking-widest uppercase flex items-center gap-2 group/btn">
+                      {cta.label} <span className="transition-transform group-hover/btn:translate-x-1">+</span>
+                    </Link>
                   ))}
                 </div>
               )}

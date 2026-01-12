@@ -9,7 +9,7 @@
   --foreground: oklch(0.15 0.01 240);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.15 0.01 240);
-  --primary-blue: oklch(45.305% 0.28646 265.668);
+  --primary-blue: oklch(45.305% 0.28646 265.668) ;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0.01 240);
   --primary: oklch(0.25 0.08 230); /* Dark blue */
