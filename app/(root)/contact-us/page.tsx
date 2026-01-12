@@ -98,8 +98,8 @@ export default function ContactPage() {
               {/* Contact Info */}
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-5 h-5 text-cyan-600" />
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-5 h-5 text-primary-blue" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800 mb-1">Visit Our Clinic</h3>
@@ -108,22 +108,22 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-5 h-5 text-cyan-600" />
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-5 h-5 text-primary-blue" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800 mb-1">General Inquiries</h3>
-                    <p className="text-cyan-600 text-sm">info@example.com</p>
+                    <p className="text-primary-blue text-sm">info@example.com</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-5 h-5 text-cyan-600" />
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5 text-primary-blue" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800 mb-1">Appointment Scheduling</h3>
-                    <p className="text-cyan-600 text-sm">(888) 4567890</p>
+                    <p className="text-primary-blue text-sm">(888) 4567890</p>
                   </div>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export default function ContactPage() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-600">Emergency</span>
-                    <span className="font-semibold text-cyan-600">24/7 Hours</span>
+                    <span className="font-semibold text-primary-blue">24/7 Hours</span>
                   </div>
                 </div>
               </div>
@@ -150,16 +150,16 @@ export default function ContactPage() {
               {/* Social Links */}
               <div className="border-t mt-6 pt-6">
                 <div className="flex gap-3">
-                  <button className="w-10 h-10 rounded border border-slate-200 hover:border-cyan-500 hover:text-cyan-600 flex items-center justify-center transition-colors">
+                  <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
                     <Facebook className="w-4 h-4" />
                   </button>
-                  <button className="w-10 h-10 rounded border border-slate-200 hover:border-cyan-500 hover:text-cyan-600 flex items-center justify-center transition-colors">
+                  <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
                     <Twitter className="w-4 h-4" />
                   </button>
-                  <button className="w-10 h-10 rounded border border-slate-200 hover:border-cyan-500 hover:text-cyan-600 flex items-center justify-center transition-colors">
+                  <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
                     <Linkedin className="w-4 h-4" />
                   </button>
-                  <button className="w-10 h-10 rounded border border-slate-200 hover:border-cyan-500 hover:text-cyan-600 flex items-center justify-center transition-colors">
+                  <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
                     <FaWhatsapp className="w-4 h-4" />
                   </button>
                 </div>
@@ -171,7 +171,7 @@ export default function ContactPage() {
           <div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="text-cyan-600 text-sm font-semibold uppercase tracking-wide">Contact Us</span>
+                <span className="text-primary-blue text-sm font-semibold uppercase tracking-wide">Contact Us</span>
                 <h2 className="text-3xl font-normal text-slate-800 mt-2">Book an Appointment</h2>
                 <p className="text-slate-600 mt-2">We're here to help you with your healthcare needs. Whether you have questions, need to schedule an appointment.</p>
               </div>
@@ -245,7 +245,7 @@ export default function ContactPage() {
                   </div>
                 )}
 
-                <Button type="submit" disabled={isSubmitting} className="h-12 px-8 bg-cyan-600 hover:bg-cyan-700 text-white rounded-md">
+                <Button type="submit" disabled={isSubmitting} className="h-12 px-8 bg-primary-blue hover:bg-primary-blue/80 text-white rounded-md">
                   {isSubmitting ? "Booking..." : "Book Appointment"}
                 </Button>
               </form>

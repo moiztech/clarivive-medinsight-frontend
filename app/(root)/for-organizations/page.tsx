@@ -226,7 +226,7 @@ function ContactPage() {
           <div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="text-cyan-600 text-sm font-semibold uppercase tracking-wide">Contact Us</span>
+                <span className="text-primary-blue text-sm font-semibold uppercase tracking-wide">Contact Us</span>
                 <h2 className="text-3xl font-normal text-slate-800 mt-2">Organizational Enquiry</h2>
                 <p className="text-slate-600 mt-2">
                   If you are an organization interested in working with Clarivive MedInsight, please complete the enquiry form below. A member of our team will contact you to
@@ -358,7 +358,7 @@ function ContactPage() {
                 )}
 
                 {/* Submit */}
-                <Button type="submit" disabled={isSubmitting} className="h-12 px-8 bg-cyan-600 hover:bg-cyan-700 text-white">
+                <Button type="submit" disabled={isSubmitting} className="h-12 px-8 bg-primary-blue hover:bg-primary-blue/80 text-white">
                   {isSubmitting ? "Submitting..." : "Submit Enquiry"}
                 </Button>
               </form>

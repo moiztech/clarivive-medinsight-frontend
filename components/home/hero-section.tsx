@@ -59,7 +59,7 @@ export default function HeroSection() {
           <div className="relative">
             {/* Main hero image */}
             <div className="relative z-10">
-              <Image width={100} height={100} preload loading="eager" src="images/Group 32.png" alt="Excited student with coffee and phone" className="w-full h-auto rounded-lg" />
+              <Image width={100} height={100} preload loading="eager" src="/images/Group 32 (1).webp" alt="Excited student with coffee and phone" className="w-full h-auto rounded-lg" />
             </div>
 
             {/* Decorative elements */}
