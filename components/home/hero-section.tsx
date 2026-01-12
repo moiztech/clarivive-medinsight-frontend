@@ -171,7 +171,7 @@ export default function HeroSection() {
 function VideoButton() {
   const videoId = "JygUacpeBjk";
   const [open, setOpen] = useState(false);
-  const videoSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0`;
+  const videoSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&playsinline=1&rel=0`;
 
   return (
     <>
@@ -183,11 +183,12 @@ function VideoButton() {
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent  className="max-w-5xl! p-0 bg-black border-none focus:outline-none">
+        <DialogContent className="max-w-5xl! p-0 bg-black border-none focus:outline-none">
           <div className="relative pt-[56.25%]">
             {" "}
             {/* 16:9 aspect ratio */}
             <iframe
+              key={open ? "open" : "closed"}
               className="absolute inset-0 w-full h-full rounded-xl"
               src={videoSrc}
               title="Clarivive MedInsight – Home Page Video"
