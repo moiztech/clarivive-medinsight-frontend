@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import api from "@/lib/axios";
 import AuthCard from "@/components/auth/AuthCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +9,8 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { useAuthActions } from "@/app/_hooks/useAuthActions";
 import Image from "next/image";
+import { useAuth } from "@/app/_contexts/AuthProvider"; // ✅ use new context
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -20,22 +19,19 @@ export default function LoginPage() {
     password: "",
     remember: false,
   });
-  const { login } = useAuthActions();
+
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await api.post("/learner/login", form);
-      toast.success(res.data.message);
-      login({
-        user: res.data.user,
-        token: res.data.token,
-      });
+      await login(form.email, form.password);
+      toast.success("Login successful");
       router.push("/");
     } catch (error: any) {
-      const message = error?.response?.data?.message || error?.response?.data?.errors?.email?.[0] || "Signup failed";
-
+      const message =
+        error?.response?.data?.message || error?.message || "Login failed";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -46,10 +42,17 @@ export default function LoginPage() {
     <>
       <AuthCard>
         <h1 className="text-3xl font-bold">Welcome back!</h1>
-        <p className="text-muted-foreground mb-8">Enter your credentials to access your account</p>
+        <p className="text-muted-foreground mb-8">
+          Enter your credentials to access your account
+        </p>
 
         <div className="space-y-4">
-          <Input placeholder="Enter your email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          <Input
+            placeholder="Enter your email"
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
 
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
@@ -59,15 +62,31 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <Input placeholder="Enter your password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            <Input
+              placeholder="Enter your password"
+              type="password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
           </div>
 
           <div className="flex items-center gap-2 text-sm">
-            <Checkbox id="remember-me" checked={form.remember} onCheckedChange={(v) => setForm({ ...form, remember: Boolean(v) })} />
+            <Checkbox
+              id="remember-me"
+              checked={form.remember}
+              onCheckedChange={(v) =>
+                setForm({ ...form, remember: Boolean(v) })
+              }
+            />
             <Label htmlFor="remember-me">Remember for 30 days</Label>
           </div>
 
-          <Button className="w-full rounded-xl" variant={"primary"} disabled={loading} onClick={handleSubmit}>
+          <Button
+            className="w-full rounded-xl"
+            variant={"primary"}
+            disabled={loading}
+            onClick={handleSubmit}
+          >
             {loading ? "Logging in..." : "Login"}
           </Button>
 
@@ -79,8 +98,15 @@ export default function LoginPage() {
           </div>
         </div>
       </AuthCard>
+
       <div className="h-screen hidden lg:block lg:w-1/2 overflow-hidden rounded-l-4xl">
-        <Image src={"/images/login.jpeg"} alt="Auth page side image" height={100} width={400} className="w-full! h-full! object-cover object-center" />
+        <Image
+          src={"/images/login.jpeg"}
+          alt="Auth page side image"
+          height={100}
+          width={400}
+          className="w-full! h-full! object-cover object-center"
+        />
       </div>
     </>
   );

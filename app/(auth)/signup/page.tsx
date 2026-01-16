@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import api from "@/lib/axios";
 import AuthCard from "@/components/auth/AuthCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-// import { useRouter } from "next/router";
+import { useAuth } from "@/app/_contexts/AuthProvider"; // ✅
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -20,18 +19,19 @@ export default function SignupPage() {
     password: "",
     terms: false,
   });
+
   const router = useRouter();
+  const { signup } = useAuth();
 
   const handleSubmit = async () => {
     setLoading(true);
-
     try {
-      const res = await api.post("/learner/signup", form);
-      toast.success(res.data.message);
+      await signup(form.name, form.email, form.password);
+      toast.success("User registered successfully");
       router.push("/");
     } catch (error: any) {
-      const message = error?.response?.data?.message || error?.response?.data?.errors?.email?.[0] || "Signup failed";
-
+      const message =
+        error?.response?.data?.message || error?.message || "Signup failed";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -44,14 +44,31 @@ export default function SignupPage() {
         <h1 className="text-3xl font-bold mb-10">Get Started Now</h1>
 
         <div className="space-y-4">
-          <Input placeholder="Enter your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <Input
+            placeholder="Enter your name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
 
-          <Input placeholder="Enter your email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          <Input
+            placeholder="Enter your email"
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
 
-          <Input placeholder="Enter your password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <Input
+            placeholder="Enter your password"
+            type="password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
 
           <div className="flex items-center gap-2 text-sm">
-            <Checkbox checked={form.terms} onCheckedChange={(v) => setForm({ ...form, terms: Boolean(v) })} />
+            <Checkbox
+              checked={form.terms}
+              onCheckedChange={(v) => setForm({ ...form, terms: Boolean(v) })}
+            />
             <span>
               I agree to the{" "}
               <Link href="#" className="underline">
@@ -60,7 +77,12 @@ export default function SignupPage() {
             </span>
           </div>
 
-          <Button variant={"primary"} className="w-full rounded-xl" disabled={loading || !form.terms} onClick={handleSubmit}>
+          <Button
+            variant={"primary"}
+            className="w-full rounded-xl"
+            disabled={loading || !form.terms}
+            onClick={handleSubmit}
+          >
             {loading ? "Signing up..." : "Signup"}
           </Button>
 
@@ -72,8 +94,15 @@ export default function SignupPage() {
           </div>
         </div>
       </AuthCard>
+
       <div className="h-screen hidden lg:block lg:w-1/2 overflow-hidden rounded-l-4xl">
-        <Image src={"/images/signup.jpeg"} alt="Auth page side image" height={100} width={400} className="w-full! h-full! object-cover object-center" />
+        <Image
+          src={"/images/signup.jpeg"}
+          alt="Auth page side image"
+          height={100}
+          width={400}
+          className="w-full! h-full! object-cover object-center"
+        />
       </div>
     </>
   );

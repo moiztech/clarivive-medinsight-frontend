@@ -5,13 +5,15 @@ import { Analytics } from "@vercel/analytics/next";
 import "@/app/globals.css";
 import MainLayout from "@/components/MainLayout";
 import NextTopLoader from "nextjs-toploader";
-import AuthProvider from "../_contexts/AuthProvider";
+import { AuthProvider } from "../_contexts/AuthProvider";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: "Clarivive Medinsight  - Your trusted partner for digital healthcare excellence & compliance",
-  description: "Expand your skills in development, testing, analysis, and designing. Join 50K+ students in our learning platform.",
+  title:
+    "Clarivive Medinsight  - Your trusted partner for digital healthcare excellence & compliance",
+  description:
+    "Expand your skills in development, testing, analysis, and designing. Join 50K+ students in our learning platform.",
   // generator: "v0.app",
   icons: {
     icon: [

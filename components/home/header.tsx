@@ -20,6 +20,7 @@ import {
   ArrowUpIcon,
   ChevronDown,
   Diamond,
+  User,
 } from "lucide-react";
 import {
   NavigationMenu,
@@ -30,8 +31,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import NavOffcanvas from "../nav-offcanvas";
-import { useAuth } from "@/app/_hooks/useAuth";
-import { useAuthActions } from "@/app/_hooks/useAuthActions";
+import { useAuth } from "@/app/_contexts/AuthProvider";
+// import { useAuthActions } from "@/app/_hooks/useAuthActions";
 
 interface NavItem {
   label: string;
@@ -74,7 +75,7 @@ export default function Header() {
     null
   );
   const { user } = useAuth();
-  const { logout } = useAuthActions();
+  const { logout } = useAuth();
 
   return (
     <header className="bg-card border-b sticky top-0 z-50">
@@ -160,19 +161,25 @@ export default function Header() {
                 0
               </span>
             </Button>
+
             {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger className="cursor-pointer">
+                  <User className="w-5 h-5" />
+                </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuItem>
-                    <span className="font-bold">{user?.email}</span> <br />
-                    {user?.name}
+                  <DropdownMenuItem className="cursor-pointer">
+                    <div className="flex items-start flex-col gap-2">
+                      <span className="font-semibold">{user?.name}</span>
+                      <span className="text-xs">{user?.email}</span>
+                    </div>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
+                    className="cursor-pointer"
                     variant="destructive"
-                    onClick={() => logout()}
+                    onClick={async () => await logout()}
                   >
                     Logout
                   </DropdownMenuItem>
