@@ -5,18 +5,18 @@ import AnimateOnScroll from "./ui/animate-on-scroll";
 
 const doctors = [
   {
-    designation: "CEO",
+    designation: "BLS, PEOPLE M&H, PMVA TRAINER",
     name: "M . Ameer Hamza",
     image: "/team/ceo.jpeg",
   },
   {
-    designation: "Trainer 1", 
-    name: "Arsalan Ahmed ",
+    designation: "BLS, MEDICATION ADMINISTRATION TRAINER", 
+    name: "Malik Arsalan Ahmed",
     image: "/team/trainer-1.jpeg",
   },
   {
-    designation: "Trainer 2",
-    name: "Mubashir Iqbal ",
+    designation: "BLS, PEOPLE M&H TRAINER",
+    name: "Mubashir Iqbal",
     image: "/team/trainer-2.jpeg",
   },
 ];
@@ -61,7 +61,7 @@ export function DoctorsSection() {
                   </div>
                 </div>
                 <h3 className="text-2xl self-start font-medium text-slate-900">{doctor.name}</h3>
-                <p className="text-xl self-start font-medium text-primary-blue italic">{doctor.designation}</p>
+                <p className="text-lg self-start font-medium text-primary-blue italic">{doctor.designation}</p>
               </div>
             </AnimateOnScroll>
           ))}

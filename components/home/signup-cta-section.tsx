@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { HelpCircle } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function SignupCTASection() {
-  const [domain, setDomain] = useState("")
-  const [email, setEmail] = useState("")
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
 
   return (
     <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-purple-50 relative overflow-hidden">
@@ -22,62 +22,74 @@ export default function SignupCTASection() {
             <span className="text-blue-600">Sign up in seconds.</span>{" "}
             <span className="text-gray-900">Simplify training forever.</span>
           </h2>
-          <p className="text-xl text-gray-600">Because you deserve a training platform that delivers.</p>
+          <p className="text-xl text-gray-600">
+            Because you deserve a training platform that delivers.
+          </p>
         </div>
 
         {/* Signup Form */}
         <div className="bg-white rounded-3xl border-4 border-blue-600 p-6 md:p-8 lg:p-12 shadow-xl">
-          <div className="flex flex-col lg:flex-row gap-4 items-center">
-            {/* Domain Name Input */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Domain name</label>
-              <div className="flex flex-col md:flex-row items-center gap-2">
-                <div className="relative flex-1">
-                  <Input
-                    type="text"
-                    placeholder="companyname"
-                    value={domain}
-                    onChange={(e) => setDomain(e.target.value)}
-                    className="h-14 px-4 text-lg border-2 border-gray-300 focus:border-blue-600 rounded-lg"
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <HelpCircle className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="bg-gray-100 w-full md:w-auto px-6 h-14 flex items-center rounded-lg border-2 border-gray-300 text-gray-700 font-medium whitespace-nowrap">
-                  .talentlms.com
+          <form method="POST">
+            <div className="flex flex-col lg:flex-row gap-4 items-center">
+              {/* Name Input */}
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Enter your name
+                </label>
+                <div className="flex flex-col md:flex-row items-center gap-2">
+                  <div className="relative flex-1 w-full">
+                    <Input
+                      type="text"
+                      placeholder="First name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="h-14 px-4 text-lg border-2 border-gray-300 focus:border-blue-600 rounded-lg"
+                    />
+                  </div>
+                  <div className="relative flex-1 w-full">
+                    <Input
+                      type="text"
+                      placeholder="Surname"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="h-14 px-4 text-lg border-2 border-gray-300 focus:border-blue-600 rounded-lg"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Email Input */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-14 px-4 text-lg border-2 border-gray-300 focus:border-blue-600 rounded-lg"
-              />
-            </div>
+              {/* Email Input */}
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </label>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-14 px-4 text-lg border-2 border-gray-300 focus:border-blue-600 rounded-lg"
+                />
+              </div>
 
-            {/* Submit Button */}
-            <div className="flex flex-col items-end gap-1">
-              <Button
-                size="lg"
-                className="bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg h-14 px-12 rounded-lg whitespace-nowrap"
-              >
-                Get started
-              </Button>
-              <p className="text-sm text-gray-500 italic">*No credit card required</p>
+              {/* Submit Button */}
+              <div className="flex flex-col items-end gap-1">
+                <Button
+                  size="lg"
+                  variant={"primary"}
+                  className="text-white font-bold text-lg h-14 px-12 rounded-lg whitespace-nowrap"
+                  type="submit"
+                >
+                  Get started
+                </Button>
+                <p className="text-sm text-gray-500 italic">
+                  *No credit card required
+                </p>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </section>
-  )
+  );
 }

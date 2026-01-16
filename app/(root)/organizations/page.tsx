@@ -1,20 +1,58 @@
 "use client";
-import LaboratoryAdvantages, { LaboratoryAdvantagesProps } from "@/components/about/laboratory-advantages";
+import LaboratoryAdvantages, {
+  LaboratoryAdvantagesProps,
+} from "@/components/about/laboratory-advantages";
 import BreadCrumb from "@/components/BreadCrumb";
 import Image from "next/image";
-import { Blend, Check, Pickaxe, RefreshCcw, ScanFace, Star } from "lucide-react";
+import {
+  Blend,
+  Check,
+  Pickaxe,
+  RefreshCcw,
+  ScanFace,
+  Star,
+} from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FaFacebook, FaLinkedin, FaLinkedinIn, FaTwitter, FaWhatsapp } from "react-icons/fa";
-import { Heart, Eye, Brain, Activity, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Syringe, ClipboardList, Stethoscope, Microscope } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  FaFacebook,
+  FaLinkedin,
+  FaLinkedinIn,
+  FaTwitter,
+  FaWhatsapp,
+} from "react-icons/fa";
+import {
+  Heart,
+  Eye,
+  Brain,
+  Activity,
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Syringe,
+  ClipboardList,
+  Stethoscope,
+  Microscope,
+} from "lucide-react";
 import React from "react";
 import OurMission from "@/components/about/our-mission";
 import QualityGovern from "@/components/for-organization/QualityGovern";
 import { OrganizationalPortalAccess } from "@/components/for-organization/OrganizationalPortalAccess";
-import ProcessSection, { ProcessSectionProps } from "@/components/courses/process-section";
+import ProcessSection, {
+  ProcessSectionProps,
+} from "@/components/courses/process-section";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
@@ -34,25 +72,30 @@ function page() {
     heading: "What We ",
     highlightedText: "offer",
     headingPost: "",
+    imageSrc: "/trainer-learing-icon-01.svg",
     advantages: [
       {
         title: "Face-to-face Training",
-        description: "Instructor-Led training delivered at your premises or agreed locations by qualified healthcare professionals.",
+        description:
+          "Instructor-Led training delivered at your premises or agreed locations by qualified healthcare professionals.",
         icon: ScanFace,
       },
       {
         title: "Online & Blended Learning",
-        description: "Flexible at your own pace, online and blended courses accessed through our secure LMS.",
+        description:
+          "Flexible at your own pace, online and blended courses accessed through our secure LMS.",
         icon: Blend,
       },
       {
         title: "Mandatory & Refresher Training",
-        description: "Compliance-focused training developed in line with healthcare standards and regulatory frameworks .",
+        description:
+          "Compliance-focused training developed in line with healthcare standards and regulatory frameworks .",
         icon: RefreshCcw,
       },
       {
         title: "Tailored Training Solutions",
-        description: "Customized programs designed to fit your organization’s size, workforce, and operational needs .",
+        description:
+          "Customized programs designed to fit your organization’s size, workforce, and operational needs .",
         icon: Pickaxe,
       },
     ],
@@ -62,7 +105,8 @@ function page() {
     headingHighlight: "Responsibilities",
     imageSrc:
       "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description: "Training supports learning and awareness and must be applied within the employer’s governance framework. Employers retain responsibility for:",
+    description:
+      "Training supports learning and awareness and must be applied within the employer’s governance framework. Employers retain responsibility for:",
     steps: [
       {
         title: "Staff Supervision & Induction",
@@ -72,12 +116,14 @@ function page() {
       },
       {
         title: "Role-Specific Competency Assessment",
-        description: "Our courses help identify and develop role-based competencies, enabling employers to assess skills effectively and maintain high standards of care.",
+        description:
+          "Our courses help identify and develop role-based competencies, enabling employers to assess skills effectively and maintain high standards of care.",
         number: "",
       },
       {
         title: "Application Within Local Policies & Procedures",
-        description: "Training is designed to align with your organization’s policies, procedures, and risk assessments, supporting smooth integration into daily practice.",
+        description:
+          "Training is designed to align with your organization’s policies, procedures, and risk assessments, supporting smooth integration into daily practice.",
         number: "",
       },
       {
@@ -92,10 +138,10 @@ function page() {
     <div className="min-h-screen bg-white">
       <BreadCrumb
         paths={[
-          { label: "For Organizations", href: "/for-organizations" },
+          { label: "Organizations", href: "/organizations" },
           // { label: "Online Courses", href: "/courses/online" },
         ]}
-        title="For Organizations"
+        title="Organizations"
       />
       {/* <AboutHero /> */}
       <OurMission
@@ -157,7 +203,8 @@ function ContactPage() {
       // Mock response aligned with enquiry context
       const mockResponse = {
         success: true,
-        enquiryId: "ENQ-" + Math.random().toString(36).slice(2, 10).toUpperCase(),
+        enquiryId:
+          "ENQ-" + Math.random().toString(36).slice(2, 10).toUpperCase(),
         message: "Your enquiry has been successfully submitted.",
       };
 
@@ -207,18 +254,31 @@ function ContactPage() {
           {/* Left Sidebar - Emergency Info */}
           <div>
             <div className="p-8 lg:border-r lg:border-slate-200 lg:sticky lg:top-16">
-              <h2 className="text-3xl font-normal text-slate-800 mb-4">Working With Clarivive MedInsight</h2>
-              <p className="text-slate-600 mb-4">We aim to build professional, transparent working relationships with organizations by providing:</p>
+              <h2 className="text-3xl font-normal text-slate-800 mb-4">
+                Working With Clarivive MedInsight
+              </h2>
+              <p className="text-slate-600 mb-4">
+                We aim to build professional, transparent working relationships
+                with organizations by providing:
+              </p>
 
               {/* Contact Info */}
               <div className="space-y-1 mb-3 ps-3">
                 <div>• Consistent and standardized training delivery</div>
-                <div>• Secure record keeping supporting audit and internal review</div>
-                <div>• Clear professional boundaries and governance responsibilities</div>
+                <div>
+                  • Secure record keeping supporting audit and internal review
+                </div>
+                <div>
+                  • Clear professional boundaries and governance
+                  responsibilities
+                </div>
               </div>
 
               {/* Opening Hours */}
-              <p className="text-slate-600 mb-6">Organizational portal access is subject to acceptance of Clarivive MedInsight’s Organizational Portal Terms of Use.</p>
+              <p className="text-slate-600 mb-6">
+                Organizational portal access is subject to acceptance of
+                Clarivive MedInsight’s Organizational Portal Terms of Use.
+              </p>
             </div>
           </div>
 
@@ -226,11 +286,17 @@ function ContactPage() {
           <div>
             <div className="p-8">
               <div className="mb-6">
-                <span className="text-primary-blue text-sm font-semibold uppercase tracking-wide">Contact Us</span>
-                <h2 className="text-3xl font-normal text-slate-800 mt-2">Organizational Enquiry</h2>
+                <span className="text-primary-blue text-sm font-semibold uppercase tracking-wide">
+                  Contact Us
+                </span>
+                <h2 className="text-3xl font-normal text-slate-800 mt-2">
+                  Organizational Enquiry
+                </h2>
                 <p className="text-slate-600 mt-2">
-                  If you are an organization interested in working with Clarivive MedInsight, please complete the enquiry form below. A member of our team will contact you to
-                  discuss your training requirements.
+                  If you are an organization interested in working with
+                  Clarivive MedInsight, please complete the enquiry form below.
+                  A member of our team will contact you to discuss your training
+                  requirements.
                 </p>
               </div>
 
@@ -240,7 +306,9 @@ function ContactPage() {
                   <Input
                     placeholder="Organization Name"
                     value={formData.organizationName}
-                    onChange={(e) => handleInputChange("organizationName", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("organizationName", e.target.value)
+                    }
                     required
                     className="h-12"
                   />
@@ -248,15 +316,27 @@ function ContactPage() {
 
                 {/* Type of Organization */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium">Type of Organization</Label>
+                  <Label className="text-sm font-medium">
+                    Type of Organization
+                  </Label>
 
                   <div className="grid md:grid-cols-2 gap-3">
-                    {["Care Home", "Domiciliary Care Agency", "Supported Living", "Healthcare Provider", "Other"].map((type) => (
+                    {[
+                      "Care Home",
+                      "Domiciliary Care Agency",
+                      "Supported Living",
+                      "Healthcare Provider",
+                      "Other",
+                    ].map((type) => (
                       <div key={type} className="flex items-center gap-2">
                         <Checkbox
                           checked={formData.organizationTypes?.includes(type)}
                           onCheckedChange={(checked) => {
-                            const updated = checked ? [...(formData.organizationTypes || []), type] : formData.organizationTypes.filter((t) => t !== type);
+                            const updated = checked
+                              ? [...(formData.organizationTypes || []), type]
+                              : formData.organizationTypes.filter(
+                                  (t) => t !== type
+                                );
 
                             handleInputChange("organizationTypes", updated);
                           }}
@@ -270,7 +350,12 @@ function ContactPage() {
                     <Input
                       placeholder="Please specify"
                       value={formData.otherOrganizationType}
-                      onChange={(e) => handleInputChange("otherOrganizationType", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "otherOrganizationType",
+                          e.target.value
+                        )
+                      }
                       className="h-11 mt-2"
                     />
                   )}
@@ -278,20 +363,56 @@ function ContactPage() {
 
                 {/* Contact Details */}
                 <div className="grid md:grid-cols-2 gap-4">
-                  <Input placeholder="Contact Name" value={formData.contactName} onChange={(e) => handleInputChange("contactName", e.target.value)} required className="h-12" />
+                  <Input
+                    placeholder="Contact Name"
+                    value={formData.contactName}
+                    onChange={(e) =>
+                      handleInputChange("contactName", e.target.value)
+                    }
+                    required
+                    className="h-12"
+                  />
 
-                  <Input placeholder="Job Title / Role" value={formData.jobTitle} onChange={(e) => handleInputChange("jobTitle", e.target.value)} required className="h-12" />
+                  <Input
+                    placeholder="Job Title / Role"
+                    value={formData.jobTitle}
+                    onChange={(e) =>
+                      handleInputChange("jobTitle", e.target.value)
+                    }
+                    required
+                    className="h-12"
+                  />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                  <Input type="email" placeholder="Email Address" value={formData.email} onChange={(e) => handleInputChange("email", e.target.value)} required className="h-12" />
+                  <Input
+                    type="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    required
+                    className="h-12"
+                  />
 
-                  <Input type="tel" placeholder="Contact Number" value={formData.phone} onChange={(e) => handleInputChange("phone", e.target.value)} required className="h-12" />
+                  <Input
+                    type="tel"
+                    placeholder="Contact Number"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    required
+                    className="h-12"
+                  />
                 </div>
 
                 {/* Staff Count */}
                 <div>
-                  <Select value={formData.staffCount} onValueChange={(value) => handleInputChange("staffCount", value)} required>
+                  <Select
+                    value={formData.staffCount}
+                    onValueChange={(value) =>
+                      handleInputChange("staffCount", value)
+                    }
+                    required
+                  >
                     <SelectTrigger className="h-12 w-full">
                       <SelectValue placeholder="Approximate Number of Staff Requiring Training" />
                     </SelectTrigger>
@@ -307,15 +428,27 @@ function ContactPage() {
 
                 {/* Training Requirements */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium">Training Requirements</Label>
+                  <Label className="text-sm font-medium">
+                    Training Requirements
+                  </Label>
 
                   <div className="grid md:grid-cols-2 gap-3">
-                    {["Mandatory Training / Refreshers", "Face-to-Face Training", "Online / Blended Learning", "Bespoke Training", "Unsure – would like guidance"].map((req) => (
+                    {[
+                      "Mandatory Training / Refreshers",
+                      "Face-to-Face Training",
+                      "Online / Blended Learning",
+                      "Bespoke Training",
+                      "Unsure – would like guidance",
+                    ].map((req) => (
                       <div key={req} className="flex items-center gap-2">
                         <Checkbox
                           checked={formData.trainingRequirements?.includes(req)}
                           onCheckedChange={(checked) => {
-                            const updated = checked ? [...(formData.trainingRequirements || []), req] : formData.trainingRequirements.filter((r) => r !== req);
+                            const updated = checked
+                              ? [...(formData.trainingRequirements || []), req]
+                              : formData.trainingRequirements.filter(
+                                  (r) => r !== req
+                                );
 
                             handleInputChange("trainingRequirements", updated);
                           }}
@@ -331,7 +464,9 @@ function ContactPage() {
                   <Textarea
                     placeholder="Message / Enquiry Details"
                     value={formData.message}
-                    onChange={(e) => handleInputChange("message", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("message", e.target.value)
+                    }
                     rows={5}
                     className="resize-none"
                   />
@@ -339,10 +474,17 @@ function ContactPage() {
 
                 {/* Consent */}
                 <div className="flex items-start gap-3">
-                  <Checkbox checked={formData.consent} onCheckedChange={(checked) => handleInputChange("consent", checked)} required />
+                  <Checkbox
+                    checked={formData.consent}
+                    onCheckedChange={(checked) =>
+                      handleInputChange("consent", checked)
+                    }
+                    required
+                  />
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    I consent to Clarivive MedInsight contacting me regarding this enquiry. I understand my information will be used only for this purpose and in line with the
-                    Privacy Notice.
+                    I consent to Clarivive MedInsight contacting me regarding
+                    this enquiry. I understand my information will be used only
+                    for this purpose and in line with the Privacy Notice.
                   </p>
                 </div>
 
@@ -350,7 +492,9 @@ function ContactPage() {
                 {submitStatus.type && (
                   <div
                     className={`p-4 rounded-lg ${
-                      submitStatus.type === "success" ? "bg-green-50 text-green-800 border border-green-200" : "bg-red-50 text-red-800 border border-red-200"
+                      submitStatus.type === "success"
+                        ? "bg-green-50 text-green-800 border border-green-200"
+                        : "bg-red-50 text-red-800 border border-red-200"
                     }`}
                   >
                     {submitStatus.message}
@@ -358,7 +502,11 @@ function ContactPage() {
                 )}
 
                 {/* Submit */}
-                <Button type="submit" disabled={isSubmitting} className="h-12 px-8 bg-primary-blue hover:bg-primary-blue/80 text-white">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="h-12 px-8 bg-primary-blue hover:bg-primary-blue/80 text-white"
+                >
                   {isSubmitting ? "Submitting..." : "Submit Enquiry"}
                 </Button>
               </form>

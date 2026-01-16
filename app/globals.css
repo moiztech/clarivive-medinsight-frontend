@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: "edwardian_script_itcregular";
+  src: url("/fonts/edwardianscriptitc.woff2") format("woff2"),
+    url("/fonts/edwardianscriptitc.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -9,7 +17,7 @@
   --foreground: oklch(0.15 0.01 240);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.15 0.01 240);
-  --primary-blue: oklch(45.305% 0.28646 265.668) ;
+  --primary-blue: oklch(45.305% 0.28646 265.668);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0.01 240);
   --primary: oklch(0.25 0.08 230); /* Dark blue */
@@ -142,7 +150,7 @@
   transform: translateY(24px);
   transition-property: opacity, transform;
   transition-duration: 700ms;
-  transition-timing-function: cubic-bezier(.2,.8,.2,1);
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: opacity, transform;
 }
 .aos-in {
@@ -150,12 +158,20 @@
   transform: translateY(0);
 }
 
-.aos.fade-left { transform: translateX(-20px); }
-.aos.fade-right { transform: translateX(20px); }
-.aos.fade-up { transform: translateY(24px); }
+.aos.fade-left {
+  transform: translateX(-20px);
+}
+.aos.fade-right {
+  transform: translateX(20px);
+}
+.aos.fade-up {
+  transform: translateY(24px);
+}
 .aos-in.fade-left,
 .aos-in.fade-right,
-.aos-in.fade-up { transform: translateX(0) translateY(0); }
+.aos-in.fade-up {
+  transform: translateX(0) translateY(0);
+}
 
 /* .card-with-cut {
   position: relative;

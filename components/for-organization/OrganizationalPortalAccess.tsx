@@ -14,15 +14,20 @@ export function OrganizationalPortalAccess() {
         <div className="flex flex-col lg:flex-row items-center gap-16">
           <div className="w-full lg:w-1/2 space-y-8">
             <div className="space-y-4">
-              <span className="inline-block px-4 py-1.5 bg-blue-400/20 text-blue-400 text-sm font-normal rounded-md tracking-wide uppercase">Organizational Portal Access
-</span>
+              <span className="inline-block px-4 py-1.5 bg-blue-400/20 text-blue-400 text-sm font-normal rounded-md tracking-wide uppercase">
+                Organizational Portal Access
+              </span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium text-medical-navy leading-[1.1]">
-                Organizational Portal <span className="text-blue-400 font-serif">Access</span>
+                Organizational Portal{" "}
+                <span className="text-blue-400 font-serif">Access</span>
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                Where applicable, organizations may be provided with access to a secure organizational portal that reflects their organization’s identity and provides controlled
-                access to training records. <br />
-                The organizational portal allows authorized organization administrators to:
+                Where applicable, organizations may be provided with access to a
+                secure organizational portal that reflects their organization’s
+                identity and provides controlled access to training records.{" "}
+                <br />
+                The organizational portal allows authorized organization
+                administrators to:
               </p>
             </div>
 
@@ -32,20 +37,26 @@ export function OrganizationalPortalAccess() {
                   <div className="shrink-0 w-6 h-6 rounded-full bg-blue-400/10 flex items-center justify-center transition-colors group-hover:bg-blue-400">
                     <Check className="w-3.5 h-3.5 text-blue-400 transition-colors group-hover:text-white" />
                   </div>
-                  <span className="text-medical-navy font-medium text-base">{service}</span>
+                  <span className="text-medical-navy font-medium text-base">
+                    {service}
+                  </span>
                 </li>
               ))}
             </ul>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-              Portal access provides read-only oversight of training activity delivered by Clarivive MedInsight. Organization administrators cannot edit training content,
-              assessments, or certification outcomes. <br />
-              All training delivery, assessment, certification, and data governance remain managed under Clarivive MedInsight’s systems and policies.
+              Portal access provides read-only oversight of training activity
+              delivered by Clarivive MedInsight. Organization administrators
+              cannot edit training content, assessments, or certification
+              outcomes. <br />
+              All training delivery, assessment, certification, and data
+              governance remain managed under Clarivive MedInsight’s systems and
+              policies.
             </p>
           </div>
           <div className="w-full lg:w-1/2 relative">
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1000&auto=format&fit=crop"
+                src="/ORGANIZATIONAL-PORATL ACESS-IMG.png"
                 alt="Healthcare professional with patient"
                 width={800}
                 height={900}
