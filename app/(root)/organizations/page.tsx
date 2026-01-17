@@ -142,6 +142,7 @@ function page() {
           // { label: "Online Courses", href: "/courses/online" },
         ]}
         title="Organizations"
+        coverImg="/images/ORGANIZATION-BANNER-IMG.webp"
       />
       {/* <AboutHero /> */}
       <OurMission
@@ -335,7 +336,7 @@ function ContactPage() {
                             const updated = checked
                               ? [...(formData.organizationTypes || []), type]
                               : formData.organizationTypes.filter(
-                                  (t) => t !== type
+                                  (t) => t !== type,
                                 );
 
                             handleInputChange("organizationTypes", updated);
@@ -353,7 +354,7 @@ function ContactPage() {
                       onChange={(e) =>
                         handleInputChange(
                           "otherOrganizationType",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       className="h-11 mt-2"
@@ -447,7 +448,7 @@ function ContactPage() {
                             const updated = checked
                               ? [...(formData.trainingRequirements || []), req]
                               : formData.trainingRequirements.filter(
-                                  (r) => r !== req
+                                  (r) => r !== req,
                                 );
 
                             handleInputChange("trainingRequirements", updated);

@@ -68,7 +68,7 @@ export default function LaboratoryAdvantages({
               {badgeText}
             </span>
 
-            <div className="relative w-80 h-80 text-center mx-auto">
+            <div className="relative w-105 h-105 text-center mx-auto">
               <Image
                 src={imageSrc}
                 alt={imageAlt}

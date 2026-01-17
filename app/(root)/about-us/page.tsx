@@ -12,7 +12,11 @@ import React from "react";
 function page() {
   return (
     <div className="min-h-screen bg-white">
-      <BreadCrumb paths={[{ label: "About Us", href: "/about-us" }]} title="About Us" />
+      <BreadCrumb
+        paths={[{ label: "About Us", href: "/about-us" }]}
+        title="About Us"
+        coverImg="/images/ABOUT-US-IMG-webp.webp"
+      />
       <CommunitySection />
       <OurMissionSection />
       {/* <OurMission/> */}
@@ -21,14 +25,23 @@ function page() {
       <WhoWeAreSection />
       <ExperienceCredibilitySection />
       <div className="mx-auto max-w-7xl px-8 pb-24">
-        <Image src={"/images/about-us-group.jpeg"} alt="our group" width={600} height={200} className="w-full! h-150! rounded-2xl object-cover" />
+        <Image
+          src={"/images/about-us-group.jpeg"}
+          alt="our group"
+          width={600}
+          height={200}
+          className="w-full! h-150! rounded-2xl object-cover"
+        />
       </div>
       <section className="pb-24">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="font-bold text-4xl mb-5">Empowering Safe Practice Through Clarity</h2>
+          <h2 className="font-bold text-4xl mb-5">
+            Empowering Safe Practice Through Clarity
+          </h2>
           <p className="mt-2 text-lg max-w-2/3 mx-auto">
-            Effective training does not end at course completion. We support learners with clear guidance and structured learning that reinforces safe, professional practice over
-            time.
+            Effective training does not end at course completion. We support
+            learners with clear guidance and structured learning that reinforces
+            safe, professional practice over time.
           </p>
         </div>
       </section>

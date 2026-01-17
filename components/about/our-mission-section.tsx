@@ -1,7 +1,7 @@
-import { Great_Vibes } from "next/font/google";
-const _greatVibes = Great_Vibes({
+import { Orbitron } from "next/font/google";
+const _orbitron = Orbitron({
   subsets: ["latin"],
-  weight: "400",
+  weight: "500",
   preload: true,
 });
 export default function OurMissionSection() {
@@ -26,32 +26,41 @@ export default function OurMissionSection() {
           </div>
 
           {/* Right Stats */}
-          <div className="space-y-6">
+          <div className="flex flex-col  gap-6">
             {/* Stat 1 */}
-            <div className="space-y-1">
+            <div className="space-y-1 mx-auto lg:ml-65">
               <div className="inline-block bg-primary-blue text-white py-7 px-12 rounded-[50px]">
-                <h3 className="text-lg sm:text-2xl uppercase font-regular">
-                  More than <span className="text-4xl">75</span>
+                <h3 className="text-lg sm:text-xl uppercase font-regular">
+                  More than{" "}
+                  <span className={_orbitron.className + " text-4xl ps-1"}>
+                    75
+                  </span>
                 </h3>
                 <p className="text-sm font-light">e learning trainings</p>
               </div>
             </div>
 
             {/* Stat 2 */}
-            <div className="space-y-1">
+            <div className="space-y-1 mx-auto lg:ml-33">
               <div className="inline-block bg-primary-blue text-white py-7 px-12 rounded-[50px]">
-                <h3 className="text-lg sm:text-2xl uppercase font-regular">
-                  Upto <span className="text-4xl">6</span>
+                <h3 className="text-lg sm:text-xl uppercase font-regular">
+                  Upto{" "}
+                  <span className={_orbitron.className + " text-4xl ps-1"}>
+                    6
+                  </span>
                 </h3>
                 <p className="text-sm font-light">Assets under holding</p>
               </div>
             </div>
 
             {/* Stat 3 */}
-            <div className="space-y-1">
+            <div className="space-y-1 mx-auto lg:ml-7">
               <div className="inline-block bg-primary-blue text-white py-7 px-12 rounded-[50px]">
-                <h3 className="text-lg sm:text-2xl uppercase font-regular">
-                  Only <span className="text-4xl">1</span>
+                <h3 className="text-lg sm:text-xl uppercase font-regular">
+                  Only{" "}
+                  <span className={_orbitron.className + " text-4xl ps-1"}>
+                    1
+                  </span>
                 </h3>
                 <p className="text-sm font-light">Centralized platform</p>
               </div>

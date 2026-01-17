@@ -4,31 +4,29 @@ import AnimateOnScroll from "../ui/animate-on-scroll";
 export default function HowItWorks() {
   const steps = [
     {
-      title: "Facility",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      image:
-        "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+      title: "Organization Enrolment",
+      description:
+        "Register your organization and choose required healthcare training",
+      image: "about-us/org-enrolment.jpeg",
       rotate: "-rotate-3",
     },
     {
-      title: "E-Learning",
-      description: "Nulla ante eros, venenatis vel malesuada sit amet luctus.",
-      image:
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
+      title: "Digital Learning Access",
+      description: "Access flexible, expert-led healthcare courses online",
+      image: "about-us/digital-learning.jpeg",
       rotate: "rotate-2",
     },
     {
-      title: "Kid's Courses",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      image:
-        "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80",
+      title: "Practice-Based Learning",
+      description: "Apply training safely within real care environments",
+      image: "about-us/practice-based.jpeg",
       rotate: "-rotate-2",
     },
     {
-      title: "Best Students",
-      description: "Nulla ante eros, venenatis vel malesuada sit amet luctus.",
-      image:
-        "https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80",
+      title: "Competency & Compliance",
+      description:
+        "Track progress, competence, and regulatory training records",
+      image: "about-us/competency.jpeg",
       rotate: "rotate-3",
     },
   ];
@@ -57,9 +55,9 @@ export default function HowItWorks() {
             How It Works?
           </h2>
           <p className="text-gray-600 mt-4 max-w-3xl mx-auto">
-            Proin ac lobortis arcu, a vestibulum augue. Vivamus ipsum neque,
-            facilisis vel mollis vitae, mollis nec ante. Quisque aliquam dictum
-            condim.
+            Our platform is designed to support healthcare professionals in
+            meeting regulatory requirements and maintaining competence through
+            structured, evidence-based training.
           </p>
         </div>
 

@@ -6,11 +6,11 @@ import AnimateOnScroll from "./ui/animate-on-scroll";
 const doctors = [
   {
     designation: "BLS, PEOPLE M&H, PMVA TRAINER",
-    name: "M . Ameer Hamza",
+    name: "Muhammad Ameer Hamza",
     image: "/team/ceo.jpeg",
   },
   {
-    designation: "BLS, MEDICATION ADMINISTRATION TRAINER", 
+    designation: "BLS, MEDICATION ADMINISTRATION TRAINER",
     name: "Malik Arsalan Ahmed",
     image: "/team/trainer-1.jpeg",
   },
@@ -33,16 +33,27 @@ export function DoctorsSection() {
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
             Meet the Experienced Practitioners Behind Our
             <br />
-            <span className="italic font-serif text-indigo-500">Training Courses</span>
+            <span className="italic font-serif text-indigo-500">
+              Training Courses
+            </span>
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {doctors.map((doctor, index) => (
-            <AnimateOnScroll threshold={0.45} delay={100 + index * 150} key={doctor.name}>
+            <AnimateOnScroll
+              threshold={0.45}
+              delay={100 + index * 150}
+              key={doctor.name}
+            >
               <div className="group flex flex-col items-center">
                 <div className="relative w-full aspect-[1/1] cursor-pointer group rounded-3xl overflow-hidden mb-5">
-                  <Image src={doctor.image || "/placeholder.svg"} alt={doctor.name} fill className="object-cover object-top transition-transform duration-500 group-hover:scale-108" />
+                  <Image
+                    src={doctor.image || "/placeholder.svg"}
+                    alt={doctor.name}
+                    fill
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-108"
+                  />
                   <div className="absolute -bottom-5 right-3 bg-slate-50 rounded-t-full p-2">
                     <button className="p-2 mb-3 bg-slate-950 cursor-pointer text-white rounded-full group-hover:bg-indigo-600 hover:bg-indigo-600 transition-colors shadow-lg">
                       <Share2 className="size-4" />
@@ -60,8 +71,12 @@ export function DoctorsSection() {
                     </button>
                   </div>
                 </div>
-                <h3 className="text-2xl self-start font-medium text-slate-900">{doctor.name}</h3>
-                <p className="text-lg self-start font-medium text-primary-blue italic">{doctor.designation}</p>
+                <h3 className="text-2xl self-start font-medium text-slate-900">
+                  {doctor.name}
+                </h3>
+                <p className="text-lg self-start font-medium text-primary-blue italic">
+                  {doctor.designation}
+                </p>
               </div>
             </AnimateOnScroll>
           ))}

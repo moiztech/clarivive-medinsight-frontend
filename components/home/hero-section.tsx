@@ -16,23 +16,35 @@ export default function HeroSection() {
               <section className="max-w-3xl mx-auto px-1">
                 <h1 className="text-4xl sm:text-5xl font-semibold leading-tight text-gray-900">
                   Your
-                  <span className="bg-clip-text mb-0 pb-0 text-transparent overflow-hidden bg-linear-to-r from-blue-600 to-blue-300 font-bold"> trusted partner</span>
+                  <span className="bg-clip-text mb-0 pb-0 text-transparent overflow-hidden bg-linear-to-r from-blue-600 to-blue-300 font-bold">
+                    {" "}
+                    trusted partner
+                  </span>
                   <br />
                   for digital healthcare excellence & compliance.
                 </h1>
 
                 <p className="mt-6 text-lg text-gray-600 leading-relaxed">
-                  <span className="text-blue-600 font-semibold">Empowering healthcare professionals </span>
+                  <span className="text-blue-600 font-semibold">
+                    Empowering healthcare professionals{" "}
+                  </span>
                   at every stage. Access
-                  <span className="text-blue-500 font-semibold cursor-pointer hover:underline">&nbsp; expert-led healthcare training</span> anytime, build practical skills, stay
-                  compliant, and manage your learning with ease. Ready to advance your career ? Start learning today.
+                  <span className="text-blue-500 font-semibold cursor-pointer hover:underline">
+                    &nbsp; expert-led healthcare training
+                  </span>{" "}
+                  anytime, build practical skills, stay compliant, and manage
+                  your learning with ease. Ready to advance your career ? Start
+                  learning today.
                 </p>
               </section>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-2">
-              <Button size="xl" className="bg-[#1321F1] hover:bg-[#1321F1]/90 text-secondary-foreground px-10">
+              <Button
+                size="xl"
+                className="bg-[#1321F1] hover:bg-[#1321F1]/90 text-secondary-foreground px-10"
+              >
                 Get Started
               </Button>
               <VideoButton />
@@ -59,7 +71,15 @@ export default function HeroSection() {
           <div className="relative">
             {/* Main hero image */}
             <div className="relative z-10">
-              <Image width={100} height={100} preload loading="eager" src="/images/Group 32 (1).webp" alt="Excited student with coffee and phone" className="w-full h-auto rounded-lg" />
+              <Image
+                width={100}
+                height={100}
+                preload
+                loading="eager"
+                src="/home/Group-32-(2).webp"
+                alt="Excited student with coffee and phone"
+                className="w-full h-auto rounded-lg"
+              />
             </div>
 
             {/* Decorative elements */}
@@ -105,7 +125,10 @@ export default function HeroSection() {
             </div> */}
 
             {/* Progress indicator */}
-            <div className="absolute bottom-1/4 left-1/4 bg-card shadow-lg rounded-lg p-3 animate-float" style={{ animationDelay: "1s" }}>
+            <div
+              className="absolute bottom-1/4 left-1/4 bg-card shadow-lg rounded-lg p-3 animate-float"
+              style={{ animationDelay: "1s" }}
+            >
               <div className="flex gap-2 items-center mb-2">
                 <div className="w-8 h-1 bg-accent rounded-full"></div>
                 <div className="w-8 h-1 bg-secondary rounded-full"></div>
@@ -146,7 +169,12 @@ export default function HeroSection() {
           </div>
         </div>
         <div className="absolute end-0 pointer-events-none start-0 bottom-0 xl:-bottom-1/3">
-          <img loading="eager" src="images/Vector 1.png" alt="Wave Pattern" className="w-full h-auto" />
+          <img
+            loading="eager"
+            src="images/Vector 1.png"
+            alt="Wave Pattern"
+            className="w-full h-auto"
+          />
         </div>
       </div>
 
@@ -175,7 +203,12 @@ function VideoButton() {
 
   return (
     <>
-      <Button variant="ghost" size="xl" className="gap-2" onClick={() => setOpen(true)}>
+      <Button
+        variant="ghost"
+        size="xl"
+        className="gap-2"
+        onClick={() => setOpen(true)}
+      >
         <div className="w-10 h-10 bg-white shadow rounded-full flex items-center justify-center">
           <Play className="w-4 h-4 text-[#1321F1] fill-[#1321F1]" />
         </div>
@@ -194,11 +227,13 @@ function VideoButton() {
               title="Clarivive MedInsight – Home Page Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              referrerPolicy="strict-origin-when-cross-origin" 
+              referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>
           <DialogClose asChild>
-            <button className="absolute cursor-pointer -top-4 -right-4 bg-white rounded-full p-2 shadow-lg text-black z-50">✕</button>
+            <button className="absolute cursor-pointer -top-4 -right-4 bg-white rounded-full p-2 shadow-lg text-black z-50">
+              ✕
+            </button>
           </DialogClose>
         </DialogContent>
       </Dialog>
