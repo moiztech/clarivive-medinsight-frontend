@@ -1,11 +1,24 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import AboutHero, { CoursesHeroProps } from "@/components/courses/courses-hero";
-import ProcessSection, { ProcessSectionProps, ProcessStep } from "@/components/courses/process-section";
+import ProcessSection, {
+  ProcessSectionProps,
+  ProcessStep,
+} from "@/components/courses/process-section";
 import ServicesGrid from "@/components/courses/services-grid";
 import { FaqSection } from "@/components/faq-section";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import { StatsBar } from "@/components/stats-bar";
-import { Heart, Eye, Brain, Activity, Syringe, ClipboardList, Stethoscope, Microscope, BookOpen } from "lucide-react";
+import {
+  Heart,
+  Eye,
+  Brain,
+  Activity,
+  Syringe,
+  ClipboardList,
+  Stethoscope,
+  Microscope,
+  BookOpen,
+} from "lucide-react";
 import React from "react";
 
 function page() {
@@ -106,8 +119,10 @@ function page() {
   const processSectionContent: ProcessSectionProps = {
     headingMain: "How Our ",
     headingHighlight: "Training Platform",
-    description: "Access compliant health and social care training through a clear, structured process. Follow the steps below to enrol, learn, and record your training securely.",
-    imageSrc:"https://images.unsplash.com/photo-1673865641073-4479f93a7776?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    description:
+      "Access compliant health and social care training through a clear, structured process. Follow the steps below to enrol, learn, and record your training securely.",
+    imageSrc:
+      "https://images.unsplash.com/photo-1673865641073-4479f93a7776?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     steps: [
       {
         number: "1",
@@ -132,14 +147,15 @@ function page() {
   return (
     <div className="min-h-screen bg-white">
       <BreadCrumb
-        paths={[
-          { label: "Courses", href: "/courses" },
-          { label: "Online Courses", href: "/courses/online" },
-        ]}
+        paths={[{ label: "Online Courses", href: "/courses/online" }]}
         title="Online Courses"
       />
       <AboutHero {...courseHeroContent} />
-      <ServicesGrid cardLinkPrefix="course" title="our courses" services={services} />
+      <ServicesGrid
+        cardLinkPrefix="course/online"
+        title="our courses"
+        services={services}
+      />
       <StatsBar />
       <ProcessSection {...processSectionContent} />
       <FaqSection />
