@@ -11,23 +11,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   ArrowLeftFromLine,
-  BarChart3,
-  Book,
-  Building2,
-  Calendar,
   BriefcaseIcon as CertificateIcon,
   ChevronRight,
-  Clipboard,
-  DollarSign,
   Home,
   LogOut,
   type LucideIcon,
   Menu,
-  MessageSquare,
   Settings,
   User,
-  Users,
-  Users2,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -45,10 +36,6 @@ const navItems: NavItem[] = [
       {
         label: "LMS",
         href: "/lms",
-      },
-      {
-        label: "Employee",
-        href: "/employee",
       },
     ],
   },
