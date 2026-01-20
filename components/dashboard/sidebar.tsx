@@ -31,30 +31,42 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-
-interface NavItem {
-  icon: LucideIcon;
-  label: string;
-  href?: string;
-}
+import SidebarGroup, { NavItem } from "./sidebar-group";
 
 const navItems: NavItem[] = [
-  { icon: Home, label: "Dashboard" },
-  { icon: Building2, label: "School" },
-  { icon: Users, label: "Student" },
-  { icon: Users2, label: "Teacher" },
-  { icon: Users2, label: "Parent" },
-  { icon: Book, label: "LMS" },
-  { icon: Users, label: "Students" },
-  { icon: Users2, label: "Teachers" },
-  { icon: MessageSquare, label: "Announcements" },
-  { icon: Users, label: "Guardian" },
-  { icon: Clipboard, label: "Classes" },
-  { icon: BarChart3, label: "Examinations" },
-  { icon: DollarSign, label: "Fees Collection" },
-  { icon: Calendar, label: "Attendance" },
-  { icon: Calendar, label: "Leaves" },
-  { icon: CertificateIcon, label: "Certificate" },
+  {
+    icon: Home,
+    label: "Dashboard",
+    children: [
+      {
+        label: "Company",
+        href: "/company",
+      },
+      {
+        label: "LMS",
+        href: "/lms",
+      },
+      {
+        label: "Employee",
+        href: "/employee",
+      },
+    ],
+  },
+  // { icon: Building2, label: "School" },
+  // { icon: Users, label: "Student" },
+  // { icon: Users2, label: "Teacher" },
+  // { icon: Users2, label: "Parent" },
+  // { icon: Book, label: "LMS" },
+  // { icon: Users, label: "Students" },
+  // { icon: Users2, label: "Teachers" },
+  // { icon: MessageSquare, label: "Announcements" },
+  // { icon: Users, label: "Guardian" },
+  // { icon: Clipboard, label: "Classes" },
+  // { icon: BarChart3, label: "Examinations" },
+  // { icon: DollarSign, label: "Fees Collection" },
+  // { icon: Calendar, label: "Attendance" },
+  // { icon: Calendar, label: "Leaves" },
+  // { icon: CertificateIcon, label: "Certificate" },
 ];
 
 export function Sidebar() {
@@ -82,7 +94,7 @@ export function Sidebar() {
           variant="ghost"
           size="icon-sm"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="ml-auto"
+          className={`${isExpanded ? "ml-auto" : "mx-auto"}`}
         >
           {isExpanded ? (
             <ArrowLeftFromLine className="h-4 w-4" />
@@ -98,7 +110,7 @@ export function Sidebar() {
           <DropdownMenuTrigger asChild>
             <Button
               variant={"ghost"}
-              className="w-full ps-5! h-full! flex justify-between items-center gap-3"
+              className={`w-full ${isExpanded ? "ps-5! justify-between " : "px-2! justify-center"} h-full! flex  items-center gap-3`}
             >
               <Avatar className="h-8 w-8 border border-primary">
                 <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" />
@@ -138,26 +150,17 @@ export function Sidebar() {
         </DropdownMenu>
       </div>
 
-      {/* Navigation Items */}
-      <nav className="flex-1 overflow-y-auto gap-2 py-4 px-4 [scrollbar-width:none]">
-        {navItems.map((item, index) => {
-          const Icon = item.icon;
-          const isActive = index === 0;
-          return (
-            <Button
+      <nav className="flex-1 overflow-y-auto py-4 px-3 overflow-x-hidden">
+        {navItems.map((item) =>
+          item.children ? (
+            <SidebarGroup
               key={item.label}
-              variant={isActive ? "primary" : "link"}
-              className={`w-full justify-start ${
-                isExpanded ? "px-4" : "px-2"
-              } py-3 h-auto ${isActive ? "" : "text-muted-foreground hover:decoration-0! hover:text-primary-blue!"}`}
-            >
-              <Icon className="size-5 shrink-0" />
-              {isExpanded && (
-                <span className="ml-2 truncate">{item.label}</span>
-              )}
-            </Button>
-          );
-        })}
+              item={item}
+              isExpanded={isExpanded}
+              onClick={() => setIsExpanded(isExpanded ? true : true)}
+            />
+          ) : null,
+        )}
       </nav>
 
       {/* Footer */}

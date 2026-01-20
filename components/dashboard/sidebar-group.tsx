@@ -1,0 +1,93 @@
+import { useState } from "react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, type LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+
+export interface NavItem {
+  icon: LucideIcon;
+  label: string;
+  href?: string;
+  children?: {
+    label: string;
+    href?: string;
+  }[];
+}
+
+function SidebarGroup({
+  item,
+  isExpanded,
+  onClick,
+}: {
+  item: NavItem;
+  isExpanded: boolean;
+  onClick?: () => void;
+}) {
+  const Icon = item.icon;
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger asChild>
+        <Button
+          variant="primary"
+          className={`w-full justify-between h-auto ${isExpanded ? "px-4! py-3!" : ""}`}
+          onClick={onClick}
+        >
+          <div className="flex items-center gap-2">
+            <Icon className="size-5" />
+            {isExpanded && <span>{item.label}</span>}
+          </div>
+
+          {isExpanded && (
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 opacity-70 transition-transform duration-200",
+                isOpen ? "rotate-0" : "-rotate-90",
+              )}
+            />
+          )}
+        </Button>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent className="transition-all duration-200">
+        <div className="relative ml-6 mt-2 space-y-1">
+          {/* vertical line */}
+          <span className="absolute left-3 top-0 h-[85%] w-px bg-border" />
+
+          {item.children?.map((child, idx) => {
+            const isActive = child.href === window.location.pathname;
+            return (
+              <Link key={child.label} href={child.href ? child.href : "#"}>
+                <Button
+                  variant="link"
+                  className={cn(
+                    "w-full justify-start group hover:text-primary-blue hover:no-underline pl-6 py-2 h-auto relative",
+                    isActive && "text-primary-blue",
+                  )}
+                  onClick={onClick}
+                >
+                  {/* dot */}
+                  <span
+                    className={cn(
+                      "absolute left-2 h-2 w-2 rounded-full group-hover:bg-primary-blue",
+                      isActive ? "bg-primary-blue" : "bg-muted",
+                    )}
+                  />
+
+                  {child.label}
+                </Button>
+              </Link>
+            );
+          })}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+export default SidebarGroup;

@@ -2,10 +2,10 @@ import { Card } from "@/components/ui/card";
 
 export function AttendanceChart() {
   const attendanceData = [
-    { label: "Present", percentage: 87, color: "bg-dashboard-teal" },
-    { label: "Absent", percentage: 40, color: "bg-dashboard-orange" },
-    { label: "Late", percentage: 20, color: "bg-dashboard-purple" },
-    { label: "Half day", percentage: 20, color: "bg-dashboard-green" },
+    { label: "Present", percentage: 87, color: "bg-chart-1" },
+    { label: "Absent", percentage: 40, color: "bg-chart-2" },
+    { label: "Late", percentage: 20, color: "bg-chart-3" },
+    { label: "Half day", percentage: 20, color: "bg-chart-4" },
   ];
 
   return (

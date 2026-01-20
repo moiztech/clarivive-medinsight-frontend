@@ -46,7 +46,7 @@ export function UpcomingEvents() {
       <h3 className="text-lg font-semibold text-foreground mb-4">
         Upcoming Events
       </h3>
-      <div className="space-y-3 flex-1 overflow-y-auto max-h-96">
+      <div className="space-y-3 flex-1 overflow-y-auto min-h-screen max-h-[calc(100vh+10rem)]">
         {events.map((event) => (
           <div
             key={event.id}

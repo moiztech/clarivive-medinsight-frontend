@@ -2,7 +2,7 @@
 
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Header } from "@/components/dashboard/header";
-import { StatCard } from "@/components/dashboard/stat-card";
+import { StatCard, StatCardProps } from "@/components/dashboard/stat-card";
 import { RevenueChart } from "@/components/dashboard/revenue-chart";
 import { AttendanceChart } from "@/components/dashboard/attendance-chart";
 import { NoticeBoard } from "@/components/dashboard/notice-board";
@@ -24,7 +24,14 @@ export default function Dashboard() {
       value: "20,000",
       change: 8,
       trend: "up" as const,
-      backgroundColor: "bg-orange-500",
+      backgroundColor: "orange-500",
+      chartType: "bar" as const,
+      chartData: [
+        { month: "Jan", desktop: 186 },
+        { month: "Feb", desktop: 305 },
+        { month: "Mar", desktop: 237 },
+        { month: "Apr", desktop: 273 },
+      ],
     },
     {
       icon: <Users2 className="h-8 w-8 text-white" />,
@@ -32,7 +39,14 @@ export default function Dashboard() {
       value: "20,000",
       change: 8,
       trend: "up" as const,
-      backgroundColor: "bg-blue-500",
+      backgroundColor: "blue-500",
+      chartType: "line" as const,
+      chartData: [
+        { month: "Jan", desktop: 200 },
+        { month: "Feb", desktop: 280 },
+        { month: "Mar", desktop: 320 },
+        { month: "Apr", desktop: 350 },
+      ],
     },
     {
       icon: <Users className="h-8 w-8 text-white" />,
@@ -40,7 +54,14 @@ export default function Dashboard() {
       value: "20,000",
       change: 8,
       trend: "up" as const,
-      backgroundColor: "bg-purple-500",
+      backgroundColor: "purple-500",
+      chartType: "bar" as const,
+      chartData: [
+        { month: "Jan", desktop: 150 },
+        { month: "Feb", desktop: 220 },
+        { month: "Mar", desktop: 290 },
+        { month: "Apr", desktop: 310 },
+      ],
     },
     {
       icon: <BookOpen className="h-8 w-8 text-white" />,
@@ -48,7 +69,14 @@ export default function Dashboard() {
       value: "20,000",
       change: 8,
       trend: "up" as const,
-      backgroundColor: "bg-emerald-500",
+      backgroundColor: "emerald-500",
+      chartType: "line" as const,
+      chartData: [
+        { month: "Jan", desktop: 180 },
+        { month: "Feb", desktop: 240 },
+        { month: "Mar", desktop: 300 },
+        { month: "Apr", desktop: 330 },
+      ],
     },
     {
       icon: <BarChart3 className="h-8 w-8 text-white" />,
@@ -56,7 +84,14 @@ export default function Dashboard() {
       value: "20,000",
       change: 8,
       trend: "up" as const,
-      backgroundColor: "bg-cyan-500",
+      backgroundColor: "cyan-500",
+      chartType: "bar" as const,
+      chartData: [
+        { month: "Jan", desktop: 210 },
+        { month: "Feb", desktop: 260 },
+        { month: "Mar", desktop: 315 },
+        { month: "Apr", desktop: 340 },
+      ],
     },
     {
       icon: <Award className="h-8 w-8 text-white" />,
@@ -64,9 +99,16 @@ export default function Dashboard() {
       value: "20,000",
       change: 8,
       trend: "up" as const,
-      backgroundColor: "bg-indigo-500",
+      backgroundColor: "indigo-500",
+      chartType: "line" as const,
+      chartData: [
+        { month: "Jan", desktop: 190 },
+        { month: "Feb", desktop: 270 },
+        { month: "Mar", desktop: 325 },
+        { month: "Apr", desktop: 360 },
+      ],
     },
-  ];
+  ] as StatCardProps[];
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -100,11 +142,14 @@ export default function Dashboard() {
                     change={card.change}
                     trend={card.trend}
                     backgroundColor={card.backgroundColor}
+                    chartType={card.chartType}
+                    chartData={card.chartData}
                   />
                 ))}
               </div>
-              <div className="grow min-w-md">
+              <div className="grow min-w-md flex flex-col gap-4">
                 <AttendanceChart />
+                <CalendarWidget />
               </div>
             </div>
             <div className="flex flex-col xl:flex-row gap-4 w-full justify-stretch">
@@ -122,7 +167,6 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="flex flex-col gap-4 min-w-md">
-                <CalendarWidget />
                 <UpcomingEvents />
               </div>
             </div>
