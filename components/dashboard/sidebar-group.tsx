@@ -1,14 +1,17 @@
 "use client";
+
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { ChevronDown, type LucideIcon } from "lucide-react";
+
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 export interface NavItem {
   icon: LucideIcon;
@@ -31,13 +34,17 @@ function SidebarGroup({
 }) {
   const Icon = item.icon;
   const [isOpen, setIsOpen] = useState(true);
+  const pathname = usePathname(); // ✅ replaces window.location.pathname
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
         <Button
           variant="primary"
-          className={`w-full justify-between h-auto ${isExpanded ? "px-4! py-3!" : ""}`}
+          className={cn(
+            "w-full justify-between h-auto",
+            isExpanded && "px-4! py-3!",
+          )}
           onClick={onClick}
         >
           <div className="flex items-center gap-2">
@@ -58,13 +65,16 @@ function SidebarGroup({
 
       <CollapsibleContent className="transition-all duration-200">
         <div className="relative ml-6 mt-2 space-y-1">
-          {/* vertical line */}
           <span className="absolute left-3 top-0 h-[85%] w-px bg-border" />
 
-          {item.children?.map((child, idx) => {
-            const isActive = child.href === window.location.pathname;
+          {item.children?.map((child) => {
+            const href = child.href ?? "#";
+            const isActive = child.href
+              ? pathname.startsWith(child.href)
+              : false;
+
             return (
-              <Link key={child.label} href={child.href ? child.href : "#"}>
+              <Link key={child.label} href={href}>
                 <Button
                   variant="link"
                   className={cn(
@@ -73,14 +83,12 @@ function SidebarGroup({
                   )}
                   onClick={onClick}
                 >
-                  {/* dot */}
                   <span
                     className={cn(
                       "absolute left-2 h-2 w-2 rounded-full group-hover:bg-primary-blue",
                       isActive ? "bg-primary-blue" : "bg-muted",
                     )}
                   />
-
                   {child.label}
                 </Button>
               </Link>
@@ -91,4 +99,5 @@ function SidebarGroup({
     </Collapsible>
   );
 }
+
 export default SidebarGroup;
