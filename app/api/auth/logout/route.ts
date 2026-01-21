@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { serverApi } from "@/lib/axios/server";
+import { serverApi } from "@/lib/axios";
 
 export async function POST(req: Request) {
   // We forward access token (sent from client as Authorization)

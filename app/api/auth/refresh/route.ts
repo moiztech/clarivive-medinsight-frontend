@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { serverApi } from "@/lib/axios/server";
+import { serverApi } from "@/lib/axios";
 
 export async function POST() {
   const refreshToken = (await cookies()).get("refresh_token")?.value;
@@ -8,7 +8,7 @@ export async function POST() {
   if (!refreshToken) {
     return NextResponse.json(
       { status: false, message: "No refresh token" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -32,7 +32,7 @@ export async function POST() {
         message: payload?.message || "Refresh failed",
         raw: payload,
       },
-      { status: 401 }
+      { status: 401 },
     );
   }
 

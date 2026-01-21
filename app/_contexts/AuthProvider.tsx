@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { clientApi } from "@/lib/axios/client";
+import { clientApi } from "@/lib/axios";
 import { tokenStore } from "@/lib/auth/tokenStore";
 import { userStore } from "@/lib/auth/userStore";
 
@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await clientApi.post(
       "/auth/logout",
       {},
-      token ? { headers: { Authorization: `Bearer ${token}` } } : undefined
+      token ? { headers: { Authorization: `Bearer ${token}` } } : undefined,
     );
   }
 
@@ -66,14 +66,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const savedUser = userStore.get();
         if (savedUser) setUser(savedUser);
 
-        // ✅ If access token missing, try refresh using cookie
-        if (!tokenStore.get()) {
-          const res = await clientApi.post("/auth/refresh");
-          if (res.data?.access_token) tokenStore.set(res.data.access_token);
-        }
-
         // If you later add /me endpoint, call it here to verify user is real.
-      } catch {
+
+        const res = await clientApi.get("/auth/me");
+        if (res.status != 401) {
+          setUser(res.data.user ?? null);
+          userStore.set(res.data.user ?? null);
+        }
+        return;
+      } catch (err: any) {
+        console.error("Failed to bootstrap session", err);
         tokenStore.clear();
         userStore.clear();
         setUser(null);

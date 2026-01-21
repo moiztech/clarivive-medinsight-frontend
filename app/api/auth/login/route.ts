@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { serverApi } from "@/lib/axios/server";
+import { serverApi } from "@/lib/axios";
 
 export async function POST(req: Request) {
   const body = await req.json(); // { email, password, remember? }
@@ -30,7 +30,12 @@ export async function POST(req: Request) {
   }
 
   const user = data
-    ? { id: data.id, name: data.name, email: data.email, role: data.role }
+    ? {
+        id: data.user?.id,
+        name: data.user?.name,
+        email: data.user?.email,
+        role: data.user?.role,
+      }
     : null;
 
   return NextResponse.json({
