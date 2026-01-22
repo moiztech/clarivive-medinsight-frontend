@@ -2,15 +2,21 @@ import BreadCrumb from "@/components/BreadCrumb";
 import ServicesGrid from "@/components/courses/services-grid";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import { LogoBar } from "@/components/logo-bar";
-import { Service } from "@/lib/types";
-import { Activity, Heart } from "lucide-react";
-import React from "react";
 
-function page() {
-  const branches: Service[] = [
-    { title: "Angioplasty", icon: Heart },
-    { title: "Cardiology", icon: Activity },
-  ];
+export type Branch = {
+  id: number;
+  title: string;
+  slug: string;
+  description: string;
+  location: string;
+  icon: string;
+};
+
+async function page() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`, {
+    next: { revalidate: 60 },
+  });
+  const branches: Branch[] = await res.json().then((res) => res.data);
   return (
     <div className="min-h-screen bg-white">
       <BreadCrumb
@@ -20,7 +26,7 @@ function page() {
         ]}
         title="Our Branches"
       />
-      <ServicesGrid services={branches}/>
+      <ServicesGrid services={branches} />
       <LogoBar />
       <SignupCTASection />
     </div>

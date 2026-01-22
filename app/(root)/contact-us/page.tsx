@@ -16,6 +16,7 @@ import {
 import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import BreadCrumb from "@/components/BreadCrumb";
+import { serverApi } from "@/lib/axios";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -40,28 +41,18 @@ export default function ContactPage() {
 
     // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Mock successful response
-      const mockResponse = {
-        success: true,
-        appointmentId:
-          "APT" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-        message: "Your appointment has been successfully booked!",
-        details: {
-          patientName: formData.name,
-          department: formData.department,
-          doctor: formData.doctor,
-          date: formData.date,
-          confirmationSent: formData.email,
-        },
-      };
-
+      await serverApi.post("/contact-messages", formData).catch((error) => {
+        console.error("Error sending message:", error);
+        setSubmitStatus({
+          type: "error",
+          message: "Failed to send message. Please try again.",
+        });
+        return;
+      });
       setSubmitStatus({
         type: "success",
-        message: `${mockResponse.message} Confirmation ID: ${mockResponse.appointmentId}`,
+        message: "Your message has been sent successfully!",
       });
-
       // Reset form
       setFormData({
         name: "",
@@ -75,7 +66,7 @@ export default function ContactPage() {
     } catch (error) {
       setSubmitStatus({
         type: "error",
-        message: "Failed to book appointment. Please try again.",
+        message: "Failed to send message. Please try again.",
       });
     } finally {
       setIsSubmitting(false);

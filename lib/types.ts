@@ -1,6 +1,8 @@
 type Service = {
   title: string;
-  icon: React.ComponentType<any>;
+  icon: any;
+  description?: string;
+  slug?: string;
 };
 type EventType = {
   id: number;

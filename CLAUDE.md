@@ -1,3 +1,4 @@
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -8,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Lint**: `npm run lint`
 - **Run all tests**: `npm test`
 - **Run a specific test**: `npm test -- <test-file-path>`
+- **Start development server**: `npm run dev`
 
 ## Code Architecture
 
@@ -20,7 +22,6 @@ This repository is a Next.js project. Key directories and their purposes include
 - `components`: Reusable UI components.
   - `home`: Components specific to the home page.
 - `lib`: Utility functions and modules.
-  - `axios`: (Deprecated/Removed) Likely contained Axios-related configurations.
   - `auth`: Authentication-related utility functions.
 
 ## Important Notes
@@ -29,3 +30,4 @@ This repository is a Next.js project. Key directories and their purposes include
 - Authentication is managed via `AuthProvider` in `app/_contexts/AuthProvider.tsx`.
 - Some files like `lib/axios.ts` have been deleted, indicating a potential shift in how HTTP requests are handled.
 - New API routes might be located in `app/api/` and authentication utilities in `lib/auth/`.
+- Git commands: `git status`, `git pull`, `git branch` are commonly used.
