@@ -6,7 +6,7 @@ export async function generateStaticParams() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`);
   const branches = await res.json();
 
-  return branches.map((b: any) => ({
+  return branches.data.map((b: any) => ({
     branch: b.slug,
   }));
 }
