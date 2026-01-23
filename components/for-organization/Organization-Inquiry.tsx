@@ -202,27 +202,48 @@ function OrganizationInquiry() {
                   </Label>
 
                   <div className="grid md:grid-cols-2 gap-3">
+                    {/* ["care_home", "supported_living","domiciliary_care_agency","healthcare_provider","other"], */}
                     {[
-                      "Care Home",
-                      "Domiciliary Care Agency",
-                      "Supported Living",
-                      "Healthcare Provider",
-                      "Other",
+                      {
+                        label: "Care Home",
+                        value: "care_home",
+                      },
+                      {
+                        label: "Domiciliary Care Agency",
+                        value: "domiciliary_care_agency",
+                      },
+                      {
+                        label: "Supported Living",
+                        value: "supported_living",
+                      },
+                      {
+                        label: "Healthcare Provider",
+                        value: "healthcare_provider",
+                      },
+                      {
+                        label: "Other",
+                        value: "other",
+                      },
                     ].map((type) => (
-                      <div key={type} className="flex items-center gap-2">
+                      <div key={type.value} className="flex items-center gap-2">
                         <Checkbox
-                          checked={formData.organizationTypes?.includes(type)}
+                          checked={formData.organizationTypes?.includes(
+                            type.value,
+                          )}
                           onCheckedChange={(checked) => {
                             const updated = checked
-                              ? [...(formData.organizationTypes || []), type]
+                              ? [
+                                  ...(formData.organizationTypes || []),
+                                  type.value,
+                                ]
                               : formData.organizationTypes.filter(
-                                  (t) => t !== type,
+                                  (t) => t !== type.value,
                                 );
 
                             handleInputChange("organizationTypes", updated);
                           }}
                         />
-                        <Label className="text-sm">{type}</Label>
+                        <Label className="text-sm">{type.label}</Label>
                       </div>
                     ))}
                   </div>
@@ -314,27 +335,48 @@ function OrganizationInquiry() {
                   </Label>
 
                   <div className="grid md:grid-cols-2 gap-3">
+                    {/* ["mandatory_training_refreshers", "face_to_face_training","online_blended_learning","unsure_would_like_guidance"], */}
                     {[
-                      "Mandatory Training / Refreshers",
-                      "Face-to-Face Training",
-                      "Online / Blended Learning",
-                      "Bespoke Training",
-                      "Unsure – would like guidance",
+                      {
+                        label: "Mandatory Training / Refreshers",
+                        value: "mandatory_training_refreshers",
+                      },
+                      {
+                        label: "Face-to-Face Training",
+                        value: "face_to_face_training",
+                      },
+                      {
+                        label: "Online / Blended Learning",
+                        value: "online_blended_learning",
+                      },
+                      {
+                        label: "Bespoke Training",
+                        value: "bespoke_training",
+                      },
+                      {
+                        label: "Unsure – would like guidance",
+                        value: "unsure_would_like_guidance",
+                      },
                     ].map((req) => (
-                      <div key={req} className="flex items-center gap-2">
+                      <div key={req.value} className="flex items-center gap-2">
                         <Checkbox
-                          checked={formData.trainingRequirements?.includes(req)}
+                          checked={formData.trainingRequirements?.includes(
+                            req.value,
+                          )}
                           onCheckedChange={(checked) => {
                             const updated = checked
-                              ? [...(formData.trainingRequirements || []), req]
+                              ? [
+                                  ...(formData.trainingRequirements || []),
+                                  req.value,
+                                ]
                               : formData.trainingRequirements.filter(
-                                  (r) => r !== req,
+                                  (r) => r !== req.value,
                                 );
 
                             handleInputChange("trainingRequirements", updated);
                           }}
                         />
-                        <Label className="text-sm">{req}</Label>
+                        <Label className="text-sm">{req.label}</Label>
                       </div>
                     ))}
                   </div>
