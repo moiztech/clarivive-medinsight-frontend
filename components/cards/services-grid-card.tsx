@@ -20,14 +20,21 @@ const ServicesGridCard = ({
       key={index}
       className="bg-white cursor-pointer px-10 py-8 flex flex-col items-center text-center space-y-6 transition-all duration-300 hover:z-10 hover:shadow-2xl hover:bg-slate-50 group"
     >
-      <div className="w-20 h-20 rounded-2xl bg-blue-400 /5 flex items-center justify-center transition-all duration-300 group-hover:bg-blue-400  group-hover:-translate-y-2 group-hover:rotate-3 shadow-inner">
+      <div className="w-20 h-20 rounded-2xl bg-blue-400/5 flex items-center justify-center transition-all duration-300 group-hover:bg-blue-400 group-hover:-translate-y-2 group-hover:rotate-3 shadow-inner">
         {service.icon ? (
-          <Image
-            src={service.icon}
-            alt={service.title}
-            width={40}
-            height={40}
-          />
+          typeof service.icon === "string" ? (
+            <Image
+              src={service.icon}
+              alt={service.title}
+              width={40}
+              height={40}
+            />
+          ) : (
+            <service.icon
+              className="w-10 h-10 text-blue-400 transition-colors group-hover:text-white"
+              strokeWidth={1.5}
+            />
+          )
         ) : (
           <Building
             className="w-10 h-10 text-blue-400 transition-colors group-hover:text-white"
