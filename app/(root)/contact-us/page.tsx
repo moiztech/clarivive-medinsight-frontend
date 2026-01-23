@@ -41,7 +41,7 @@ export default function ContactPage() {
 
     // Simulate API call
     try {
-      await serverApi.post("/contact-messages", formData).catch((error) => {
+      await serverApi.post("/contact-inquiry", formData).catch((error) => {
         console.error("Error sending message:", error);
         setSubmitStatus({
           type: "error",

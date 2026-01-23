@@ -3,8 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["images.unsplash.com"],
-    remotePatterns: [{ hostname: "images.unsplash.com" }],
+    // domains: ["images.unsplash.com"],
+    remotePatterns: [
+      { hostname: "images.unsplash.com" },
+      { hostname: process.env.NEXT_PUBLIC_API_BASE_URL as string },
+    ],
     unoptimized: true,
   },
 };
