@@ -13,16 +13,24 @@ export async function generateStaticParams() {
 
 const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
   const { branch } = await params;
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/branches/${branch}`,
+    {
+      next: { revalidate: 90 },
+    },
+  );
+  const data = await res.json();
+  // console.log(data);
   return (
     <>
       <BreadCrumb
-        title={`Branch ${branch}`}
+        title={`${data.data.title}`}
         paths={[
           { label: "Branches", href: "/branches" },
-          { label: `Branch ${branch}`, href: `/branches/${branch}` },
+          { label: `${data.data.title}`, href: `/branches/${data.data.slug}` },
         ]}
       />
-      {/* <div className="text-center">{branch}</div> */}
+      {/* <div className="text-center">{data.data.title}</div> */}
       <TimetableSection />
     </>
   );

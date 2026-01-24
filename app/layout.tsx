@@ -7,6 +7,7 @@ import "@/app/globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { AuthProvider } from "./_contexts/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
+import Providers from "./providers";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({
@@ -48,7 +49,7 @@ export default function RootLayout({
         />
 
         <AuthProvider>
-          {children}
+          <Providers>{children}</Providers>
           <Toaster richColors position="bottom-right" />
         </AuthProvider>
 
