@@ -2,25 +2,14 @@ import BreadCrumb from "@/components/BreadCrumb";
 import AboutHero, { CoursesHeroProps } from "@/components/courses/courses-hero";
 import ProcessSection, {
   ProcessSectionProps,
-  ProcessStep,
 } from "@/components/courses/process-section";
-import ServicesGrid from "@/components/courses/services-grid";
 import { FaqSection } from "@/components/faq-section";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import { StatsBar } from "@/components/stats-bar";
-import {
-  Heart,
-  Eye,
-  Brain,
-  Activity,
-  Syringe,
-  ClipboardList,
-  Stethoscope,
-  Microscope,
-  BookOpen,
-} from "lucide-react";
+import { BookOpen } from "lucide-react";
 import React from "react";
 import ClientCoursesGrid from "./client-courses-grid";
+import { CategoryResponse } from "@/lib/types";
 
 const courseTitles = [
   "Physical Activity and Mobility Support",
@@ -145,14 +134,21 @@ const processSectionContent: ProcessSectionProps = {
   ],
 };
 async function page() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/online?page=1`,
-    {
-      next: { revalidate: 60 },
-    },
-  );
+  const [courseRes, categoryRes] = await Promise.all([
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/online?page=1`,
+      {
+        next: { revalidate: 60 },
+      },
+    ),
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      next: { revalidate: 300 },
+    }),
+  ]);
 
-  const json = await res.json();
+  const courseJson = await courseRes.json();
+  const { data: categoryJson }: { data: CategoryResponse[] } =
+    await categoryRes.json();
   return (
     <div className="min-h-screen bg-white">
       <BreadCrumb
@@ -166,8 +162,9 @@ async function page() {
         services={services}
       /> */}
       <ClientCoursesGrid
-        initialData={json.data}
-        initialMeta={json.meta}
+        initialData={courseJson.data}
+        initialMeta={courseJson.meta}
+        categories={categoryJson}
         type="online"
       />
       <StatsBar />

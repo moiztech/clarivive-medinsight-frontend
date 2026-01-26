@@ -25,8 +25,60 @@ type AuthContextType = {
   user: UserType | null;
   saveUser: (user: UserType) => void;
 };
+type CategoryResponse = {
+  id: number;
+  name: string;
+  slug: string;
+  icon: string;
+};
 
-export type { Service, EventType, AuthContextType, UserType };
+type TopicData = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+type CourseData = {
+  id: number;
+  title: string;
+  slug: string;
+  thumbnail: string;
+  description?: string;
+  topics?: TopicData[];
+  price: number;
+  rating?: number;
+};
+export type {
+  Service,
+  EventType,
+  AuthContextType,
+  UserType,
+  CategoryResponse,
+  CourseData,
+};
+
+export type DetailCourse = {
+  id: number;
+  title: string;
+  slug: string;
+  thumbnail: string;
+  price: number;
+  description?: string;
+  duration: string;
+  modules: number;
+  rating?: number;
+  type?: {
+    id: number;
+    name: string;
+  };
+  topics?: TopicData[];
+  content?: string;
+  video?: {
+    type: string;
+    url: string;
+    file: string | null;
+  };
+};
 
 export interface Course {
   title: string;

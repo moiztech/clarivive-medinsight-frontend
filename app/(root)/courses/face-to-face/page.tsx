@@ -17,7 +17,8 @@ import ProcessSection, {
 import { FaqSection } from "@/components/faq-section";
 import { StatsBar } from "@/components/stats-bar";
 import BreadCrumb from "@/components/BreadCrumb";
-import ClientCoursesGrid from "./client-courses-grid";
+import ClientCoursesGrid from "@/app/(root)/courses/online/client-courses-grid";
+import { CategoryResponse } from "@/lib/types";
 const services = [
   {
     title: "First Aid",
@@ -94,14 +95,21 @@ const processSectionProps: ProcessSectionProps = {
   ],
 };
 async function page() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/face-to-face?page=1`,
-    {
-      next: { revalidate: 60 }, // small ISR window
-    },
-  );
+  const [courseRes, categoryRes] = await Promise.all([
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/face-to-face?page=1`,
+      {
+        next: { revalidate: 60 },
+      },
+    ),
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      next: { revalidate: 300 },
+    }),
+  ]);
 
-  const json = await res.json();
+  const courseJson = await courseRes.json();
+  const { data: categoryJson }: { data: CategoryResponse[] } =
+    await categoryRes.json();
   return (
     <div className="min-h-screen bg-white">
       <BreadCrumb
@@ -117,7 +125,12 @@ async function page() {
         description="We provide various courses"
         cardLinkPrefix="course/face-to-face"
       /> */}
-      <ClientCoursesGrid initialData={json.data} initialMeta={json.meta} />
+      <ClientCoursesGrid
+        initialData={courseJson.data}
+        type="face-to-face"
+        initialMeta={courseJson.meta}
+        categories={categoryJson}
+      />
       <StatsBar />
       <ProcessSection {...processSectionProps} />
       <FaqSection />

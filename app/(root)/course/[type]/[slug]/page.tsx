@@ -1,7 +1,17 @@
+import React from "react";
+import { DetailCourse } from "@/lib/types";
 import BreadCrumb from "@/components/BreadCrumb";
 import CourseDetailSection from "@/components/courses/CourseDetailSection";
-import { dummyCourse } from "@/data/dummyCourse";
-import React from "react";
+
+export async function generateStaticParams() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses`);
+  const courses = await res.json();
+
+  return courses.data.map((c: any) => ({
+    slug: c.slug,
+    type: String(c.type).toLowerCase().trim(),
+  }));
+}
 
 const page = async ({
   params,
@@ -9,17 +19,24 @@ const page = async ({
   params: Promise<{ type: string; slug: string }>;
 }) => {
   const { slug, type } = await params;
-  const course = dummyCourse; // Replace with actual data fetching logic using slug
+  const course = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${slug}`,
+    {
+      next: { revalidate: 60 },
+    },
+  );
+  const courseData: DetailCourse = (await course.json()).data;
+  // console.log(courseData);
   return (
     <>
       <BreadCrumb
-        title={course.title}
+        title={courseData.title}
         paths={[
           { label: `${type} Courses`, href: `/courses/${type}` },
-          { label: course.title, href: `/course/${type}/${slug}` },
+          { label: courseData.title, href: `/course/${type}/${slug}` },
         ]}
       />
-      <CourseDetailSection course={course} />
+      <CourseDetailSection course={courseData} />
     </>
   );
 };
