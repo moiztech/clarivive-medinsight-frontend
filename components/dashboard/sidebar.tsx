@@ -14,6 +14,7 @@ import {
   BriefcaseIcon as CertificateIcon,
   ChevronRight,
   Home,
+  Link as LinkIcon,
   LogOut,
   type LucideIcon,
   Menu,
@@ -21,43 +22,21 @@ import {
   User,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SidebarGroup, { NavItem } from "./sidebar-group";
+import { useAuth } from "@/app/_contexts/AuthProvider";
 
-const navItems: NavItem[] = [
-  {
-    icon: Home,
-    label: "Dashboard",
-    children: [
-      {
-        label: "Company",
-        href: "/company",
-      },
-      {
-        label: "LMS",
-        href: "/lms",
-      },
-    ],
-  },
-  // { icon: Building2, label: "School" },
-  // { icon: Users, label: "Student" },
-  // { icon: Users2, label: "Teacher" },
-  // { icon: Users2, label: "Parent" },
-  // { icon: Book, label: "LMS" },
-  // { icon: Users, label: "Students" },
-  // { icon: Users2, label: "Teachers" },
-  // { icon: MessageSquare, label: "Announcements" },
-  // { icon: Users, label: "Guardian" },
-  // { icon: Clipboard, label: "Classes" },
-  // { icon: BarChart3, label: "Examinations" },
-  // { icon: DollarSign, label: "Fees Collection" },
-  // { icon: Calendar, label: "Attendance" },
-  // { icon: Calendar, label: "Leaves" },
-  // { icon: CertificateIcon, label: "Certificate" },
-];
+export interface SidebarProps {
+  navItems: NavItem[];
+}
 
-export function Sidebar() {
+export function Sidebar({ navItems }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  const pathname = usePathname();
+  const { user } = useAuth();
 
   return (
     <aside
@@ -68,14 +47,16 @@ export function Sidebar() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
         {isExpanded && (
-          <Image
-            src="/Clarivive medinsight logo-01.png"
-            alt="Logo"
-            width={180}
-            height={72}
-            priority
-            loading="eager"
-          />
+          <Link href={"/"}>
+            <Image
+              src="/Clarivive medinsight logo-01.png"
+              alt="Logo"
+              width={180}
+              height={72}
+              priority
+              loading="eager"
+            />
+          </Link>
         )}
         <Button
           variant="ghost"
@@ -107,10 +88,10 @@ export function Sidebar() {
               {isExpanded && (
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-sidebar-foreground truncate">
-                    Jone Copper
+                    {user?.name}
                   </p>
-                  <p className="text-xs text-sidebar-accent-foreground">
-                    Admin
+                  <p className="text-xs text-start text-sidebar-accent-foreground">
+                    {user?.role}
                   </p>
                 </div>
               )}
@@ -146,7 +127,33 @@ export function Sidebar() {
               isExpanded={isExpanded}
               onClick={() => setIsExpanded(isExpanded ? true : true)}
             />
-          ) : null,
+          ) : (
+            <Link
+              key={item.label}
+              href={item.href || "#"}
+              className="block mb-2"
+            >
+              <Button
+                variant={pathname === item.href ? "primary" : "ghost"}
+                className={`w-full h-auto ${
+                  isExpanded
+                    ? "ps-4! justify-start py-3!"
+                    : "px-2! justify-center"
+                } h-full! flex items-center gap-3 ${
+                  pathname === item.href
+                    ? "bg-primary-blue text-muted"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                }`}
+              >
+                <item.icon className="h-5 w-5 flex-shrink-0" />
+                {isExpanded && (
+                  <span className="text-sm font-medium truncate">
+                    {item.label}
+                  </span>
+                )}
+              </Button>
+            </Link>
+          ),
         )}
       </nav>
 

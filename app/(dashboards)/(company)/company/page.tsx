@@ -1,7 +1,5 @@
 "use client";
 
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { Header } from "@/components/dashboard/header";
 import { StatCard, StatCardProps } from "@/components/dashboard/stat-card";
 import { RevenueChart } from "@/components/dashboard/revenue-chart";
 import { AttendanceChart } from "@/components/dashboard/attendance-chart";
@@ -111,80 +109,65 @@ export default function Dashboard() {
   ] as StatCardProps[];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <Header />
-
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-background">
-          <div className="p-6 space-y-6">
-            <div className="flex flex-col gap-1">
-              <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
-              <p className="text-sm text-muted-foreground">
-                School • Manage your school, track attendance, expense, and net
-                worth.
-              </p>
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
+        <p className="text-sm text-muted-foreground">
+          School • Manage your school, track attendance, expense, and net worth.
+        </p>
+      </div>
+      <div className="flex flex-col xl:flex-row gap-4 w-full justify-stretch">
+        {/* Stat Cards - 3x2 Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 w-full lg:grid-cols-3 gap-4">
+          {statCards.map((card, index) => (
+            <StatCard
+              key={index}
+              icon={card.icon}
+              title={card.title}
+              value={card.value}
+              change={card.change}
+              trend={card.trend}
+              backgroundColor={card.backgroundColor}
+              chartType={card.chartType}
+              chartData={card.chartData}
+            />
+          ))}
+        </div>
+        <div className="grow min-w-md flex flex-col gap-4">
+          <AttendanceChart />
+          <CalendarWidget />
+        </div>
+      </div>
+      <div className="flex flex-col xl:flex-row gap-4 w-full justify-stretch">
+        {/* Charts Row - Revenue (2/3) + Attendance (1/3) */}
+        <div className="flex flex-col gap-4 h-full">
+          <RevenueChart />
+          {/* Notice Board & Leave Requests + Calendar & Events */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 h-full gap-4">
+            <div className="lg:col-span-2 flex flex-col h-full">
+              <NoticeBoard />
             </div>
-            <div className="flex flex-col xl:flex-row gap-4 w-full justify-stretch">
-              {/* Stat Cards - 3x2 Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 w-full lg:grid-cols-3 gap-4">
-                {statCards.map((card, index) => (
-                  <StatCard
-                    key={index}
-                    icon={card.icon}
-                    title={card.title}
-                    value={card.value}
-                    change={card.change}
-                    trend={card.trend}
-                    backgroundColor={card.backgroundColor}
-                    chartType={card.chartType}
-                    chartData={card.chartData}
-                  />
-                ))}
-              </div>
-              <div className="grow min-w-md flex flex-col gap-4">
-                <AttendanceChart />
-                <CalendarWidget />
-              </div>
-            </div>
-            <div className="flex flex-col xl:flex-row gap-4 w-full justify-stretch">
-              {/* Charts Row - Revenue (2/3) + Attendance (1/3) */}
-              <div className="flex flex-col gap-4 h-full">
-                <RevenueChart />
-                {/* Notice Board & Leave Requests + Calendar & Events */}
-                <div className="grid grid-cols-1 lg:grid-cols-4 h-full gap-4">
-                  <div className="lg:col-span-2 flex flex-col h-full">
-                    <NoticeBoard />
-                  </div>
-                  <div className="lg:col-span-2 flex flex-col h-full">
-                    <LeaveRequests />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 min-w-md">
-                <UpcomingEvents />
-              </div>
-            </div>
-
-            {/* Charts Row - User Overview + Income vs Expense */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <UserOverview />
-              <IncomeVsExpense />
-            </div>
-
-            {/* Bottom Row - Top Teachers, New Admissions, Top Students */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <TopTeachers />
-              <NewAdmissions />
-              <TopStudents />
+            <div className="lg:col-span-2 flex flex-col h-full">
+              <LeaveRequests />
             </div>
           </div>
-        </main>
+        </div>
+        <div className="flex flex-col gap-4 min-w-md">
+          <UpcomingEvents />
+        </div>
+      </div>
+
+      {/* Charts Row - User Overview + Income vs Expense */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <UserOverview />
+        <IncomeVsExpense />
+      </div>
+
+      {/* Bottom Row - Top Teachers, New Admissions, Top Students */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <TopTeachers />
+        <NewAdmissions />
+        <TopStudents />
       </div>
     </div>
   );

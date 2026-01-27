@@ -33,17 +33,23 @@ function SidebarGroup({
   onClick?: () => void;
 }) {
   const Icon = item.icon;
-  const [isOpen, setIsOpen] = useState(true);
-  const pathname = usePathname(); // ✅ replaces window.location.pathname
+  const pathname = usePathname();
+  const isAnyChildActive = item.children?.some((child) =>
+    child.href ? pathname.startsWith(child.href) : false,
+  );
+  const [isOpen, setIsOpen] = useState(isAnyChildActive || false);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
         <Button
-          variant="primary"
+          variant={isAnyChildActive ? "primary" : "ghost"}
           className={cn(
             "w-full justify-between h-auto",
             isExpanded && "px-4! py-3!",
+            isAnyChildActive
+              ? "bg-primary-blue text-primary-foreground"
+              : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
           )}
           onClick={onClick}
         >

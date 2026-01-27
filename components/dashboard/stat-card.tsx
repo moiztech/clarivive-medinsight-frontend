@@ -37,7 +37,15 @@ export function StatCard({
   backgroundColor,
   chartData = defaultChartData,
   chartType = "bar",
-}: StatCardProps) {
+  chartColor = "#2563eb",
+}: StatCardProps & { chartColor?: string }) {
+  const dynamicChartConfig = {
+    desktop: {
+      label: "Desktop",
+      color: chartColor,
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="p-6 bg-card shadow-blue-200 gap-2! dark:shadow-blue-900/20 overflow-hidden relative hover:shadow-lg transition-shadow">
       <div
@@ -76,18 +84,24 @@ export function StatCard({
         </div>
       </div>
       {chartType === "bar" ? (
-        <ChartContainer config={chartConfig} className="min-h-[120px] w-full">
+        <ChartContainer
+          config={dynamicChartConfig}
+          className="min-h-[120px] w-full"
+        >
           <BarChart accessibilityLayer data={chartData}>
-            <Bar dataKey="desktop" fill="var(--chart-1)" radius={4} />
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
           </BarChart>
         </ChartContainer>
       ) : (
-        <ChartContainer config={chartConfig} className="min-h-[120px] w-full">
+        <ChartContainer
+          config={dynamicChartConfig}
+          className="min-h-[120px] w-full"
+        >
           <AreaChart accessibilityLayer data={chartData}>
             <Area
               dataKey="desktop"
-              stroke="var(--chart-2)"
-              fill="var(--chart-2)"
+              stroke="var(--color-desktop)"
+              fill="var(--color-desktop)"
               radius={4}
             />
           </AreaChart>

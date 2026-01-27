@@ -15,15 +15,6 @@ jobs:
         with:
           fetch-depth: 1
 
-      # Cache npm downloads (runner-side speedup)
-      - name: Cache npm cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -38,41 +29,43 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
           set -e
-      
+
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-      
+
           cd ${{ secrets.APP_PATH }}
-      
-          # Ensure correct Node is active (optional but recommended)
+
           # If you have .nvmrc in your repo, use it:
           if [ -f ".nvmrc" ]; then
             nvm install
             nvm use
           fi
-      
+
           node -v
           npm -v
-      
+
           # Ensure pm2 exists in this NVM/node context
           if ! command -v pm2 >/dev/null 2>&1; then
             echo "pm2 not found, installing globally..."
             npm install -g pm2
           fi
-      
+
           pm2 -v
-      
+
           # Fast, clean code sync
           git fetch origin
           git reset --hard origin/master
-      
-          # Install deps
-          npm ci --no-audit --no-fund || npm install --no-audit --no-fund
-      
+
+          # Install deps (fast on repeat deploys)
+          if [ ! -d "node_modules" ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
           # Build
           NEXT_TELEMETRY_DISABLED=1 npm run build
-      
-          # Restart (use ecosystem if you have one)
+
+          # Restart
           pm2 reload all || pm2 restart all
           EOF
-      

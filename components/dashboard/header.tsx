@@ -23,9 +23,11 @@ import {
   Sun,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useAuth } from "@/app/_contexts/AuthProvider";
 
 export function Header() {
   const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -39,7 +41,7 @@ export function Header() {
           <div className="hidden md:flex items-center gap-2 text-gray-700">
             <Input
               placeholder="Search..."
-              className="w-64 bg-muted/50 border-border h-10 text-lg! text-foreground placeholder:text-muted-foreground"
+              className="w-64 bg-muted/50 dark:border-gray-900! h-10 text-lg! text-foreground placeholder:text-muted-foreground"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -69,7 +71,7 @@ export function Header() {
         <div className="hidden md:flex items-center gap-2 text-gray-700">
           <Input
             placeholder="Search..."
-            className="w-100 bg-muted/50 border-border h-10 text-lg! text-foreground placeholder:text-muted-foreground"
+            className="w-100 bg-muted/50 border-gray-600! h-10 text-lg! text-foreground placeholder:text-muted-foreground"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -106,13 +108,13 @@ export function Header() {
               <div className="flex items-center gap-2 p-2">
                 <Avatar className="h-12 w-12">
                   <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" />
-                  <AvatarFallback>JC</AvatarFallback>
+                  <AvatarFallback>{user?.name}</AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="text-sm font-semibold text-foreground">
-                    Jone Copper
+                    {user?.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">Admin</p>
+                  <p className="text-xs text-muted-foreground">{user?.role}</p>
                 </div>
               </div>
               <DropdownMenuSeparator />
