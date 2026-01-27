@@ -1,0 +1,41 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+// List of routes that require authentication
+const protectedRoutes = ["/checkout", "/dashboard"];
+
+// List of routes that should NOT be accessible if already logged in
+const authRoutes = ["/login", "/signup"];
+
+/**
+ * Next.js 16 Proxy
+ * Replaces middleware.ts for lightweight routing and protection
+ */
+export function proxy(request: NextRequest) {
+  const token = request.cookies.get("access_token")?.value;
+  const { pathname, search } = request.nextUrl;
+
+  // 1. If user is trying to access a protected route and has no token
+  if (protectedRoutes.some((route) => pathname.startsWith(route))) {
+    if (!token) {
+      const loginUrl = new URL("/login", request.url);
+      // Store the destination to redirect back after login
+      loginUrl.searchParams.set("callbackUrl", pathname + search);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // 2. If user is already logged in and tries to access login/signup
+  if (authRoutes.some((route) => pathname.startsWith(route))) {
+    if (token) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  return NextResponse.next();
+}
+
+// Matching Paths
+export const config = {
+  matcher: ["/checkout/:path*", "/dashboard/:path*", "/login", "/signup"],
+};

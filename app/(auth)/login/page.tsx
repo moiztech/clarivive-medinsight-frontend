@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useAuth } from "@/app/_contexts/AuthProvider"; // ✅ use new context
 
 export default function LoginPage() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -28,7 +29,11 @@ export default function LoginPage() {
     try {
       await login(form.email, form.password);
       toast.success("Login successful");
-      router.push("/");
+
+      // Get callbackUrl from query params
+      const searchParams = new URLSearchParams(window.location.search);
+      const callbackUrl = searchParams.get("callbackUrl") || "/";
+      router.push(callbackUrl);
     } catch (error: any) {
       const message =
         error?.response?.data?.message || error?.message || "Login failed";

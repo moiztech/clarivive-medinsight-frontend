@@ -23,7 +23,7 @@ const doctors = [
 
 export function DoctorsSection() {
   return (
-    <section className="py-20 bg-slate-50 max-w-7xl mx-auto">
+    <section className="py-20 px-5 bg-slate-50 max-w-7xl mx-auto">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <span className="inline-flex items-center rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200 mb-6">

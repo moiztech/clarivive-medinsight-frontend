@@ -2,6 +2,7 @@
 import { Course, CourseData, DetailCourse } from "@/lib/types";
 import { Button } from "../ui/button";
 import { Clock, Grid3x2 } from "lucide-react";
+import Link from "next/link";
 import { parse } from "path";
 import DOMPurify from "dompurify";
 
@@ -29,7 +30,7 @@ const CourseDetailSection = ({ course }: Props) => {
             <img
               src={course.thumbnail}
               alt={course.title}
-              className="w-full h-[360px] object-cover"
+              className="w-full h-[240px] md:h-[300px]! lg:h-[360px]! object-cover"
             />
             <a
               href={`${course?.video?.url || course?.video?.file}`}
@@ -84,12 +85,14 @@ const CourseDetailSection = ({ course }: Props) => {
             </p>
           </div>
           <div className="text-center">
-            <Button
-              size={"lg"}
-              className="bg-primary-blue mx-auto rounded-sm w-2/4 text-lg hover:bg-primary-blue/80 font-medium"
-            >
-              Buy Course
-            </Button>
+            <Link href="/checkout">
+              <Button
+                size={"lg"}
+                className="bg-primary-blue mx-auto rounded-sm w-2/4 text-lg hover:bg-primary-blue/80 font-medium"
+              >
+                Buy Course
+              </Button>
+            </Link>
           </div>
 
           <div className="border-t border-b font-medium py-4 flex items-center justify-center gap-6 xl:gap-8 text-sm text-slate-600">

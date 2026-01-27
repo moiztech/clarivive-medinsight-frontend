@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { User, Building2, Stethoscope, HeartHandshake, Users, ShieldCheck, ChevronDown } from "lucide-react";
+import {
+  User,
+  Building2,
+  Stethoscope,
+  HeartHandshake,
+  Users,
+  ShieldCheck,
+  ChevronDown,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function BusinessOutcomesSection() {
@@ -142,7 +150,8 @@ export default function BusinessOutcomesSection() {
 
     customer: {
       headline: "Healthcare Agencies & Workforce Providers",
-      description: "Consistent training delivery for agencies supplying temporary, bank, or contract staff into health and social care environments.",
+      description:
+        "Consistent training delivery for agencies supplying temporary, bank, or contract staff into health and social care environments.",
       points: [
         "Standardized training across staff groups",
         "Clear certification boundaries",
@@ -160,8 +169,14 @@ export default function BusinessOutcomesSection() {
 
     member: {
       headline: "Independent & Specialist Care Services",
-      description: "Tailored training support for independent providers and specialist services operating under their own policies, risk frameworks, and service models.",
-      points: ["Bespoke training discussions", "Site-specific delivery where appropriate", "Alignment with local service needs", "Clear professional and governance boundaries"],
+      description:
+        "Tailored training support for independent providers and specialist services operating under their own policies, risk frameworks, and service models.",
+      points: [
+        "Bespoke training discussions",
+        "Site-specific delivery where appropriate",
+        "Alignment with local service needs",
+        "Clear professional and governance boundaries",
+      ],
 
       ctas: [
         {
@@ -176,11 +191,13 @@ export default function BusinessOutcomesSection() {
   const activeContent = tabContent[activeTab as keyof typeof tabContent];
 
   return (
-    <section className="py-24 px-6 bg-gray-50">
+    <section className="py-24 px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Heading */}
         <div className="text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 max-w-4xl mx-auto leading-tight">Supporting Training Across Health & Social Care</h2>
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 max-w-4xl mx-auto leading-tight">
+            Supporting Training Across Health & Social Care
+          </h2>
         </div>
 
         {/* Category Tabs */}
@@ -207,12 +224,24 @@ export default function BusinessOutcomesSection() {
                 >
                   {category.icon}
                 </div>
-                <h3 className="font-medium text-gray-900 text-md leading-tight">{category.title}</h3>
-                <ChevronDown className={`w-5 h-5 mx-auto text-purple-600 transition-transform duration-300 ${activeTab === category.id ? "rotate-180" : ""}`} />
+                <h3 className="font-medium text-gray-900 text-md leading-tight">
+                  {category.title}
+                </h3>
+                <ChevronDown
+                  className={`w-5 h-5 mx-auto text-purple-600 transition-transform duration-300 ${activeTab === category.id ? "rotate-180" : ""}`}
+                />
                 {activeTab === category.id && (
                   <div className="absolute hidden xl:block top-full left-0 right-0 h-8 bg-gray-100 z-0">
-                    {index === 0 ? " " : <span className="absolute -left-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tl-4xl" />}
-                    {index === categories.length - 1 ? " " : <span className="absolute -right-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tr-4xl" />}
+                    {index === 0 ? (
+                      " "
+                    ) : (
+                      <span className="absolute -left-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tl-4xl" />
+                    )}
+                    {index === categories.length - 1 ? (
+                      " "
+                    ) : (
+                      <span className="absolute -right-4 -bottom-4 w-4 h-7 bg-gray-100 rounded-tr-4xl" />
+                    )}
                   </div>
                 )}
               </button>
@@ -222,11 +251,18 @@ export default function BusinessOutcomesSection() {
 
         {/* Content Area with Animation */}
         <div className="bg-gray-100 rounded-4xl px-8 pt-10 pb-6 lg:px-6 shadow-sm overflow-hidden relative">
-          <div key={activeTab} className="grid lg:grid-cols-2 gap-12 items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div
+            key={activeTab}
+            className="grid lg:grid-cols-2 gap-12 items-center animate-in fade-in slide-in-from-bottom-4 duration-500"
+          >
             {/* Left Content */}
             <div className="space-y-6">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">{activeContent.headline}</h2>
-              <p className="text-lg text-gray-600 leading-relaxed">{activeContent.description}</p>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                {activeContent.headline}
+              </h2>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                {activeContent.description}
+              </p>
               <ul className="space-y-3">
                 {activeContent.points.map((point, index) => (
                   <li key={index} className="flex items-start gap-3">
@@ -247,8 +283,15 @@ export default function BusinessOutcomesSection() {
                     //   >
                     //     {cta.label}
                     //   </a>
-                    <Link key={index} href={`${cta.href}`} className="text-primary-blue  underline-offset-2 py-2 font-bold text-sm tracking-widest uppercase flex items-center gap-2 group/btn">
-                      {cta.label} <span className="transition-transform group-hover/btn:translate-x-1">+</span>
+                    <Link
+                      key={index}
+                      href={`${cta.href}`}
+                      className="text-primary-blue  underline-offset-2 py-2 font-bold text-sm tracking-widest uppercase flex items-center gap-2 group/btn"
+                    >
+                      {cta.label}{" "}
+                      <span className="transition-transform group-hover/btn:translate-x-1">
+                        +
+                      </span>
                     </Link>
                   ))}
                 </div>
@@ -263,11 +306,23 @@ export default function BusinessOutcomesSection() {
             {/* Right Image */}
             <div className="relative">
               <div className="relative aspect-square rounded-full overflow-hidden bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 p-8">
-                <Image src={activeContent.image || "/placeholder.svg"} alt={activeContent.headline} width={600} height={600} className="w-full h-full object-cover rounded-full" />
+                <Image
+                  src={activeContent.image || "/placeholder.svg"}
+                  alt={activeContent.headline}
+                  width={600}
+                  height={600}
+                  className="w-full h-full object-cover rounded-full"
+                />
               </div>
               {/* Decorative Elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-2xl animate-bounce" style={{ animationDuration: "3s" }} />
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-500 rounded-full animate-pulse" style={{ animationDuration: "2s" }} />
+              <div
+                className="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-2xl animate-bounce"
+                style={{ animationDuration: "3s" }}
+              />
+              <div
+                className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-500 rounded-full animate-pulse"
+                style={{ animationDuration: "2s" }}
+              />
             </div>
           </div>
         </div>

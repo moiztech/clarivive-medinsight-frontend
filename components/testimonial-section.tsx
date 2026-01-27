@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
-import { Star, Quote } from "lucide-react"
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
@@ -26,79 +26,82 @@ const testimonials = [
     role: "Cardiology",
     image: "/female-medical-professional.png",
   },
-]
+];
 
 export function TestimonialSection() {
-  const [index, setIndex] = useState(0)
-  const [dragOffset, setDragOffset] = useState(0) // px offset while dragging
-  const startX = useRef<number | null>(null)
-  const isDragging = useRef(false)
-  const trackRef = useRef<HTMLDivElement | null>(null)
-  const [paused, setPaused] = useState(false)
+  const [index, setIndex] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0); // px offset while dragging
+  const startX = useRef<number | null>(null);
+  const isDragging = useRef(false);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [paused, setPaused] = useState(false);
 
-  const INTERVAL = 3500 // autoplay interval in ms
-  const THRESHOLD = 50 // px required to trigger slide change
+  const INTERVAL = 3500; // autoplay interval in ms
+  const THRESHOLD = 50; // px required to trigger slide change
 
   // Keyboard navigation
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % testimonials.length)
-      if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + testimonials.length) % testimonials.length)
-    }
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [])
+      if (e.key === "ArrowRight")
+        setIndex((i) => (i + 1) % testimonials.length);
+      if (e.key === "ArrowLeft")
+        setIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // Autoplay
   useEffect(() => {
-    if (paused || isDragging.current) return
+    if (paused || isDragging.current) return;
     const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % testimonials.length)
-    }, INTERVAL)
-    return () => window.clearInterval(id)
-  }, [paused, index])
+      setIndex((i) => (i + 1) % testimonials.length);
+    }, INTERVAL);
+    return () => window.clearInterval(id);
+  }, [paused, index]);
 
   // Pointer (mouse/touch) handlers
   function onPointerDown(e: React.PointerEvent) {
     // only left button for mouse
-    if ((e as any).button === 2) return
-    startX.current = e.clientX
-    isDragging.current = true
-    setDragOffset(0)
-    setPaused(true)
+    if ((e as any).button === 2) return;
+    startX.current = e.clientX;
+    isDragging.current = true;
+    setDragOffset(0);
+    setPaused(true);
     // try to capture pointer so we continue receiving moves even if pointer leaves element
     try {
-      ;(e.target as Element).setPointerCapture?.(e.pointerId)
+      (e.target as Element).setPointerCapture?.(e.pointerId);
     } catch (err) {
       // ignore
     }
   }
 
   function onPointerMove(e: React.PointerEvent) {
-    if (!isDragging.current || startX.current == null) return
-    const diff = e.clientX - startX.current
-    setDragOffset(diff)
+    if (!isDragging.current || startX.current == null) return;
+    const diff = e.clientX - startX.current;
+    setDragOffset(diff);
   }
 
   function finishDrag(clientX?: number) {
-    if (startX.current == null) return
-    const endX = clientX ?? 0
-    const diff = (clientX ?? 0) - startX.current
+    if (startX.current == null) return;
+    const endX = clientX ?? 0;
+    const diff = (clientX ?? 0) - startX.current;
 
-    if (diff < -THRESHOLD) setIndex((i) => (i + 1) % testimonials.length)
-    else if (diff > THRESHOLD) setIndex((i) => (i - 1 + testimonials.length) % testimonials.length)
+    if (diff < -THRESHOLD) setIndex((i) => (i + 1) % testimonials.length);
+    else if (diff > THRESHOLD)
+      setIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
 
-    startX.current = null
-    isDragging.current = false
-    setDragOffset(0)
+    startX.current = null;
+    isDragging.current = false;
+    setDragOffset(0);
     // give autoplay a small timeout before resuming to avoid instant slide change
-    setTimeout(() => setPaused(false), 500)
+    setTimeout(() => setPaused(false), 500);
   }
 
   function onPointerUp(e: React.PointerEvent) {
-    finishDrag(e.clientX)
+    finishDrag(e.clientX);
     try {
-      ;(e.target as Element).releasePointerCapture?.(e.pointerId)
+      (e.target as Element).releasePointerCapture?.(e.pointerId);
     } catch (err) {
       // ignore
     }
@@ -106,29 +109,30 @@ export function TestimonialSection() {
 
   // Touch fallback (for older browsers without pointer events)
   function onTouchStart(e: React.TouchEvent) {
-    startX.current = e.touches[0].clientX
-    isDragging.current = true
-    setDragOffset(0)
-    setPaused(true)
+    startX.current = e.touches[0].clientX;
+    isDragging.current = true;
+    setDragOffset(0);
+    setPaused(true);
   }
 
   function onTouchMove(e: React.TouchEvent) {
-    if (!isDragging.current || startX.current == null) return
-    const diff = e.touches[0].clientX - startX.current
-    setDragOffset(diff)
+    if (!isDragging.current || startX.current == null) return;
+    const diff = e.touches[0].clientX - startX.current;
+    setDragOffset(diff);
   }
 
   function onTouchEnd(e: React.TouchEvent) {
-    if (startX.current == null) return
-    const endX = e.changedTouches[0].clientX
-    finishDrag(endX)
+    if (startX.current == null) return;
+    const endX = e.changedTouches[0].clientX;
+    finishDrag(endX);
   }
 
-  const basePercent = -index * (100 / testimonials.length)
-  const transitionStyle = dragOffset === 0 ? "transform 500ms ease-in-out" : "none"
+  const basePercent = -index * (100 / testimonials.length);
+  const transitionStyle =
+    dragOffset === 0 ? "transform 500ms ease-in-out" : "none";
 
   return (
-    <section className="py-24 bg-white overflow-hidden mx-auto lg:px-10 2xl:px-15">
+    <section className="py-24 px-5 overflow-hidden mx-auto lg:px-10 2xl:px-15">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left column stays fixed */}
@@ -142,13 +146,20 @@ export function TestimonialSection() {
                       <Star key={s} className="size-5 fill-current" />
                     ))}
                   </div>
-                  <p className="text-slate-500 text-sm font-medium">(2.5k+ reviews)</p>
+                  <p className="text-slate-500 text-sm font-medium">
+                    (2.5k+ reviews)
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden">
-              <Image src="/home/doctor-testimonial.jpg" alt="AI Medical Robot" fill className="object-cover" />
+              <Image
+                src="/home/doctor-testimonial.jpg"
+                alt="AI Medical Robot"
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
 
@@ -175,7 +186,11 @@ export function TestimonialSection() {
               onTouchEnd={onTouchEnd}
             >
               {testimonials.map((t) => (
-                <div key={t.name} className="px-9" style={{ width: `${100 / testimonials.length}%` }}>
+                <div
+                  key={t.name}
+                  className="px-9"
+                  style={{ width: `${100 / testimonials.length}%` }}
+                >
                   <div className="space-y-8">
                     <div className="text-indigo-100">
                       <Quote className="size-20" strokeWidth={1} />
@@ -185,11 +200,20 @@ export function TestimonialSection() {
 
                     <div className="flex items-center gap-6">
                       <div className="relative size-16 rounded-full overflow-hidden ring-4 ring-indigo-50 w-16 h-16">
-                        <Image src={t.image} alt={t.name} fill className="object-cover" />
+                        <Image
+                          src={t.image}
+                          alt={t.name}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
                       <div>
-                        <h4 className="text-xl font-medium text-slate-900">{t.name}</h4>
-                        <p className="text-indigo-600 font-normal italic">{t.role}</p>
+                        <h4 className="text-xl font-medium text-slate-900">
+                          {t.name}
+                        </h4>
+                        <p className="text-indigo-600 font-normal italic">
+                          {t.role}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -212,5 +236,5 @@ export function TestimonialSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

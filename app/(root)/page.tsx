@@ -29,7 +29,7 @@ export default function HomePage() {
       <AnimateOnScroll>
         <HeroSection />
       </AnimateOnScroll>
-      <section className="max-w-full px-5 lg:px-10 mx-auto font-bold text-4xl text-center pt-25 pb-25 lg:max-w-6xl">
+      <section className="max-w-full px-8 lg:px-10 mx-auto font-bold text-2xl xl:text-4xl text-center py-20 xl:py-25 lg:max-w-6xl">
         Our vision is to provide organizations of all sizes with accessible,
         practical, and easy-to-understand health, safety, and care training,
         helping your team stay skilled, confident, and compliant in everyday

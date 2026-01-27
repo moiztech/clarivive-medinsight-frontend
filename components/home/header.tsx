@@ -72,7 +72,7 @@ const navigationItems: NavItem[] = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(
-    null
+    null,
   );
   const { user } = useAuth();
   const { logout } = useAuth();
@@ -198,9 +198,12 @@ export default function Header() {
             )}
             <Button
               size={"lg"}
-              className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 ps-4! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex"
+              className="bg-[#1321F1] py-0! hover:bg-[#1321F1]/80 ps-0! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex"
             >
-              LMS <NavOffcanvas />
+              <Link className="ps-4! py-2!" href={"/dashboard/lms"}>
+                LMS
+              </Link>
+              <NavOffcanvas />
               {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
             </Button>
 
@@ -238,7 +241,7 @@ export default function Header() {
                       type="button"
                       onClick={() =>
                         setMobileSubmenuOpen(
-                          mobileSubmenuOpen === item.label ? null : item.label
+                          mobileSubmenuOpen === item.label ? null : item.label,
                         )
                       }
                       className="text-sm font-medium flex items-center gap-2 w-full"

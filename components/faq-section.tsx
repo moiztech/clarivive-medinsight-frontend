@@ -90,7 +90,7 @@ const faqs = [
 
 export function FaqSection() {
   return (
-    <section className="py-24 bg-white lg:px-10 2xl:px-15">
+    <section className="py-24 px-8 bg-white lg:px-10 2xl:px-15">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Left Column: Image & Contact */}

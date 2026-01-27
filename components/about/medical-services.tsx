@@ -1,5 +1,13 @@
 "use client";
-import { ArrowUpRight, Brain, Flower2, Bone, Activity, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  Brain,
+  Flower2,
+  Bone,
+  Activity,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import AnimateOnScroll from "../ui/animate-on-scroll";
@@ -21,14 +29,17 @@ export default function MedicalServices() {
       title: "Face-to-Face Training",
       description:
         "We deliver classroom-based training across the UK, led by experienced trainers. Our face-to-face courses emphasize practical learning, real-life scenarios, and safe skill development.",
-      image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&q=80",
       href: "/courses/face-to-face",
     },
     {
       icon: Flower2,
       title: "Online Learning",
-      description: "For organizations requiring flexibility, we offer professionally developed online training that can be completed anytime and anywhere.",
-      image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80",
+      description:
+        "For organizations requiring flexibility, we offer professionally developed online training that can be completed anytime and anywhere.",
+      image:
+        "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80",
       href: "/courses/online",
     },
     // {
@@ -152,7 +163,7 @@ export default function MedicalServices() {
   }, [itemsPerSlide, isPaused, services.length]);
   const shouldCenter = services.length < itemsPerSlide;
   return (
-    <section className="py-20 bg-blue-600 relative overflow-hidden lg:px-20 2xl:px-25">
+    <section className="py-20 bg-blue-600 relative overflow-hidden px-8 lg:px-20 2xl:px-25">
       <div
         ref={containerRef}
         onPointerDown={handlePointerDown}
@@ -163,39 +174,59 @@ export default function MedicalServices() {
         onMouseLeave={() => setIsPaused(false)}
         onDragStart={(e) => e.preventDefault()}
         className="container mx-auto overflow-hidden max-w-7xl"
-        style={{ touchAction: "pan-y", userSelect: isDragging ? "none" : undefined }}
+        style={{
+          touchAction: "pan-y",
+          userSelect: isDragging ? "none" : undefined,
+        }}
       >
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-full text-sm text-white mb-6">Our Courses</div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-700 rounded-full text-sm text-white mb-6">
+            Our Courses
+          </div>
           <h2 className="text-4xl lg:text-6xl font-medium mx-auto max-w-3xl text-white">
-            Our Training Courses – Expert Learning for <span className="italic font-serif">Every professional</span>
+            Our Training Courses – Expert Learning for{" "}
+            <span className="italic font-serif">Every professional</span>
           </h2>
         </div>
 
         {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"> */}
         {/** Compute centering when fewer than 4 slides, otherwise normal sliding */}
         <div
-          className={shouldCenter ? "flex justify-center gap-6" : `flex ${isDragging ? "" : "transition-transform duration-500 ease-out"}`}
+          className={
+            shouldCenter
+              ? "flex justify-center gap-6"
+              : `flex ${isDragging ? "" : "transition-transform duration-500 ease-out"}`
+          }
           style={
             shouldCenter
               ? undefined
               : {
                   transform: (() => {
                     const base = -currentIndex * 100;
-                    const dragPercent = (dragOffset / (containerRef.current?.clientWidth || 1)) * 100;
+                    const dragPercent =
+                      (dragOffset / (containerRef.current?.clientWidth || 1)) *
+                      100;
                     return `translateX(${base + dragPercent}%)`;
                   })(),
                 }
           }
         >
           {services.map((service, index) => (
-            <AnimateOnScroll key={index} className={`shrink-0 px-2 ${shouldCenter ? "w-full md:w-[360px]" : "w-full md:w-1/2 xl:w-1/4"}`}>
+            <AnimateOnScroll
+              key={index}
+              className={`shrink-0 px-2 ${shouldCenter ? "w-full md:w-[360px]" : "w-full md:w-1/2 xl:w-1/4"}`}
+            >
               <div
                 className="bg-white rounded-3xl rounded-br-2xl overflow-hidden group
-             transition-transform duration-300 flex flex-col h-[520px] relative border-0 [transform:translateZ(0)]"
+             transition-transform duration-300 flex flex-col lg:h-[520px] relative border-0 [transform:translateZ(0)]"
               >
-                <div className="relative h-90 lg:h-54 2xl:h-60 flex-shrink-0">
-                  <Image src={service.image || "/placeholder.svg"} alt={service.title} fill className="object-cover" />
+                <div className="relative h-70 lg:h-54 2xl:h-60 flex-shrink-0">
+                  <Image
+                    src={service.image || "/placeholder.svg"}
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                  />
                   <div className="absolute bottom-4 left-4">
                     <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center">
                       <service.icon className="w-7 h-7 text-white" />
@@ -204,8 +235,13 @@ export default function MedicalServices() {
                 </div>
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-3">{service.title}</h3>
-                    <p className="text-gray-600 leading-relaxed mb-4 line-clamp-4" title={service.description}>
+                    <h3 className="text-2xl font-semibold text-gray-900 mb-3">
+                      {service.title}
+                    </h3>
+                    <p
+                      className="text-gray-600 leading-relaxed mb-4 line-clamp-4 pe-10 xl:pe-5"
+                      title={service.description}
+                    >
                       {service.description}
                     </p>
                   </div>
@@ -241,7 +277,12 @@ export default function MedicalServices() {
           <ArrowUpRight className="w-6 h-6" />
         </button> */}
         <div className="flex items-center justify-center gap-4 mt-8">
-          <Button variant="outline" size="icon" onClick={prevSlide} className="rounded-full xl:hidden bg-white/80 hover:bg-white border-cyan-400">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={prevSlide}
+            className="rounded-full xl:hidden bg-white/80 hover:bg-white border-cyan-400"
+          >
             <ChevronLeft className="h-5 w-5 text-gray-900" />
           </Button>
 
@@ -256,7 +297,12 @@ export default function MedicalServices() {
             ))}
           </div>
 
-          <Button variant="outline" size="icon" onClick={nextSlide} className="rounded-full xl:hidden bg-white/80 hover:bg-white border-cyan-400">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={nextSlide}
+            className="rounded-full xl:hidden bg-white/80 hover:bg-white border-cyan-400"
+          >
             <ChevronRight className="h-5 w-5 text-gray-900" />
           </Button>
         </div>

@@ -59,7 +59,7 @@ export default function LaboratoryAdvantages({
 }: LaboratoryAdvantagesProps) {
   return (
     <section className="py-20 bg-white">
-      <div className="container mx-auto lg:px-20 2xl:px-25">
+      <div className="container mx-auto px-8 lg:px-20 2xl:px-25">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Left side */}
           <div className="shrink-0 lg:w-1/3">
