@@ -1,6 +1,6 @@
 type Service = {
   title: string;
-  icon: React.ReactNode | string;
+  icon: any;
   description?: string;
   slug?: string;
 };
