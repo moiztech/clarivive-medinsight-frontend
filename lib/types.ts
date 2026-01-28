@@ -1,6 +1,6 @@
 type Service = {
   title: string;
-  icon: any;
+  icon: string;
   description?: string;
   slug?: string;
 };

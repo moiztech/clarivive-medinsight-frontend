@@ -11,12 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   ArrowLeftFromLine,
-  BriefcaseIcon as CertificateIcon,
   ChevronRight,
-  Home,
-  Link as LinkIcon,
   LogOut,
-  type LucideIcon,
   Menu,
   Settings,
   User,
@@ -96,7 +92,7 @@ export function Sidebar({ navItems }: SidebarProps) {
                 </div>
               )}
               {isExpanded && (
-                <ChevronRight className="h-4 w-4 text-sidebar-accent-foreground ml-auto flex-shrink-0" />
+                <ChevronRight className="h-4 w-4 text-sidebar-accent-foreground ml-auto shrink-0" />
               )}
             </Button>
           </DropdownMenuTrigger>
@@ -145,7 +141,7 @@ export function Sidebar({ navItems }: SidebarProps) {
                     : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 }`}
               >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
+                <item.icon className="h-5 w-5 shrink-0" />
                 {isExpanded && (
                   <span className="text-sm font-medium truncate">
                     {item.label}
@@ -163,7 +159,7 @@ export function Sidebar({ navItems }: SidebarProps) {
           variant="ghost"
           className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent"
         >
-          <Settings className="h-5 w-5 flex-shrink-0" />
+          <Settings className="h-5 w-5 shrink-0" />
           {isExpanded && <span className="ml-3 truncate">Settings</span>}
         </Button>
       </div>

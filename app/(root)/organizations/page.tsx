@@ -3,44 +3,12 @@ import LaboratoryAdvantages, {
   LaboratoryAdvantagesProps,
 } from "@/components/about/laboratory-advantages";
 import BreadCrumb from "@/components/BreadCrumb";
-import Image from "next/image";
-import {
-  Blend,
-  Check,
-  Pickaxe,
-  RefreshCcw,
-  ScanFace,
-  Star,
-} from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  FaFacebook,
-  FaLinkedin,
-  FaLinkedinIn,
-  FaTwitter,
-  FaWhatsapp,
-} from "react-icons/fa";
+import { Blend, Pickaxe, RefreshCcw, ScanFace } from "lucide-react";
 import {
   Heart,
   Eye,
   Brain,
   Activity,
-  Phone,
-  Mail,
-  MapPin,
-  Facebook,
-  Twitter,
-  Linkedin,
   Syringe,
   ClipboardList,
   Stethoscope,
@@ -53,9 +21,6 @@ import { OrganizationalPortalAccess } from "@/components/for-organization/Organi
 import ProcessSection, {
   ProcessSectionProps,
 } from "@/components/courses/process-section";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { serverApi } from "@/lib/axios";
 import OrganizationInquiry from "@/components/for-organization/Organization-Inquiry";
 
 function page() {

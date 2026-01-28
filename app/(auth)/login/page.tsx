@@ -10,10 +10,9 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useAuth } from "@/app/_contexts/AuthProvider"; // ✅ use new context
+import { useAuth } from "@/app/_contexts/AuthProvider";
 
 export default function LoginPage() {
-  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: "",
