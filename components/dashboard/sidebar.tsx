@@ -84,10 +84,10 @@ export function Sidebar({ navItems }: SidebarProps) {
               {isExpanded && (
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-sidebar-foreground truncate">
-                    {user?.name}
+                    {user?.name ?? "Lorem ipsum"}
                   </p>
                   <p className="text-xs text-start text-sidebar-accent-foreground">
-                    {user?.role}
+                    {user?.role ?? "Lorem ipsum"}
                   </p>
                 </div>
               )}

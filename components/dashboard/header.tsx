@@ -12,16 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Bell,
-  Globe,
-  LogOut,
-  Search,
-  Settings,
-  User,
-  Moon,
-  Sun,
-} from "lucide-react";
+import { Bell, LogOut, Settings, User, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 
