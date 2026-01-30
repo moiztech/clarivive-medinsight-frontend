@@ -13,15 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Search,
-  ShoppingCart,
-  Menu,
-  ArrowUpIcon,
-  ChevronDown,
-  Diamond,
-  User,
-} from "lucide-react";
+import { Search, Menu, ArrowUpIcon, ChevronDown, User } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -32,6 +24,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import NavOffcanvas from "../nav-offcanvas";
 import { useAuth } from "@/app/_contexts/AuthProvider";
+import CartPopover from "./cart-popover";
 // import { useAuthActions } from "@/app/_hooks/useAuthActions";
 
 interface NavItem {
@@ -155,12 +148,7 @@ export default function Header() {
               <Search className="w-5 h-5" />
             </Button>
 
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-blue-500 text-secondary-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center">
-                0
-              </span>
-            </Button>
+            <CartPopover />
 
             {user ? (
               <DropdownMenu modal={false}>

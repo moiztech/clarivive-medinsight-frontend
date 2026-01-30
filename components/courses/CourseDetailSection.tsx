@@ -1,17 +1,35 @@
-// components/CourseDetailSection.tsx
-import { Course, CourseData, DetailCourse } from "@/lib/types";
+"use client";
+
+import { CourseData, DetailCourse } from "@/lib/types";
 import { Button } from "../ui/button";
-import { Clock, Grid3x2 } from "lucide-react";
+import { Clock, Grid3x2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { parse } from "path";
-import DOMPurify from "dompurify";
+import { useCart } from "@/app/_contexts/CartContext";
+import { toast } from "sonner";
+import Image from "next/image";
 
 interface Props {
   course: DetailCourse;
 }
 
 const CourseDetailSection = ({ course }: Props) => {
-  // const sanitizedHtml = DOMPurify.sanitize(course.content || "");
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    // Convert DetailCourse to CourseData
+    const courseData: CourseData = {
+      id: course.id,
+      title: course.title,
+      slug: course.slug,
+      thumbnail: course.thumbnail,
+      description: course.description,
+      price: course.price,
+      topics: course.topics,
+    };
+    addItem(courseData);
+    toast.success("Added to cart!");
+  };
+
   return (
     <section className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-10">
@@ -26,36 +44,23 @@ const CourseDetailSection = ({ course }: Props) => {
           </div>
 
           {/* Image */}
-          <div className="relative rounded-xl overflow-hidden">
-            <img
+          <div className="relative rounded-xl overflow-hidden w-full h-[240px] md:h-[300px]! lg:h-[360px]!">
+            <Image
               src={course.thumbnail}
               alt={course.title}
-              className="w-full h-[240px] md:h-[300px]! lg:h-[360px]! object-cover"
+              fill
+              className="object-cover"
+              priority
             />
             <a
               href={`${course?.video?.url || course?.video?.file}`}
               target="_blank"
-              className="absolute bottom-4 left-4 bg-orange-500 text-white px-4 py-2 text-sm rounded-md"
+              className="absolute bottom-4 left-4 bg-orange-500 text-white px-4 py-2 text-sm rounded-md z-10"
             >
               Watch Trailer
             </a>
           </div>
           <div dangerouslySetInnerHTML={{ __html: course.content || "" }} />
-          {/* About */}
-          {/* <div>
-            <h2 className="text-xl font-semibold text-slate-800">
-              About the course
-            </h2>
-            <p className="mt-2 text-slate-600">{course?.about}</p>
-          </div> */}
-
-          {/* Who is this for */}
-          {/* <div>
-            <h2 className="text-xl font-semibold text-slate-800">
-              Who is this course for?
-            </h2>
-            <p className="mt-2 text-slate-600">{course.whoIsFor}</p>
-          </div> */}
 
           {/* Coverage */}
           <div>
@@ -84,13 +89,22 @@ const CourseDetailSection = ({ course }: Props) => {
               £{course.price}
             </p>
           </div>
-          <div className="text-center">
-            <Link href="/checkout">
+          <div className="flex flex-col gap-3">
+            <Button
+              size={"lg"}
+              onClick={handleAddToCart}
+              className="bg-primary-blue rounded-md w-full text-lg hover:bg-primary-blue/80 font-medium flex items-center justify-center gap-2"
+            >
+              <ShoppingCart size={20} />
+              Add to Cart
+            </Button>
+            <Link href={`/checkout/${course.slug}`} className="w-full">
               <Button
                 size={"lg"}
-                className="bg-primary-blue mx-auto rounded-sm w-2/4 text-lg hover:bg-primary-blue/80 font-medium"
+                variant="outline"
+                className="rounded-md w-full text-lg font-medium"
               >
-                Buy Course
+                Buy Now
               </Button>
             </Link>
           </div>
@@ -111,15 +125,6 @@ const CourseDetailSection = ({ course }: Props) => {
               </p>
             </div>
           </div>
-
-          {/* <ul className="space-y-2 text-sm text-slate-600">
-            {course.features.map((feature, index) => (
-              <li key={index} className="flex gap-2">
-                <span className="text-green-600">✓</span>
-                {feature}
-              </li>
-            ))}
-          </ul> */}
         </aside>
       </div>
     </section>

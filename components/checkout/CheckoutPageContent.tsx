@@ -1,79 +1,97 @@
 "use client";
 
 import React, { useState } from "react";
-import { Course, CourseData, DetailCourse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ShoppingBag, ChevronRight, Info } from "lucide-react";
+import { ShoppingBag, Info } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/app/_contexts/AuthProvider";
-interface CheckoutPageContentProps {
-  course: CourseData | DetailCourse | Course;
-}
+import { useCart } from "@/app/_contexts/CartContext";
+import Image from "next/image";
 
-const CheckoutPageContent = ({ course }: CheckoutPageContentProps) => {
+const CheckoutPageContent = () => {
   const { user } = useAuth();
+  const { items, totalPrice } = useCart();
   const [discountCode, setDiscountCode] = useState("");
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <ShoppingBag className="w-16 h-16 text-slate-300 mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
+        <p className="text-slate-500 mb-6">
+          Add some courses to your cart before checking out.
+        </p>
+        <Link href="/courses/online">
+          <Button className="bg-primary-blue">Browse Courses</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       {/* Header */}
       <header className="border-b border-slate-100 py-6 px-4 md:px-8">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold tracking-tight">
+          <Link
+            href="/"
+            className="text-2xl font-bold tracking-tight text-primary-blue"
+          >
             CLARIVIVE
           </Link>
-          <button className="text-slate-600 hover:text-slate-900 transition-colors">
+          <Link
+            href="/"
+            className="text-slate-600 hover:text-slate-900 transition-colors relative"
+          >
             <ShoppingBag className="w-6 h-6" />
-          </button>
+            <span className="absolute -top-2 -right-2 bg-primary-blue text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
+              {items.length}
+            </span>
+          </Link>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto grid lg:grid-cols-2 min-h-[calc(100-80px)]">
+      <main className="max-w-7xl mx-auto grid lg:grid-cols-2 min-h-[calc(100vh-80px)]">
         {/* Left Column: Form */}
         <div className="p-4 md:p-8 lg:p-12 space-y-10 border-r border-slate-100">
           {/* Contact */}
           <section className="space-y-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Contact</h2>
-              {/* <Link href="/login" className="text-blue-600 text-sm underline">
-                Log in
-              </Link> */}
+              <h2 className="text-xl font-semibold">Contact Details</h2>
             </div>
-            <div className="space-y-2">
-              <Input
-                placeholder="Email or mobile phone number"
-                readOnly
-                disabled
-                value={user?.email}
-                className="h-12 border-slate-300 focus:ring-2 focus:ring-blue-500 rounded-lg"
-              />
-              {/* <div className="flex items-center space-x-2">
-                <Checkbox id="marketing" />
-                <label
-                  htmlFor="marketing"
-                  className="text-sm text-slate-600 cursor-pointer"
-                >
-                  Email me with news and offers
-                </label>
-              </div> */}
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  placeholder="Email address"
+                  readOnly
+                  disabled
+                  value={user?.email || ""}
+                  className="h-12 border-slate-300 bg-slate-50 rounded-lg cursor-not-allowed"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Full name"
+                  readOnly
+                  disabled
+                  value={user?.name || ""}
+                  className="h-12 border-slate-300 bg-slate-50 rounded-lg cursor-not-allowed"
+                />
+              </div>
             </div>
           </section>
 
           {/* Payment */}
           <section className="space-y-4">
             <div>
-              <h2 className="text-xl font-semibold">Payment</h2>
+              <h2 className="text-xl font-semibold">Payment Method</h2>
               <p className="text-sm text-slate-500">
                 All transactions are secure and encrypted.
               </p>
@@ -111,42 +129,6 @@ const CheckoutPageContent = ({ course }: CheckoutPageContentProps) => {
             </RadioGroup>
           </section>
 
-          {/* Billing Address */}
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold">Billing address</h2>
-            <RadioGroup
-              defaultValue="same"
-              className="border border-slate-200 rounded-lg overflow-hidden"
-            >
-              <div className="flex items-center space-x-3 p-4 border-b border-slate-200 bg-blue-50/20">
-                <RadioGroupItem
-                  value="same"
-                  id="same"
-                  className="text-primary-blue border-primary-blue"
-                />
-                <Label
-                  htmlFor="same"
-                  className="flex-1 cursor-pointer font-medium"
-                >
-                  Same as shipping address
-                </Label>
-              </div>
-              <div className="flex items-center space-x-3 p-4">
-                <RadioGroupItem
-                  value="different"
-                  id="different"
-                  className="text-primary-blue"
-                />
-                <Label
-                  htmlFor="different"
-                  className="flex-1 cursor-pointer font-medium"
-                >
-                  Use a different billing address
-                </Label>
-              </div>
-            </RadioGroup>
-          </section>
-
           <Button className="w-full h-14 text-lg font-semibold bg-primary-blue hover:bg-primary-blue/90 text-white rounded-lg shadow-sm transition-all uppercase tracking-wide">
             Complete order
           </Button>
@@ -173,75 +155,90 @@ const CheckoutPageContent = ({ course }: CheckoutPageContentProps) => {
 
         {/* Right Column: Summary */}
         <div className="bg-slate-50/50 p-4 md:p-8 lg:p-12 space-y-8">
-          {/* Course Info */}
-          <div className="flex gap-4 items-center">
-            <div className="relative">
-              <div className="w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-white shrink-0">
-                <img
-                  src={(course as any).thumbnail || (course as any).image}
-                  alt={course.title}
-                  className="w-full h-full object-cover"
-                />
+          <h2 className="text-xl font-semibold">Order Summary</h2>
+
+          {/* Cart Items */}
+          <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="flex gap-4 items-center animate-in fade-in slide-in-from-right-4 duration-300"
+              >
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-white shrink-0">
+                    <Image
+                      src={item.thumbnail}
+                      alt={item.title}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="absolute -top-2 -right-2 bg-slate-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                    1
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-medium leading-tight truncate">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 uppercase tracking-tighter">
+                    Course
+                  </p>
+                </div>
+                <div className="text-sm font-semibold">
+                  £{item.price.toFixed(2)}
+                </div>
               </div>
-              <span className="absolute -top-2 -right-2 bg-slate-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                1
-              </span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-medium leading-tight">
-                {course.title}
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">One-time purchase</p>
-            </div>
-            <div className="text-sm font-medium">
-              £{course.price.toFixed(2)}
-            </div>
+            ))}
           </div>
 
-          {/* Discount Code */}
-          <div className="flex gap-2">
-            <Input
-              placeholder="Discount code or gift card"
-              value={discountCode}
-              onChange={(e) => setDiscountCode(e.target.value)}
-              className="h-12 border-slate-300 bg-white rounded-lg focus-visible:ring-primary-blue"
-            />
-            <Button
-              variant="outline"
-              className="h-12 px-6 bg-slate-100 border-slate-200 text-slate-500 font-semibold hover:bg-slate-200 transition-colors"
-              disabled={!discountCode}
-            >
-              Apply
-            </Button>
-          </div>
-
-          {/* Totals */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-600">Subtotal</span>
-              <span className="font-medium text-slate-900">
-                £{course.price.toFixed(2)}
-              </span>
+          <div className="border-t border-slate-200 pt-6 space-y-4">
+            {/* Discount Code */}
+            <div className="flex gap-2">
+              <Input
+                placeholder="Discount code"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+                className="h-12 border-slate-300 bg-white rounded-lg focus-visible:ring-primary-blue"
+              />
+              <Button
+                variant="outline"
+                className="h-12 px-6 bg-white border-slate-200 font-semibold hover:bg-slate-50 transition-colors"
+                disabled={!discountCode}
+              >
+                Apply
+              </Button>
             </div>
-            <div className="flex justify-between text-sm">
-              <div className="flex items-center gap-1">
-                <span className="text-slate-600">Shipping</span>
-                <Info className="w-3 h-3 text-slate-400" />
+
+            {/* Totals */}
+            <div className="space-y-2 pt-4">
+              <div className="flex justify-between text-sm text-slate-600">
+                <span>Subtotal</span>
+                <span className="font-medium text-slate-900">
+                  £{totalPrice.toFixed(2)}
+                </span>
               </div>
-              <span className="text-slate-900 text-xs font-semibold uppercase">
-                Free
-              </span>
-            </div>
+              <div className="flex justify-between text-sm text-slate-600">
+                <div className="flex items-center gap-1">
+                  <span>Shipping</span>
+                  <Info className="w-3 h-3 text-slate-400" />
+                </div>
+                <span className="text-green-600 text-xs font-bold uppercase">
+                  Free
+                </span>
+              </div>
 
-            <div className="pt-4 flex justify-between items-baseline">
-              <span className="text-lg font-bold text-slate-900">Total</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xs text-slate-500 font-medium tracking-tight">
-                  GBP
-                </span>
-                <span className="text-2xl font-bold text-slate-900 tracking-tight">
-                  £{course.price.toFixed(2)}
-                </span>
+              <div className="pt-4 mt-4 border-t border-slate-200 flex justify-between items-baseline">
+                <span className="text-lg font-bold text-slate-900">Total</span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xs text-slate-500 font-medium">
+                    GBP
+                  </span>
+                  <span className="text-2xl font-bold text-slate-900 tracking-tight">
+                    £{totalPrice.toFixed(2)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
