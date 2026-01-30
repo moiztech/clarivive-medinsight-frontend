@@ -59,14 +59,16 @@ export default function CartPopover() {
             <div className="divide-y">
               {items.map((item) => (
                 <div key={item.id} className="p-4 flex gap-3 group relative">
-                  <div className="relative w-16 h-16 rounded-md overflow-hidden bg-muted flex-shrink-0">
-                    <Image
-                      src={item.thumbnail}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                  <Link href={item?.link ?? "/"}>
+                    <div className="relative w-16 h-16 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                      <Image
+                        src={item.thumbnail}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </Link>
                   <div className="flex-1 min-w-0 pr-6">
                     <h4 className="text-sm font-medium text-slate-900 truncate">
                       {item.title}

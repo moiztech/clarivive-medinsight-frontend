@@ -2,10 +2,12 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { CourseData } from "@/lib/types";
-
+export type cartItem = CourseData & {
+  link?: string;
+};
 interface CartContextType {
-  items: CourseData[];
-  addItem: (item: CourseData) => void;
+  items: cartItem[];
+  addItem: (item: cartItem) => void;
   removeItem: (id: number) => void;
   clearCart: () => void;
   totalItems: number;
@@ -15,7 +17,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<CourseData[]>([]);
+  const [items, setItems] = useState<cartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Load from localStorage on mount
@@ -41,7 +43,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [items, isInitialized]);
 
-  const addItem = (item: CourseData) => {
+  const addItem = (item: cartItem) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {

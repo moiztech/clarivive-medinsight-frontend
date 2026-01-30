@@ -4,30 +4,38 @@ import { CourseData, DetailCourse } from "@/lib/types";
 import { Button } from "../ui/button";
 import { Clock, Grid3x2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { useCart } from "@/app/_contexts/CartContext";
+import { cartItem, useCart } from "@/app/_contexts/CartContext";
 import { toast } from "sonner";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 interface Props {
   course: DetailCourse;
 }
 
 const CourseDetailSection = ({ course }: Props) => {
-  const { addItem } = useCart();
-
-  const handleAddToCart = () => {
-    // Convert DetailCourse to CourseData
-    const courseData: CourseData = {
-      id: course.id,
-      title: course.title,
-      slug: course.slug,
-      thumbnail: course.thumbnail,
-      description: course.description,
-      price: course.price,
-      topics: course.topics,
-    };
-    addItem(courseData);
-    toast.success("Added to cart!");
+  const { addItem, removeItem, items } = useCart();
+  const isInCart = items.some((it) => it.id === course.id);
+  const link = usePathname();
+  const handleToggleCart = () => {
+    if (isInCart) {
+      removeItem(course.id);
+      toast.success("Removed from cart");
+    } else {
+      // Convert DetailCourse to CourseData
+      const courseData: cartItem = {
+        id: course.id,
+        title: course.title,
+        slug: course.slug,
+        thumbnail: course.thumbnail,
+        description: course.description,
+        price: course.price,
+        topics: course.topics,
+        link: link,
+      };
+      addItem(courseData);
+      toast.success("Added to cart!");
+    }
   };
 
   return (
@@ -92,11 +100,11 @@ const CourseDetailSection = ({ course }: Props) => {
           <div className="flex flex-col gap-3">
             <Button
               size={"lg"}
-              onClick={handleAddToCart}
+              onClick={handleToggleCart}
               className="bg-primary-blue rounded-md w-full text-lg hover:bg-primary-blue/80 font-medium flex items-center justify-center gap-2"
             >
               <ShoppingCart size={20} />
-              Add to Cart
+              {isInCart ? "Remove from Cart" : "Add to Cart"}
             </Button>
             <Link href={`/checkout/${course.slug}`} className="w-full">
               <Button
