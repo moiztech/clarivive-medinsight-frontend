@@ -8,7 +8,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 
@@ -20,7 +19,6 @@ export default function LoginPage() {
     remember: false,
   });
 
-  const router = useRouter();
   const { login } = useAuth();
 
   const handleSubmit = async () => {
@@ -32,10 +30,17 @@ export default function LoginPage() {
       // Get callbackUrl from query params
       const searchParams = new URLSearchParams(window.location.search);
       const callbackUrl = searchParams.get("callbackUrl") || "/";
-      router.push(callbackUrl);
-    } catch (error: any) {
+
+      // Using window.location.href ensures a hard reload, which is necessary
+      // for the proxy/middleware to detect the newly set cookies.
+      window.location.href = callbackUrl;
+    } catch (error) {
+      const err = error as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
       const message =
-        error?.response?.data?.message || error?.message || "Login failed";
+        err.response?.data?.message || err.message || "Login failed";
       toast.error(message);
     } finally {
       setLoading(false);

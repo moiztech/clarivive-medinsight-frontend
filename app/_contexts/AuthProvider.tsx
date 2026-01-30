@@ -5,10 +5,10 @@ import { clientApi } from "@/lib/axios";
 import { tokenStore } from "@/lib/auth/tokenStore";
 import { userStore } from "@/lib/auth/userStore";
 
-type User = any;
+import { UserType } from "@/lib/types";
 
 type AuthCtx = {
-  user: User | null;
+  user: UserType | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
@@ -18,7 +18,7 @@ type AuthCtx = {
 const Ctx = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function login(email: string, password: string, remember = false) {
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           userStore.set(res.data.user ?? null);
         }
         return;
-      } catch (err: any) {
+      } catch (err) {
         console.error("Failed to bootstrap session", err);
         tokenStore.clear();
         userStore.clear();

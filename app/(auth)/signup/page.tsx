@@ -28,10 +28,14 @@ export default function SignupPage() {
     try {
       await signup(form.name, form.email, form.password);
       toast.success("User registered successfully");
-      router.push("/");
-    } catch (error: any) {
+      window.location.href = "/";
+    } catch (error) {
+      const err = error as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
       const message =
-        error?.response?.data?.message || error?.message || "Signup failed";
+        err.response?.data?.message || err.message || "Signup failed";
       toast.error(message);
     } finally {
       setLoading(false);
