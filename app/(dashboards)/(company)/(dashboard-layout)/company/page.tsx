@@ -12,7 +12,8 @@ import { IncomeVsExpense } from "@/components/dashboard/income-vs-expense";
 import { TopTeachers } from "@/components/dashboard/top-teachers";
 import { NewAdmissions } from "@/components/dashboard/new-admissions";
 import { TopStudents } from "@/components/dashboard/top-students";
-import { Users, Users2, BookOpen, BarChart3, Award, Zap } from "lucide-react";
+import { Users, Users2, BookOpen, BarChart3, Award } from "lucide-react";
+import ContentWrapper from "@/components/dashboard/content-wrapper";
 
 export default function Dashboard() {
   const statCards = [
@@ -109,13 +110,10 @@ export default function Dashboard() {
   ] as StatCardProps[];
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
-        <p className="text-sm text-muted-foreground">
-          School • Manage your school, track attendance, expense, and net worth.
-        </p>
-      </div>
+    <ContentWrapper
+      heading="Dashboard"
+      subHeading="School • Manage your school, track attendance, expense, and net worth."
+    >
       <div className="flex flex-col xl:flex-row gap-4 w-full justify-stretch">
         {/* Stat Cards - 3x2 Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 w-full lg:grid-cols-3 gap-4">
@@ -169,6 +167,6 @@ export default function Dashboard() {
         <NewAdmissions />
         <TopStudents />
       </div>
-    </div>
+    </ContentWrapper>
   );
 }

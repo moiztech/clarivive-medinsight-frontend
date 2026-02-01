@@ -34,8 +34,8 @@ function SidebarGroup({
 }) {
   const Icon = item.icon;
   const pathname = usePathname();
-  const isAnyChildActive = item.children?.some((child) =>
-    child.href ? pathname.startsWith(child.href) : false,
+  const isAnyChildActive = item.children?.some(
+    (child) => child.href === pathname,
   );
   const [isOpen, setIsOpen] = useState(isAnyChildActive || false);
 
@@ -45,7 +45,7 @@ function SidebarGroup({
         <Button
           variant={isAnyChildActive ? "primary" : "ghost"}
           className={cn(
-            "w-full justify-between h-auto",
+            "w-full justify-between h-auto mb-2",
             isExpanded && "px-4! py-3!",
             isAnyChildActive
               ? "bg-primary-blue text-primary-foreground"
@@ -75,9 +75,7 @@ function SidebarGroup({
 
           {item.children?.map((child) => {
             const href = child.href ?? "#";
-            const isActive = child.href
-              ? pathname.startsWith(child.href)
-              : false;
+            const isActive = child.href === pathname;
 
             return (
               <Link key={child.label} href={href}>

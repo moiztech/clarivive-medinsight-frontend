@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Children } from "react";
 import { DashboardLayoutContent } from "@/components/dashboard/dashboard-layout-content";
 import { Home, Users, Settings } from "lucide-react";
 
@@ -13,16 +13,22 @@ const companyNavItems = [
         label: "Company Overview",
         href: "/company",
       },
-      {
-        label: "LMS",
-        href: "/lms",
-      },
     ],
   },
   {
     icon: Users,
     label: "Employees",
-    href: "/company/employees",
+    // href: "/company/employees",
+    children: [
+      {
+        label: "Add New Employee",
+        href: "/company/employees/add",
+      },
+      {
+        label: "Employees List",
+        href: "/company/employees",
+      },
+    ],
   },
   {
     icon: Settings,
