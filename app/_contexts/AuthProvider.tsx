@@ -62,21 +62,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     (async () => {
       try {
-        // ✅ Restore user immediately (prevents “disappearing user” UI)
-        const savedUser = userStore.get();
-        if (savedUser) setUser(savedUser);
+        const token = tokenStore.get();
 
-        // If you later add /me endpoint, call it here to verify user is real.
-
-        const res = await clientApi.get("/auth/me");
-        if (res.status != 401) {
-          setUser(res.data.user ?? null);
-          userStore.set(res.data.user ?? null);
+        if (token) {
+          const res = await clientApi.get("/auth/me");
+          if (res.status != 401) {
+            setUser(res.data.user ?? null);
+            userStore.set(res.data.user ?? null);
+          }
         }
         return;
       } catch (err) {
-        console.error("Failed to bootstrap session", err);
-        tokenStore.clear();
+        console.log("Failed to bootstrap session", err);
+        // tokenStore.clear();
         userStore.clear();
         setUser(null);
       } finally {

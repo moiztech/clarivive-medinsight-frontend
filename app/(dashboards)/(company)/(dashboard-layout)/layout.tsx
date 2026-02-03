@@ -3,6 +3,8 @@
 import React, { Children } from "react";
 import { DashboardLayoutContent } from "@/components/dashboard/dashboard-layout-content";
 import { Home, Users, Settings } from "lucide-react";
+import { CompanySidebar } from "../_components/company-sidebar";
+import { CompanyHeader } from "../_components/company-header";
 
 const companyNavItems = [
   {
@@ -30,11 +32,6 @@ const companyNavItems = [
       },
     ],
   },
-  {
-    icon: Settings,
-    label: "Settings",
-    href: "/company/settings",
-  },
 ];
 
 export default function CompanyLayout({
@@ -43,7 +40,10 @@ export default function CompanyLayout({
   children: React.ReactNode;
 }) {
   return (
-    <DashboardLayoutContent navItems={companyNavItems}>
+    <DashboardLayoutContent
+      sidebar={<CompanySidebar navItems={companyNavItems} />}
+      header={<CompanyHeader />}
+    >
       {children}
     </DashboardLayoutContent>
   );

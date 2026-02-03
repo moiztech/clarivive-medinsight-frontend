@@ -45,7 +45,7 @@ function SidebarGroup({
         <Button
           variant={isAnyChildActive ? "primary" : "ghost"}
           className={cn(
-            "w-full justify-between h-auto mb-2",
+            "w-full justify-between h-auto",
             isExpanded && "px-4! py-3!",
             isAnyChildActive
               ? "bg-primary-blue text-primary-foreground"

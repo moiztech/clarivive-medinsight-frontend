@@ -13,6 +13,7 @@ const authRoutes = ["/login", "/signup"];
  */
 export function proxy(request: NextRequest) {
   const token = request.cookies.get("access_token")?.value;
+  // const companyToken = request.cookies.get("company_token")?.value;
   const { pathname, search } = request.nextUrl;
 
   // 1. If user is trying to access a protected route and has no token

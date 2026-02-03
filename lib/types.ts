@@ -21,6 +21,20 @@ type UserType = {
   name?: string;
 };
 
+type CompanyType = {
+  id: number;
+  name: string;
+  email: string;
+  primary_contact_name: string;
+  no_of_employees: string;
+  logo: string;
+  contact: string;
+  address: string;
+  company_token: string;
+  created_at: string;
+  updated_at: string;
+};
+
 type AuthContextType = {
   user: UserType | null;
   saveUser: (user: UserType) => void;
@@ -53,6 +67,7 @@ export type {
   EventType,
   AuthContextType,
   UserType,
+  CompanyType,
   CategoryResponse,
   CourseData,
 };

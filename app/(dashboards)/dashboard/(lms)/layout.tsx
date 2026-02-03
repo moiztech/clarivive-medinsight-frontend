@@ -27,9 +27,15 @@ const lmsNavItems = [
   },
 ];
 
+import { LmsSidebar } from "./_components/lms-sidebar";
+import { LmsHeader } from "./_components/lms-header";
+
 export default function LMSLayout({ children }: { children: React.ReactNode }) {
   return (
-    <DashboardLayoutContent navItems={lmsNavItems}>
+    <DashboardLayoutContent
+      sidebar={<LmsSidebar navItems={lmsNavItems} />}
+      header={<LmsHeader />}
+    >
       {children}
     </DashboardLayoutContent>
   );

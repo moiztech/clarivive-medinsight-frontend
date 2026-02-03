@@ -1,28 +1,27 @@
 "use client";
 
 import React from "react";
-import { Sidebar } from "./sidebar";
-import { Header } from "./header";
-import { NavItem } from "./sidebar-group";
 
 interface DashboardLayoutContentProps {
-  navItems: NavItem[];
+  sidebar: React.ReactNode;
+  header: React.ReactNode;
   children: React.ReactNode;
 }
 
 export function DashboardLayoutContent({
-  navItems,
+  sidebar,
+  header,
   children,
 }: DashboardLayoutContentProps) {
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Sidebar */}
-      <Sidebar navItems={navItems} />
+      {sidebar}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <Header />
+        {header}
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto bg-background">{children}</main>

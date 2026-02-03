@@ -1,3 +1,5 @@
+import { serverApi } from "@/lib/axios";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -16,26 +18,53 @@ export async function GET(
     );
   }
 
-  if (token === "abctesting1234") {
+  // console.log(request.body);
+
+  try {
+    const backendRes = await serverApi.get(`/company-detail/${token}`);
+    const payload = backendRes.data;
+
+    if (!payload?.status || payload.status !== 200) {
+      return NextResponse.json(
+        {
+          valid: false,
+          reason:
+            "Something went wrong, verify token correctness. " + payload?.error,
+        },
+        { status: 422 },
+      );
+    }
+
     return NextResponse.json(
       {
         valid: true,
-        org: {
-          name: "Test Org",
-          email: "[EMAIL_ADDRESS]",
-          type: "Company",
-        },
-        required_fields: ["contact_name", "phone", "address"],
+        data: payload.data,
       },
       { status: 200 },
     );
-  }
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error("Verification error:", error.message);
+      // If upstream returns 404, it means token is invalid
+      if (error.response?.status === 404) {
+        return NextResponse.json(
+          {
+            valid: false,
+            reason: "Invalid token",
+          },
+          { status: 200 }, // Return 200 so frontend can handle it without crashing
+        );
+      }
+    } else {
+      console.error("Verification error:", error);
+    }
 
-  return NextResponse.json(
-    {
-      valid: false,
-      reason: "The given Token is invalid or expired.",
-    },
-    { status: 200 },
-  );
+    return NextResponse.json(
+      {
+        valid: false,
+        reason: "Internal server error",
+      },
+      { status: 500 },
+    );
+  }
 }

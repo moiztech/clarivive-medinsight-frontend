@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "@/app/globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { AuthProvider } from "./_contexts/AuthProvider";
+import { CompanyProvider } from "./_contexts/CompanyContext";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
 
@@ -49,8 +50,10 @@ export default function RootLayout({
         />
 
         <AuthProvider>
-          <Providers>{children}</Providers>
-          <Toaster richColors position="bottom-right" />
+          <CompanyProvider>
+            <Providers>{children}</Providers>
+            <Toaster richColors position="bottom-right" />
+          </CompanyProvider>
         </AuthProvider>
 
         {/* <Analytics /> */}

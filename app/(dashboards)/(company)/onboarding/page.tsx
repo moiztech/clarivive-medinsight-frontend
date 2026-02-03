@@ -2,6 +2,8 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { clientApi } from "@/lib/axios";
+import { tokenStore } from "@/lib/auth/tokenStore";
+import { useCompany } from "@/app/_contexts/CompanyContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,12 +24,20 @@ import { cn } from "@/lib/utils";
 type VerifyState =
   | { status: "loading" }
   | { status: "invalid"; reason?: string }
-  | { status: "valid"; org?: orgData; requiredFields?: string[] };
+  | { status: "valid"; org: OrgData };
 
-type orgData = {
+type OrgData = {
+  id: number;
   name: string;
   email: string;
-  type: string;
+  primary_contact_name: string;
+  no_of_employees: string;
+  logo: string;
+  contact: string;
+  address: string;
+  company_token: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export default function OnboardingPage() {
@@ -48,8 +58,23 @@ export default function OnboardingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { setTheme } = useTheme();
+  const { setCompany } = useCompany();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [logoProgress, setLogoProgress] = useState<number>(0);
+
+  async function urlToFile(url: string) {
+    // 1. Fetch the image data from the URL
+    const response = await fetch(url);
+
+    // 2. Convert the response to a Blob object
+    const blob = await response.blob();
+
+    // 3. Create a File object from the Blob
+    // The File constructor takes an array of blobs/buffers, a filename, and options (including type)
+    const file = new File([blob], "logo.png", { type: blob.type });
+
+    return file;
+  }
 
   const validateImage = async (file: File): Promise<string | null> => {
     // Check size (2MB = 2 * 1024 * 1024 bytes)
@@ -151,20 +176,31 @@ export default function OnboardingPage() {
         if (cancelled) return;
         const data = res.data as {
           valid: boolean;
-          reason?: string;
-          org?: orgData;
-          required_fields?: string[];
+          reason: string;
+          data: OrgData;
         };
+        // console.log(res);
+
         if (!data.valid) {
-          setState({ status: "invalid", reason: data.reason });
+          setState({ status: "invalid", reason: data?.reason });
           return;
         }
 
+        const org = data.data;
+
         setState({
           status: "valid",
-          org: data.org,
-          requiredFields: data.required_fields,
+          org: org,
         });
+
+        // Pre-fill form fields if data exists
+        if (org.name) setOrgName(org.name);
+        if (org.contact) setPhone(org.contact);
+        if (org.address) setAddress(org.address);
+        if (org.no_of_employees) setNumEmployees(org.no_of_employees);
+        if (org.primary_contact_name) setContactName(org.primary_contact_name);
+        if (org.logo) setLogo(await urlToFile(org.logo));
+        if (org.logo) setLogoProgress(100);
       } catch (e: any) {
         if (cancelled) return;
         setState({
@@ -206,15 +242,34 @@ export default function OnboardingPage() {
         },
       });
 
-      if (res.status === 200 || res.status === 201) {
-        router.replace("/welcome");
+      if (res.data?.success) {
+        if (res.data.token) {
+          tokenStore.set(res.data.token, "company");
+        }
+
+        if (res.data.data) {
+          setCompany(res.data.data);
+        }
+
+        // Force reload to ensure auth state is picked up
+        window.location.href = "/welcome";
       } else {
-        setSubmitError("Could not complete onboarding.");
+        setSubmitError(res.data?.message || "Could not complete onboarding.");
       }
     } catch (e: any) {
-      setSubmitError(
-        e?.response?.data?.message || e?.message || "Something went wrong.",
-      );
+      console.error(e);
+      const errorData = e?.response?.data;
+      if (errorData?.errors) {
+        // If there are field specific errors, we could show them.
+        // For now, let's join them or show the main message.
+        // Example: { message: "...", errors: { company_token: [...] } }
+        const messages = Object.values(errorData.errors).flat().join(", ");
+        setSubmitError(messages || errorData.message || "Validation failed.");
+      } else {
+        setSubmitError(
+          errorData?.message || e?.message || "Something went wrong.",
+        );
+      }
     } finally {
       setSubmitting(false);
     }
@@ -286,14 +341,6 @@ export default function OnboardingPage() {
                 Email:
               </span>
               <span className="text-muted-foreground">{state.org?.email}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-primary-blue not-italic">
-                Type:
-              </span>
-              <span className="text-muted-foreground">
-                {state.org?.type ?? "—"}
-              </span>
             </div>
           </div>
 
