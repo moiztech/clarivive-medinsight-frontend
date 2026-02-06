@@ -8,16 +8,12 @@ import {
   ArrowUpDown,
   Filter,
   User,
-  Building2,
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Edit,
   Trash2,
   UserPlus,
   Eye,
-  CheckCircle2,
-  XCircle,
 } from "lucide-react";
 import {
   Table,
@@ -37,147 +33,104 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 
+interface Employee {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  image: string;
+}
+
 // Mock Employee Data
-const INITIAL_EMPLOYEES = [
+const INITIAL_EMPLOYEES: Employee[] = [
   {
     id: 1,
     name: "John Doe",
     email: "john@clarivive.com",
-    department: "IT",
-    role: "Senior Developer",
-    status: "active",
-    joiningDate: "2024-01-15",
+    phone: "+1 (555) 123-4567",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
   },
   {
     id: 2,
     name: "Alice Smith",
     email: "alice@clarivive.com",
-    department: "HR",
-    role: "HR Manager",
-    status: "active",
-    joiningDate: "2023-11-20",
+    phone: "+1 (555) 234-5678",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alice",
   },
   {
     id: 3,
     name: "Robert Brown",
     email: "robert@clarivive.com",
-    department: "IT",
-    role: "Junior Developer",
-    status: "inactive",
-    joiningDate: "2024-02-01",
+    phone: "+1 (555) 345-6789",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Robert",
   },
   {
     id: 4,
     name: "Sarah Wilson",
     email: "sarah@clarivive.com",
-    department: "Sales",
-    role: "Sales Executive",
-    status: "active",
-    joiningDate: "2023-09-10",
+    phone: "+1 (555) 456-7890",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
   },
   {
     id: 5,
     name: "Michael Chen",
     email: "michael@clarivive.com",
-    department: "Operations",
-    role: "Operations Head",
-    status: "active",
-    joiningDate: "2023-05-24",
+    phone: "+1 (555) 567-8901",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
   },
   {
     id: 6,
     name: "Emily Davis",
     email: "emily@clarivive.com",
-    department: "HR",
-    role: "Recruiter",
-    status: "active",
-    joiningDate: "2024-03-05",
+    phone: "+1 (555) 678-9012",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
   },
   {
     id: 7,
     name: "David Miller",
     email: "david@clarivive.com",
-    department: "IT",
-    role: "Systems Admin",
-    status: "inactive",
-    joiningDate: "2023-12-12",
+    phone: "+1 (555) 789-0123",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
   },
   {
     id: 8,
     name: "Jessica Taylor",
     email: "jessica@clarivive.com",
-    department: "Marketing",
-    role: "Marketing Lead",
-    status: "active",
-    joiningDate: "2023-08-30",
+    phone: "+1 (555) 890-1234",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica",
   },
   {
     id: 9,
     name: "Kevin Anderson",
     email: "kevin@clarivive.com",
-    department: "Finance",
-    role: "Accountant",
-    status: "active",
-    joiningDate: "2024-01-05",
+    phone: "+1 (555) 901-2345",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin",
   },
   {
     id: 10,
     name: "Linda Moore",
     email: "linda@clarivive.com",
-    department: "Sales",
-    role: "Sales Manager",
-    status: "active",
-    joiningDate: "2023-06-15",
+    phone: "+1 (555) 012-3456",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Linda",
-  },
-  {
-    id: 11,
-    name: "Tom Harris",
-    email: "tom@clarivive.com",
-    department: "IT",
-    role: "Project Manager",
-    status: "active",
-    joiningDate: "2023-04-20",
-    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tom",
-  },
-  {
-    id: 12,
-    name: "Barbara White",
-    email: "barbara@clarivive.com",
-    department: "Operations",
-    role: "Logistics",
-    status: "inactive",
-    joiningDate: "2024-01-25",
-    image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Barbara",
   },
 ];
 
 function EmployeesPage() {
-  const [employees, setEmployees] = useState(INITIAL_EMPLOYEES);
+  const [employees] = useState<Employee[]>(INITIAL_EMPLOYEES);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
-    key: string;
+    key: keyof Employee;
     direction: "asc" | "desc";
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
 
   // Sorting Logic
-  const handleSort = (key: string) => {
+  const handleSort = (key: keyof Employee) => {
     let direction: "asc" | "desc" = "asc";
     if (
       sortConfig &&
@@ -195,11 +148,11 @@ function EmployeesPage() {
       (emp) =>
         emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         emp.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.department.toLowerCase().includes(searchTerm.toLowerCase()),
+        emp.phone.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     if (sortConfig) {
-      result.sort((a: any, b: any) => {
+      result.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
           return sortConfig.direction === "asc" ? -1 : 1;
         }
@@ -231,7 +184,7 @@ function EmployeesPage() {
           <div className="relative flex-1 max-w-md group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary-blue transition-colors" />
             <Input
-              placeholder="Search by name, email or department..."
+              placeholder="Search by name, email or phone..."
               className="pl-10 h-10 bg-background/50 border-border/50"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -264,7 +217,7 @@ function EmployeesPage() {
             <Table>
               <TableHeader className="bg-muted/30">
                 <TableRow className="hover:bg-transparent border-border/50">
-                  <TableHead className="w-[300px]">
+                  <TableHead className="w-[400px]">
                     <button
                       onClick={() => handleSort("name")}
                       className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
@@ -275,29 +228,10 @@ function EmployeesPage() {
                   </TableHead>
                   <TableHead>
                     <button
-                      onClick={() => handleSort("department")}
+                      onClick={() => handleSort("phone")}
                       className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
                     >
-                      Department
-                      <ArrowUpDown className="size-3" />
-                    </button>
-                  </TableHead>
-                  <TableHead className="font-semibold">Role</TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => handleSort("status")}
-                      className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                    >
-                      Status
-                      <ArrowUpDown className="size-3" />
-                    </button>
-                  </TableHead>
-                  <TableHead>
-                    <button
-                      onClick={() => handleSort("joiningDate")}
-                      className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                    >
-                      Joining Date
+                      Phone
                       <ArrowUpDown className="size-3" />
                     </button>
                   </TableHead>
@@ -333,37 +267,8 @@ function EmployeesPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          <Building2 className="size-3.5" />
-                          {emp.department}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground font-medium">
-                        {emp.role}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            emp.status === "active" ? "default" : "secondary"
-                          }
-                          className={
-                            emp.status === "active"
-                              ? "bg-green-500/10 text-green-500 hover:bg-green-500/20 border-green-500/20"
-                              : "bg-muted/50 text-muted-foreground"
-                          }
-                        >
-                          {emp.status === "active" ? (
-                            <CheckCircle2 className="size-3 mr-1" />
-                          ) : (
-                            <XCircle className="size-3 mr-1" />
-                          )}
-                          {emp.status.charAt(0).toUpperCase() +
-                            emp.status.slice(1)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-muted-foreground tabular-nums">
-                          <Calendar className="size-3.5" />
-                          {emp.joiningDate}
+                          {/* Add Phone Icon if needed, or just text */}
+                          {emp.phone}
                         </div>
                       </TableCell>
                       <TableCell className="text-right pr-6">
@@ -398,7 +303,7 @@ function EmployeesPage() {
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={6}
+                      colSpan={3}
                       className="h-48 text-center text-muted-foreground"
                     >
                       <div className="flex flex-col items-center justify-center gap-2">

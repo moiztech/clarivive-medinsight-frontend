@@ -1,6 +1,5 @@
 "use client";
 
-import { useCompany } from "@/app/_contexts/CompanyContext";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { NavItem } from "@/components/dashboard/sidebar-group";
 import { useAuth } from "@/app/_contexts/AuthProvider";
@@ -23,8 +22,7 @@ interface CompanySidebarProps {
 }
 
 export function CompanySidebar({ navItems }: CompanySidebarProps) {
-  const { company, loading } = useCompany();
-  const { logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   const Header = (isExpanded: boolean) => (
     <>
@@ -38,27 +36,27 @@ export function CompanySidebar({ navItems }: CompanySidebarProps) {
                 <Skeleton className="h-4 w-16" />
               </div>
             </div>
-          ) : company?.logo ? (
+          ) : user?.logo ? (
             <div className="relative h-11 w-full flex items-center gap-2">
               {/* Use a valid image component or just standard img if the token/auth is needed */}
               <Image
-                src={company.logo} // Ensure this is a full URL or proxy
-                alt={company.name}
+                src={user.logo} // Ensure this is a full URL or proxy
+                alt={user.name}
                 width={150}
                 height={50}
                 className="object-contain h-10 rounded-full w-auto"
                 priority
               />
               <span className="font-bold text-base truncate flex flex-col">
-                {company?.name || "Company"}
+                {user?.name || "Company"}
                 <span className="text-xs text-muted-foreground">
-                  {company?.email}
+                  {user?.email}
                 </span>
               </span>
             </div>
           ) : (
             <span className="font-bold text-lg truncate block">
-              {company?.name || "Company"}
+              {user?.name || "Company"}
             </span>
           )}
         </Link>
@@ -76,11 +74,11 @@ export function CompanySidebar({ navItems }: CompanySidebarProps) {
           >
             <Avatar className="h-8 w-8 border border-primary">
               {/* Fallback to user initials or default */}
-              {company?.logo ? (
-                <AvatarImage src={company.logo} />
+              {user?.logo ? (
+                <AvatarImage src={user.logo} />
               ) : (
                 <AvatarFallback>
-                  {company?.name?.slice(0, 2).toUpperCase() || "CN"}
+                  {user?.name?.slice(0, 2).toUpperCase() || "CN"}
                 </AvatarFallback>
               )}
             </Avatar>
@@ -88,10 +86,10 @@ export function CompanySidebar({ navItems }: CompanySidebarProps) {
             {isExpanded && (
               <div className="min-w-0 flex-1 text-left">
                 <p className="text-sm font-semibold text-sidebar-foreground truncate">
-                  {company?.name ?? "Company"}
+                  {user?.name ?? "Company"}
                 </p>
                 <p className="text-xs text-sidebar-accent-foreground truncate">
-                  {company?.email ?? "Company Admin"}
+                  {user?.email ?? "Company Admin"}
                 </p>
               </div>
             )}

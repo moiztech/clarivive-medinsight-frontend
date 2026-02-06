@@ -163,6 +163,17 @@ export default function Header() {
                       <span className="text-xs">{user?.email}</span>
                     </div>
                   </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Link
+                      href={
+                        user?.role.name === "company_admin"
+                          ? "/company"
+                          : "/dashboard/lms"
+                      }
+                    >
+                      Go to Dashboard
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"

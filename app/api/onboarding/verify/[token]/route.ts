@@ -50,7 +50,7 @@ export async function GET(
         return NextResponse.json(
           {
             valid: false,
-            reason: "Invalid token",
+            reason: error.response?.data?.error || "Invalid token",
           },
           { status: 200 }, // Return 200 so frontend can handle it without crashing
         );

@@ -15,10 +15,27 @@ type EventType = {
 
 type UserType = {
   id: number;
-  role_id?: number;
-  role?: string;
-  email?: string;
-  name?: string;
+  company_id?: number;
+  name: string;
+  email: string;
+  primary_contact_name?: string;
+  no_of_employees?: string;
+  logo?: string;
+  contact?: string;
+  address?: string;
+  email_verified_at?: string;
+  company_token?: string;
+  refresh_jti?: string;
+  refresh_expires_at?: string;
+  created_at?: string;
+  updated_at?: string;
+  role_id: number;
+  role: {
+    id: number;
+    name: string;
+    created_at?: string;
+    updated_at?: string;
+  };
 };
 
 type CompanyType = {

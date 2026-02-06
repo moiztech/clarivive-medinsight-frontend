@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { clientApi } from "@/lib/axios";
 import { tokenStore } from "@/lib/auth/tokenStore";
-import { useCompany } from "@/app/_contexts/CompanyContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,6 +20,8 @@ import {
 import { Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useAuth } from "@/app/_contexts/AuthProvider";
 
 type VerifyState =
   | { status: "loading" }
@@ -43,6 +45,7 @@ type OrgData = {
 export default function OnboardingPage() {
   const params = useSearchParams();
   const router = useRouter();
+  const { setUser } = useAuth();
 
   const token = useMemo(() => params.get("token") || "", [params]);
   const [state, setState] = useState<VerifyState>({ status: "loading" });
@@ -58,7 +61,6 @@ export default function OnboardingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { setTheme } = useTheme();
-  const { setCompany } = useCompany();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [logoProgress, setLogoProgress] = useState<number>(0);
 
@@ -243,16 +245,10 @@ export default function OnboardingPage() {
       });
 
       if (res.data?.success) {
-        if (res.data.token) {
-          tokenStore.set(res.data.token, "company");
-        }
-
-        if (res.data.data) {
-          setCompany(res.data.data);
-        }
-
-        // Force reload to ensure auth state is picked up
-        window.location.href = "/welcome";
+        toast.success(res.data?.message || "Onboarding completed successfully");
+        tokenStore.set(res.data.token);
+        setUser(res.data.data);
+        router.push("/welcome");
       } else {
         setSubmitError(res.data?.message || "Could not complete onboarding.");
       }
@@ -446,6 +442,7 @@ export default function OnboardingPage() {
                       <div className="border border-border rounded-xl p-4 flex flex-col gap-3 bg-muted/30 h-[178px] justify-center">
                         <div className="flex items-center gap-4">
                           <div className="w-16 h-16 bg-background rounded-lg overflow-hidden shrink-0 border-2 border-primary-blue/10 shadow-sm">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={URL.createObjectURL(logo)}
                               alt="Logo preview"

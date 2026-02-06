@@ -61,7 +61,7 @@ export function LmsSidebar({ navItems }: LmsSidebarProps) {
                   {user?.name ?? "Student"}
                 </p>
                 <p className="text-xs text-sidebar-accent-foreground truncate">
-                  {user?.role ?? "Student"}
+                  {user?.role.name ?? "Learner"}
                 </p>
               </div>
             )}

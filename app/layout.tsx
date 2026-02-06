@@ -2,11 +2,9 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "@/app/globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { AuthProvider } from "./_contexts/AuthProvider";
-import { CompanyProvider } from "./_contexts/CompanyContext";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
 
@@ -35,7 +33,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${geist.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="font-sans antialiased" id="root">
         <NextTopLoader
           color="#000099"
@@ -50,10 +52,8 @@ export default function RootLayout({
         />
 
         <AuthProvider>
-          <CompanyProvider>
-            <Providers>{children}</Providers>
-            <Toaster richColors position="bottom-right" />
-          </CompanyProvider>
+          <Providers>{children}</Providers>
+          <Toaster richColors position="bottom-right" />
         </AuthProvider>
 
         {/* <Analytics /> */}

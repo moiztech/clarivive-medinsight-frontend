@@ -1,12 +1,12 @@
-type User = { id: number; name: string; email: string; role: string };
+import { UserType } from "../types";
 
 export const userStore = {
-  get(): User | null {
+  get(): UserType | null {
     if (typeof window === "undefined") return null;
     const raw = localStorage.getItem("auth_user");
-    return raw ? (JSON.parse(raw) as User) : null;
+    return raw ? (JSON.parse(raw) as UserType) : null;
   },
-  set(user: User | null) {
+  set(user: UserType | null) {
     if (typeof window === "undefined") return;
     if (user) localStorage.setItem("auth_user", JSON.stringify(user));
     else localStorage.removeItem("auth_user");

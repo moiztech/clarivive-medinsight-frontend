@@ -13,13 +13,11 @@ import {
 import { Bell, LogOut, Settings, User, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/app/_contexts/AuthProvider";
-import { useCompany } from "@/app/_contexts/CompanyContext";
 import { AvatarImage } from "@radix-ui/react-avatar";
 
 export function CompanyHeader() {
   const { theme, setTheme } = useTheme();
-  const { logout } = useAuth();
-  const { company } = useCompany();
+  const { logout, user } = useAuth();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -28,18 +26,18 @@ export function CompanyHeader() {
 
   if (!mounted) {
     return (
-      <header className="sticky top-0 z-40 border-b border-border bg-card h-16" />
+      <header className="sticky top-0 z-40 border-b border-border bg-sidebar h-16" />
     );
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-card">
+    <header className="sticky top-0 z-40 border-b border-border bg-sidebar">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Search Bar or Company Name */}
         <div className="hidden md:flex items-center gap-2 text-gray-700">
           {/* Maybe show company name here too if needed, or just search */}
           <h1 className="text-xl font-semibold text-foreground">
-            {company?.name ? `${company.name} Dashboard` : "Dashboard"}
+            {user?.name ? `${user.name} Dashboard` : "Dashboard"}
           </h1>
         </div>
 
@@ -74,18 +72,16 @@ export function CompanyHeader() {
                 className="gap-2 w-auto h-12 rounded-2xl px-2"
               >
                 <Avatar className="h-9 w-9 border border-primary">
-                  <AvatarImage src={company?.logo} />
+                  <AvatarImage src={user?.logo} />
                   <AvatarFallback>
-                    {company?.name?.slice(0, 2).toUpperCase()}
+                    {user?.name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="text-left hidden md:block">
                   <p className="text-sm font-medium leading-none">
-                    {company?.name}
+                    {user?.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    {company?.email}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{user?.email}</p>
                 </div>
               </Button>
             </DropdownMenuTrigger>

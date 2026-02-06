@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { useAuth } from "@/app/_contexts/AuthProvider";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,7 @@ export default function LoginPage() {
   });
 
   const { login } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -30,10 +32,7 @@ export default function LoginPage() {
       // Get callbackUrl from query params
       const searchParams = new URLSearchParams(window.location.search);
       const callbackUrl = searchParams.get("callbackUrl") || "/";
-
-      // Using window.location.href ensures a hard reload, which is necessary
-      // for the proxy/middleware to detect the newly set cookies.
-      window.location.href = callbackUrl;
+      router.push(callbackUrl);
     } catch (error) {
       const err = error as {
         response?: { data?: { message?: string } };

@@ -56,7 +56,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-card">
+    <header className="sticky top-0 z-40 border-b border-border bg-sidebar">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Search Bar */}
         <div className="hidden md:flex items-center gap-2 text-gray-700">
