@@ -103,7 +103,7 @@ export function TestimonialSection() {
     try {
       (e.target as Element).releasePointerCapture?.(e.pointerId);
     } catch (err) {
-      // ignore
+      console.error(err);
     }
   }
 

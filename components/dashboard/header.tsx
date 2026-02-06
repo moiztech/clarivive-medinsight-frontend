@@ -105,7 +105,9 @@ export function Header() {
                   <p className="text-sm font-semibold text-foreground">
                     {user?.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">{user?.role}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {user?.role.name}
+                  </p>
                 </div>
               </div>
               <DropdownMenuSeparator />

@@ -1,19 +1,17 @@
 "use client";
 
 import ContentWrapper from "@/components/dashboard/content-wrapper";
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Search,
-  MoreHorizontal,
+  Book,
+  Clock,
+  Layout,
   ArrowUpDown,
   Filter,
-  User,
+  Eye,
   ChevronLeft,
   ChevronRight,
-  Edit,
-  Trash2,
-  UserPlus,
-  Eye,
 } from "lucide-react";
 import {
   Table,
@@ -25,74 +23,26 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEmployee } from "../_hooks/useEmployee";
+import { useCourse, Course } from "../../_hooks/useCourse";
+import Image from "next/image";
 
-export interface Employee {
-  id: number;
-  company_id: number;
-  name: string;
-  email: string;
-  primary_contact_name: string | null;
-  no_of_employees: number | null;
-  logo: string | null;
-  contact: string;
-  address: string | null;
-  email_verified_at: string | null;
-  company_token: string | null;
-  created_at: string;
-  updated_at: string;
-  role_id: number;
-  company: {
-    id: number;
-    company_id: number | null;
-    name: string;
-    email: string;
-    primary_contact_name: string | null;
-    no_of_employees: string | null;
-    logo: string | null;
-    contact: string;
-    address: string | null;
-    email_verified_at: string | null;
-    company_token: string | null;
-    created_at: string;
-    updated_at: string;
-    role_id: number;
-  };
-  role: {
-    id: number;
-    name: string;
-    created_at: string;
-    updated_at: string;
-  };
-}
-
-function EmployeesPage() {
-  const { employees, loading, getEmployees, deleteEmployee } = useEmployee();
+function CoursesListPage() {
+  const { courses, loading, getCourses } = useCourse();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof Employee;
+    key: keyof Course;
     direction: "asc" | "desc";
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
 
-  React.useEffect(() => {
-    getEmployees();
-  }, [getEmployees]);
+  useEffect(() => {
+    getCourses();
+  }, [getCourses]);
 
   // Sorting Logic
-  const handleSort = (key: keyof Employee) => {
+  const handleSort = (key: keyof Course) => {
     let direction: "asc" | "desc" = "asc";
     if (
       sortConfig &&
@@ -105,17 +55,13 @@ function EmployeesPage() {
   };
 
   // Filter & Sort Data
-  const filteredEmployees = useMemo(() => {
-    // Defensive check to ensure employees is an array
-    const safeEmployees = Array.isArray(employees) ? employees : [];
+  const filteredCourses = useMemo(() => {
+    const safeCourses = Array.isArray(courses) ? courses : [];
 
-    const result = safeEmployees.filter(
-      (emp) =>
-        emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.created_at.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.updated_at.toLowerCase().includes(searchTerm.toLowerCase()),
+    const result = safeCourses.filter(
+      (course) =>
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     if (sortConfig) {
@@ -138,15 +84,11 @@ function EmployeesPage() {
     }
 
     return result;
-  }, [employees, searchTerm, sortConfig]);
-
-  const handleDelete = async (id: number) => {
-    await deleteEmployee(id);
-  };
+  }, [courses, searchTerm, sortConfig]);
 
   // Pagination Logic
-  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
-  const currentData = filteredEmployees.slice(
+  const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
+  const currentData = filteredCourses.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
@@ -154,14 +96,14 @@ function EmployeesPage() {
   if (loading) {
     return (
       <ContentWrapper
-        heading="Employees"
-        subHeading="Manage and view your organization's employees"
+        heading="Courses List"
+        subHeading="View all available courses for your organization"
       >
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="flex flex-col items-center gap-4">
             <div className="size-10 border-4 border-primary-blue/30 border-t-primary-blue rounded-full animate-spin" />
             <p className="text-muted-foreground animate-pulse">
-              Loading employees...
+              Loading courses...
             </p>
           </div>
         </div>
@@ -171,8 +113,8 @@ function EmployeesPage() {
 
   return (
     <ContentWrapper
-      heading="Employees"
-      subHeading="Manage and view your organization's employees"
+      heading="Courses List"
+      subHeading="View all available courses for your organization"
     >
       <div className="space-y-6">
         {/* Actions Bar */}
@@ -180,7 +122,7 @@ function EmployeesPage() {
           <div className="relative flex-1 max-w-md group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary-blue transition-colors" />
             <Input
-              placeholder="Search by name, email or phone..."
+              placeholder="Search by title or description..."
               className="pl-10 h-10 bg-background/50 border-border/50"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -195,15 +137,6 @@ function EmployeesPage() {
               <Filter className="size-4" />
               Filter
             </Button>
-            <Link href="/company/employees/add">
-              <Button
-                variant="primary"
-                className="gap-2 h-10 shadow-lg shadow-primary-blue/20"
-              >
-                <UserPlus className="size-4" />
-                Add Employee
-              </Button>
-            </Link>
           </div>
         </div>
 
@@ -215,37 +148,37 @@ function EmployeesPage() {
                 <TableRow className="hover:bg-transparent border-border/50">
                   <TableHead className="w-[400px]">
                     <button
-                      onClick={() => handleSort("name")}
+                      onClick={() => handleSort("title")}
                       className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
                     >
-                      Employee
+                      Course
                       <ArrowUpDown className="size-3" />
                     </button>
                   </TableHead>
                   <TableHead>
                     <button
-                      onClick={() => handleSort("contact")}
+                      onClick={() => handleSort("duration")}
                       className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
                     >
-                      Phone
+                      Duration
                       <ArrowUpDown className="size-3" />
                     </button>
                   </TableHead>
                   <TableHead>
                     <button
-                      onClick={() => handleSort("created_at")}
+                      onClick={() => handleSort("modules")}
                       className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
                     >
-                      Created At
+                      Modules
                       <ArrowUpDown className="size-3" />
                     </button>
                   </TableHead>
                   <TableHead>
                     <button
-                      onClick={() => handleSort("updated_at")}
+                      onClick={() => handleSort("price")}
                       className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
                     >
-                      Updated At
+                      Price
                       <ArrowUpDown className="size-3" />
                     </button>
                   </TableHead>
@@ -256,80 +189,56 @@ function EmployeesPage() {
               </TableHeader>
               <TableBody>
                 {currentData.length > 0 ? (
-                  currentData.map((emp) => (
+                  currentData.map((course) => (
                     <TableRow
-                      key={emp.id}
+                      key={course.id}
                       className="group border-border/40 hover:bg-muted/30 transition-colors"
                     >
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <Avatar className="size-10 border border-border/50 group-hover:border-primary-blue/30 transition-colors">
-                            <AvatarImage
-                              src={emp?.logo || "/placeholder.svg"}
-                            />
-                            <AvatarFallback>
-                              {emp.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
+                          {/* <Book className="size-6 text-primary-blue" /> */}
+                          <Image
+                            src={course.icon}
+                            alt={course.title}
+                            width={200}
+                            height={48}
+                            className="rounded-lg"
+                          />
                           <div className="flex flex-col">
                             <span className="font-semibold text-foreground group-hover:text-primary-blue transition-colors">
-                              {emp.name}
+                              {course.title}
                             </span>
-                            <span className="text-xs text-muted-foreground">
-                              {emp.email}
+                            <span className="text-xs text-muted-foreground line-clamp-1 max-w-[300px]">
+                              {course.description}
                             </span>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          {/* Add Phone Icon if needed, or just text */}
-                          {emp.contact}
+                          <Clock className="size-4" />
+                          {course.duration} mins
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          {/* Add Phone Icon if needed, or just text */}
-                          {new Date(emp.created_at).toLocaleDateString()}
+                          <Layout className="size-4" />
+                          {course.modules} Modules
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          {/* Add Phone Icon if needed, or just text */}
-                          {new Date(emp.updated_at).toLocaleDateString()}
-                        </div>
+                        <span className="font-semibold text-primary-blue">
+                          ${course.price}
+                        </span>
                       </TableCell>
                       <TableCell className="text-right pr-6">
-                        <DropdownMenu modal={false}>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              className="hover:bg-primary-blue/10 hover:text-primary-blue"
-                            >
-                              <MoreHorizontal className="size-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="gap-2 cursor-pointer">
-                              <Eye className="size-4" /> View Details
-                            </DropdownMenuItem>
-                            <Link href={`/company/employees/${emp.id}/edit`}>
-                              <DropdownMenuItem className="gap-2 cursor-pointer">
-                                <Edit className="size-4" /> Edit Profile
-                              </DropdownMenuItem>
-                            </Link>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(emp.id)}
-                              className="gap-2 cursor-pointer text-destructive focus:text-destructive"
-                            >
-                              <Trash2 className="size-4" /> Delete Access
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          className="hover:bg-primary-blue/10 hover:text-primary-blue"
+                        >
+                          <Eye className="size-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -340,9 +249,9 @@ function EmployeesPage() {
                       className="h-48 text-center text-muted-foreground"
                     >
                       <div className="flex flex-col items-center justify-center gap-2">
-                        <User className="size-8 opacity-20" />
+                        <Book className="size-8 opacity-20" />
                         <p className="text-sm">
-                          No employees found matching your search.
+                          No courses found matching your search.
                         </p>
                         <Button
                           variant="link"
@@ -364,8 +273,8 @@ function EmployeesPage() {
           <p className="text-sm text-muted-foreground font-medium">
             Showing{" "}
             <span className="text-foreground">{currentData.length}</span> of{" "}
-            <span className="text-foreground">{filteredEmployees.length}</span>{" "}
-            employees
+            <span className="text-foreground">{filteredCourses.length}</span>{" "}
+            courses
           </p>
           <div className="flex items-center gap-2">
             <Button
@@ -410,4 +319,4 @@ function EmployeesPage() {
   );
 }
 
-export default EmployeesPage;
+export default CoursesListPage;

@@ -34,8 +34,8 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 
 export default function LMSLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-
+  const { user, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
   if (!user) {
     toast.error("You are not logged in");
     return redirect("/login?callbackUrl=/dashboard/lms");

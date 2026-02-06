@@ -2,7 +2,7 @@
 
 import React from "react";
 import { DashboardLayoutContent } from "@/components/dashboard/dashboard-layout-content";
-import { Home, Users } from "lucide-react";
+import { Book, Home, Users } from "lucide-react";
 import { CompanySidebar } from "../_components/company-sidebar";
 import { CompanyHeader } from "../_components/company-header";
 import { useAuth } from "@/app/_contexts/AuthProvider";
@@ -35,6 +35,20 @@ const companyNavItems = [
       },
     ],
   },
+  {
+    icon: Book,
+    label: "Courses",
+    children: [
+      {
+        label: "Assign Courses",
+        href: "/company/courses/assign",
+      },
+      {
+        label: "Courses List",
+        href: "/company/courses/list",
+      },
+    ],
+  },
 ];
 
 export default function CompanyLayout({
@@ -42,7 +56,8 @@ export default function CompanyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
   if (!user) {
     toast.error("You are not logged in");
     return redirect("/login?callbackUrl=/company");

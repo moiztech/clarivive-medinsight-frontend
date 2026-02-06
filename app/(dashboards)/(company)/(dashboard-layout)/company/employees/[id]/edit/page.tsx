@@ -1,7 +1,7 @@
 "use client";
 
 import ContentWrapper from "@/components/dashboard/content-wrapper";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Mail, Phone, UserSquare2, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,18 +13,39 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useEmployee } from "@/app/(dashboards)/(company)/(dashboard-layout)/company/_hooks/useEmployee";
+import { toast } from "sonner";
 
-function AddEmployeePage() {
-  const { storeEmployee } = useEmployee();
+function EditEmployeePage() {
+  const { id } = useParams();
+  const { getEmployee, updateEmployee, loading: actionLoading } = useEmployee();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
   });
+
+  useEffect(() => {
+    async function loadEmployee() {
+      if (!id) return;
+      const data = await getEmployee(Number(id));
+      if (data) {
+        setFormData({
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.contact || "",
+        });
+      } else {
+        toast.error("Employee not found");
+        router.push("/company/employees");
+      }
+      setInitialLoading(false);
+    }
+    loadEmployee();
+  }, [id, getEmployee, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -33,20 +54,31 @@ function AddEmployeePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    await storeEmployee({
+    await updateEmployee(Number(id), {
       name: formData.name,
       email: formData.email,
       contact: formData.phone,
     });
     router.push("/company/employees");
-    setLoading(false);
   };
+
+  if (initialLoading) {
+    return (
+      <ContentWrapper
+        heading="Edit Employee"
+        subHeading="Management / Employees / Edit"
+      >
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="size-8 animate-spin text-primary-blue" />
+        </div>
+      </ContentWrapper>
+    );
+  }
 
   return (
     <ContentWrapper
-      heading="Add New Employee"
-      subHeading="Management / Employees / Add"
+      heading="Edit Employee"
+      subHeading={`Management / Employees / Edit / ${formData.name}`}
     >
       <form
         onSubmit={handleSubmit}
@@ -59,7 +91,7 @@ function AddEmployeePage() {
               <CardTitle className="text-xl">Employee Details</CardTitle>
             </div>
             <CardDescription>
-              Enter the basic information to add a new employee.
+              Update the employee&apos;s information.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -76,7 +108,7 @@ function AddEmployeePage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  disabled={loading}
+                  disabled={actionLoading}
                 />
               </div>
             </div>
@@ -95,7 +127,7 @@ function AddEmployeePage() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  disabled={loading}
+                  disabled={actionLoading}
                 />
               </div>
             </div>
@@ -114,14 +146,13 @@ function AddEmployeePage() {
                   required
                   value={formData.phone}
                   onChange={handleChange}
-                  disabled={loading}
+                  disabled={actionLoading}
                 />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Form Actions */}
         <div className="flex items-center justify-end gap-4">
           <Button
             variant="ghost"
@@ -129,7 +160,7 @@ function AddEmployeePage() {
             size="lg"
             className="px-8 hover:bg-accent/10"
             onClick={() => router.back()}
-            disabled={loading}
+            disabled={actionLoading}
           >
             Cancel
           </Button>
@@ -138,15 +169,15 @@ function AddEmployeePage() {
             type="submit"
             size="xl"
             className="px-12 shadow-lg shadow-primary-blue/20"
-            disabled={loading}
+            disabled={actionLoading}
           >
-            {loading ? (
+            {actionLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
+                Saving...
               </>
             ) : (
-              "Create Employee"
+              "Save Changes"
             )}
           </Button>
         </div>
@@ -155,4 +186,4 @@ function AddEmployeePage() {
   );
 }
 
-export default AddEmployeePage;
+export default EditEmployeePage;
