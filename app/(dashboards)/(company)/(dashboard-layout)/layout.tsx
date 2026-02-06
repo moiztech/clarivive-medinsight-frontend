@@ -6,8 +6,9 @@ import { Book, Home, Users } from "lucide-react";
 import { CompanySidebar } from "../_components/company-sidebar";
 import { CompanyHeader } from "../_components/company-header";
 import { useAuth } from "@/app/_contexts/AuthProvider";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 const companyNavItems = [
   {
@@ -57,14 +58,28 @@ export default function CompanyLayout({
   children: React.ReactNode;
 }) {
   const { user, loading } = useAuth();
-  if (loading) return <div>Loading...</div>;
-  if (!user) {
-    toast.error("You are not logged in");
-    return redirect("/login?callbackUrl=/company");
-  } else if (user.role.name !== "company_admin") {
-    toast.error("You are not authorized to access this page");
-    return redirect("/");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        toast.error("You are not logged in");
+        router.push("/login?callbackUrl=/company");
+      } else if (user.role.name !== "company_admin") {
+        toast.error("You are not authorized to access this page");
+        router.push("/");
+      }
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
+
+  if (!user || user.role.name !== "company_admin") {
+    return null; // Will redirect via useEffect
+  }
+
   return (
     <DashboardLayoutContent
       sidebar={<CompanySidebar navItems={companyNavItems} />}

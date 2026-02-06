@@ -31,18 +31,33 @@ import { LmsSidebar } from "./_components/lms-sidebar";
 import { LmsHeader } from "./_components/lms-header";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LMSLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
-  if (loading) return <div>Loading...</div>;
-  if (!user) {
-    toast.error("You are not logged in");
-    return redirect("/login?callbackUrl=/dashboard/lms");
-  } else if (user.role.name !== "learner") {
-    toast.error("You need to login as a learner to access this page");
-    return redirect("/");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        toast.error("You are not logged in");
+        router.push("/login?callbackUrl=/dashboard/lms");
+      } else if (user.role.name !== "learner") {
+        toast.error("You need to login as a learner to access this page");
+        router.push("/");
+      }
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
+
+  if (!user || user.role.name !== "learner") {
+    return null; // Will redirect via useEffect
+  }
+
   return (
     <DashboardLayoutContent
       sidebar={<LmsSidebar navItems={lmsNavItems} />}

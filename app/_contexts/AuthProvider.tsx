@@ -7,7 +7,7 @@ import { tokenStore } from "@/lib/auth/tokenStore";
 import { UserType } from "@/lib/types";
 import protectedApi from "@/lib/axios/protected";
 import { toast } from "sonner";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 type AuthCtx = {
   user: UserType | null;
@@ -21,6 +21,7 @@ type AuthCtx = {
 const Ctx = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
