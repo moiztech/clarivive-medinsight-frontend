@@ -28,7 +28,7 @@ export default function BusinessOutcomesSection() {
     {
       id: "employee",
       icon: <Building2 className="w-full h-full" />,
-      title: "For Organizations",
+      title: "Organizations",
       color: "text-primary-blue",
       bgColor: "bg-blue-50",
       hoverBg: "hover:bg-blue-100",
@@ -92,7 +92,7 @@ export default function BusinessOutcomesSection() {
     },
 
     employee: {
-      headline: "For organizations",
+      headline: "Organizations",
       description:
         "Training solutions for organizations requiring consistent, auditable training delivery while retaining full responsibility for supervision, competence assessment, and workforce governance.",
       points: [
@@ -104,7 +104,7 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/for-organizations",
+          href: "/organizations",
         },
       ],
       image: "/home/Image 03.png",
@@ -123,7 +123,7 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/for-organizations",
+          href: "/organizations",
         },
       ],
       image: "/home/Image 03.png",
@@ -142,7 +142,7 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/for-organizations",
+          href: "/organizations",
         },
       ],
       image: "/home/Image 03.png",
@@ -161,7 +161,7 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/for-organizations",
+          href: "/organizations",
         },
       ],
       image: "/home/Image 03.png",
@@ -181,7 +181,7 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/for-organizations",
+          href: "/organizations",
         },
       ],
       image: "/home/Image 03.png",

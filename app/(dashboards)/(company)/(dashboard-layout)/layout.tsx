@@ -14,12 +14,7 @@ const companyNavItems = [
   {
     icon: Home,
     label: "Dashboard",
-    children: [
-      {
-        label: "Company Overview",
-        href: "/company",
-      },
-    ],
+    href: "/company",
   },
   {
     icon: Users,

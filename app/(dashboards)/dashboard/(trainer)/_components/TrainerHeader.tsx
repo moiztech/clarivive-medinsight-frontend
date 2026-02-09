@@ -13,12 +13,11 @@ import {
 import { Bell, LogOut, Settings, User, Moon, Sun, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/app/_contexts/AuthProvider";
-import { AvatarImage } from "@radix-ui/react-avatar";
 import { useSidebarToggle } from "@/components/dashboard/dashboard-layout-content";
 
-export function CompanyHeader() {
+export function TrainerHeader() {
   const { theme, setTheme } = useTheme();
-  const { logout, user } = useAuth();
+  const { user, logout } = useAuth();
   const { setIsMobileOpen } = useSidebarToggle();
   const [mounted, setMounted] = React.useState(false);
 
@@ -35,7 +34,6 @@ export function CompanyHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-sidebar">
       <div className="flex items-center justify-between px-6 py-4">
-        {/* Search Bar or Company Name */}
         <div className="flex items-center gap-3">
           {/* Mobile Menu Toggle */}
           <Button
@@ -48,7 +46,7 @@ export function CompanyHeader() {
           </Button>
 
           <h1 className="text-xl font-semibold text-foreground">
-            {user?.name ? `${user.name} Dashboard` : "Dashboard"}
+            Trainer Dashboard
           </h1>
         </div>
 
@@ -83,7 +81,6 @@ export function CompanyHeader() {
                 className="gap-2 w-auto h-12 rounded-2xl px-2"
               >
                 <Avatar className="h-9 w-9 border border-primary">
-                  <AvatarImage src={user?.logo} />
                   <AvatarFallback>
                     {user?.name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>

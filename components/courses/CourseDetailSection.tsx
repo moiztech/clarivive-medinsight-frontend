@@ -8,6 +8,7 @@ import { cartItem, useCart } from "@/app/_contexts/CartContext";
 import { toast } from "sonner";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useId } from "react";
 
 interface Props {
   course: DetailCourse;
@@ -17,6 +18,7 @@ const CourseDetailSection = ({ course }: Props) => {
   const { addItem, removeItem, items } = useCart();
   const isInCart = items.some((it) => it.id === course.id);
   const link = usePathname();
+  const id = useId();
   const handleToggleCart = () => {
     if (isInCart) {
       removeItem(course.id);
@@ -106,7 +108,7 @@ const CourseDetailSection = ({ course }: Props) => {
               <ShoppingCart size={20} />
               {isInCart ? "Remove from Cart" : "Add to Cart"}
             </Button>
-            <Link href={`/checkout/${course.slug}`} className="w-full">
+            <Link href={`/checkout/${id}`} className="w-full">
               <Button
                 size={"lg"}
                 variant="outline"

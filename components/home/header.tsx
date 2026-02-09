@@ -69,6 +69,13 @@ export default function Header() {
   );
   const { user } = useAuth();
   const { logout } = useAuth();
+  let dashboardLink = "/dashboard/lms";
+
+  if (user?.role.name === "trainer") {
+    dashboardLink = "/dashboard/trainer";
+  } else if (user?.role.name === "company_admin") {
+    dashboardLink = "/company";
+  }
 
   return (
     <header className="bg-card border-b sticky top-0 z-50">
@@ -164,15 +171,7 @@ export default function Header() {
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
-                    <Link
-                      href={
-                        user?.role.name === "company_admin"
-                          ? "/company"
-                          : "/dashboard/lms"
-                      }
-                    >
-                      Go to Dashboard
-                    </Link>
+                    <Link href={dashboardLink}>Go to Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

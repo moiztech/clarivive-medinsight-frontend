@@ -3,8 +3,6 @@ import {
   ArrowUpRight,
   Brain,
   Flower2,
-  Bone,
-  Activity,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -23,6 +21,7 @@ export default function MedicalServices() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(1);
   const services = [
     {
       icon: Brain,
@@ -42,42 +41,6 @@ export default function MedicalServices() {
         "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80",
       href: "/courses/online",
     },
-    // {
-    //   icon: Bone,
-    //   title: "Orthopedic",
-    //   description: "Focuses on the diagnosis, treatment, and rehabilitation of musculoskeletal conditions and injuries.",
-    //   image: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80",
-    // },
-    // {
-    //   icon: Activity,
-    //   title: "Diagnostics",
-    //   description: "Accurate testing and screening services to detect, monitor, and diagnose various medical conditions.",
-    //   image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
-    // },
-    // {
-    //   icon: Brain,
-    //   title: "Neurology",
-    //   description: "Neurology is the branch of medicine that focuses on the diagnosis, treatment, and management of disorders.",
-    //   image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&q=80",
-    // },
-    // {
-    //   icon: Flower2,
-    //   title: "Holistic Care",
-    //   description: "It recognizes that health is influenced by a combination of physical, mental, emotional, and spiritual factors.",
-    //   image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80",
-    // },
-    // {
-    //   icon: Bone,
-    //   title: "Orthopedic",
-    //   description: "Focuses on the diagnosis, treatment, and rehabilitation of musculoskeletal conditions and injuries.",
-    //   image: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=800&q=80",
-    // },
-    // {
-    //   icon: Activity,
-    //   title: "Diagnostics",
-    //   description: "Accurate testing and screening services to detect, monitor, and diagnose various medical conditions.",
-    //   image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
-    // },
   ];
   useEffect(() => {
     const updateItemsPerSlide = () => {
@@ -92,6 +55,11 @@ export default function MedicalServices() {
       }
 
       setCurrentIndex(0); // reset slide on resize
+
+      // Update container width to avoid ref access during render
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.clientWidth);
+      }
     };
 
     updateItemsPerSlide(); // initial run
@@ -203,9 +171,7 @@ export default function MedicalServices() {
               : {
                   transform: (() => {
                     const base = -currentIndex * 100;
-                    const dragPercent =
-                      (dragOffset / (containerRef.current?.clientWidth || 1)) *
-                      100;
+                    const dragPercent = (dragOffset / containerWidth) * 100;
                     return `translateX(${base + dragPercent}%)`;
                   })(),
                 }
@@ -220,7 +186,7 @@ export default function MedicalServices() {
                 className="bg-white rounded-3xl rounded-br-2xl overflow-hidden group
              transition-transform duration-300 flex flex-col lg:h-[520px] relative border-0 [transform:translateZ(0)]"
               >
-                <div className="relative h-70 lg:h-54 2xl:h-60 flex-shrink-0">
+                <div className="relative h-70 lg:h-54 2xl:h-60 shrink-0">
                   <Image
                     src={service.image || "/placeholder.svg"}
                     alt={service.title}

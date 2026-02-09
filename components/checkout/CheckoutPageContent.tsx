@@ -5,15 +5,44 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ShoppingBag, Info } from "lucide-react";
+import { ShoppingBag, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { useCart } from "@/app/_contexts/CartContext";
 import Image from "next/image";
+import protectedApi from "@/lib/axios/protected";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const CheckoutPageContent = () => {
   const { user } = useAuth();
-  const { items, totalPrice } = useCart();
+  const { items, totalPrice, clearCart } = useCart();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const handleCompleteOrder = async () => {
+    setLoading(true);
+    try {
+      const res = await protectedApi.post("/checkout", {
+        course_ids: items.map((item) => item.id),
+        // payment_method: "cod",
+      });
+      if (res?.data?.status === 200) {
+        toast.success(
+          "Order placed successfully ID#" + res?.data?.data?.order_id,
+        );
+        setLoading(false);
+        clearCart();
+        router.push(`/dashboard/lms`);
+      } else {
+        toast.error(res?.data?.message ?? "Something went wrong");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+      setLoading(false);
+    }
+  };
   const [discountCode, setDiscountCode] = useState("");
 
   if (items.length === 0) {
@@ -56,7 +85,12 @@ const CheckoutPageContent = () => {
 
       <main className="max-w-7xl mx-auto grid lg:grid-cols-2 min-h-[calc(100vh-80px)]">
         {/* Left Column: Form */}
-        <div className="p-4 md:p-8 lg:p-12 space-y-10 border-r border-slate-100">
+        <div className="p-4 md:p-8 lg:p-12 space-y-10 border-r relative border-slate-100">
+          {loading && (
+            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-white z-50">
+              <Loader2 className="w-12 h-12 animate-spin text-primary-blue" />
+            </div>
+          )}
           {/* Contact */}
           <section className="space-y-4">
             <div className="flex justify-between items-center">
@@ -129,7 +163,10 @@ const CheckoutPageContent = () => {
             </RadioGroup>
           </section>
 
-          <Button className="w-full h-14 text-lg font-semibold bg-primary-blue hover:bg-primary-blue/90 text-white rounded-lg shadow-sm transition-all uppercase tracking-wide">
+          <Button
+            onClick={handleCompleteOrder}
+            className="w-full h-14 text-lg font-semibold bg-primary-blue hover:bg-primary-blue/90 text-white rounded-lg shadow-sm transition-all uppercase tracking-wide"
+          >
             Complete order
           </Button>
 
@@ -158,11 +195,11 @@ const CheckoutPageContent = () => {
           <h2 className="text-xl font-semibold">Order Summary</h2>
 
           {/* Cart Items */}
-          <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex gap-4 items-center animate-in fade-in slide-in-from-right-4 duration-300"
+                className="flex gap-4 mt-4 items-center animate-in fade-in slide-in-from-right-4 duration-300"
               >
                 <div className="relative">
                   <div className="w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-white shrink-0">
@@ -174,7 +211,7 @@ const CheckoutPageContent = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="absolute -top-2 -right-2 bg-slate-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-slate-500 text-white text-[10px] z-3 font-bold w-5 h-5 rounded-full flex items-center justify-center">
                     1
                   </span>
                 </div>
@@ -219,7 +256,7 @@ const CheckoutPageContent = () => {
                   £{totalPrice.toFixed(2)}
                 </span>
               </div>
-              <div className="flex justify-between text-sm text-slate-600">
+              {/* <div className="flex justify-between text-sm text-slate-600">
                 <div className="flex items-center gap-1">
                   <span>Shipping</span>
                   <Info className="w-3 h-3 text-slate-400" />
@@ -227,7 +264,7 @@ const CheckoutPageContent = () => {
                 <span className="text-green-600 text-xs font-bold uppercase">
                   Free
                 </span>
-              </div>
+              </div> */}
 
               <div className="pt-4 mt-4 border-t border-slate-200 flex justify-between items-baseline">
                 <span className="text-lg font-bold text-slate-900">Total</span>

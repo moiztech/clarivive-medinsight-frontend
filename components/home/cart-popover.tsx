@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useId } from "react";
 import {
   Popover,
   PopoverContent,
@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 export default function CartPopover() {
   const { items, removeItem, totalItems, totalPrice } = useCart();
   const pathname = usePathname();
+  const id = useId();
 
   // Close popover when navigating (optional, but good UX)
   const [open, setOpen] = React.useState(false);
@@ -100,10 +101,7 @@ export default function CartPopover() {
               </span>
             </div>
             <div className="grid gap-2">
-              <Link
-                href={`/checkout/${items[0]?.slug || "cart"}`}
-                className="w-full"
-              >
+              <Link href={`/checkout/${id} || "cart"}`} className="w-full">
                 <Button className="w-full bg-blue-600 hover:bg-blue-700">
                   Checkout Now
                 </Button>

@@ -10,13 +10,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Bell, LogOut, Settings, User, Moon, Sun } from "lucide-react";
+import { Bell, LogOut, Settings, User, Moon, Sun, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/app/_contexts/AuthProvider";
+import { useSidebarToggle } from "@/components/dashboard/dashboard-layout-content";
 
 export function LmsHeader() {
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
+  const { setIsMobileOpen } = useSidebarToggle();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -32,7 +34,17 @@ export function LmsHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-sidebar">
       <div className="flex items-center justify-between px-6 py-4">
-        <div className="hidden md:flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-3">
+          {/* Mobile Menu Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMobileOpen(true)}
+            className="lg:hidden"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+
           <h1 className="text-xl font-semibold text-foreground">
             LMS Dashboard
           </h1>

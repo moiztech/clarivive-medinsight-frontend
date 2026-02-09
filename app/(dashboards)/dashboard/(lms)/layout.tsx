@@ -43,7 +43,10 @@ export default function LMSLayout({ children }: { children: React.ReactNode }) {
       if (!user) {
         toast.error("You are not logged in");
         router.push("/login?callbackUrl=/dashboard/lms");
-      } else if (user.role.name !== "learner") {
+      } else if (
+        user.role.name !== "learner" &&
+        user.role.name !== "employee"
+      ) {
         toast.error("You need to login as a learner to access this page");
         router.push("/");
       }
@@ -54,7 +57,10 @@ export default function LMSLayout({ children }: { children: React.ReactNode }) {
     return <div>Loading...</div>;
   }
 
-  if (!user || user.role.name !== "learner") {
+  if (
+    !user ||
+    (user.role.name !== "learner" && user.role.name !== "employee")
+  ) {
     return null; // Will redirect via useEffect
   }
 

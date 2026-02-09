@@ -18,6 +18,7 @@ export function Sidebar({ navItems, header, footer }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const pathname = usePathname();
+  // const pathname = usePathname();
 
   return (
     <aside
