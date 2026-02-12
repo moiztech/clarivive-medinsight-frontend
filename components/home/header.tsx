@@ -173,6 +173,11 @@ export default function Header() {
                   <DropdownMenuItem className="cursor-pointer">
                     <Link href={dashboardLink}>Go to Dashboard</Link>
                   </DropdownMenuItem>
+                  {user.role.name === "learner" && (
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Link href={"/orders"}>My Orders</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"

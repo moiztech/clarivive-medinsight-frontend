@@ -14,6 +14,8 @@ import {
   Trash2,
   UserPlus,
   Eye,
+  Book,
+  BookOpen,
 } from "lucide-react";
 import {
   Table,
@@ -319,6 +321,11 @@ function EmployeesPage() {
                             <Link href={`/company/employees/${emp.id}/edit`}>
                               <DropdownMenuItem className="gap-2 cursor-pointer">
                                 <Edit className="size-4" /> Edit Profile
+                              </DropdownMenuItem>
+                            </Link>
+                            <Link href={`/company/employees/${emp.id}/courses`}>
+                              <DropdownMenuItem className="gap-2 cursor-pointer">
+                                <BookOpen className="size-4" /> Courses
                               </DropdownMenuItem>
                             </Link>
                             <DropdownMenuSeparator />

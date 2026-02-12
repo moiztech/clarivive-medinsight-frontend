@@ -104,6 +104,22 @@ export function useEmployee() {
     [getEmployees],
   );
 
+  const getEmployeeCourses = useCallback(async (id: number) => {
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await protectedApi.get(`/employee/${id}/courses`);
+      return res.data.data || res.data;
+    } catch (error) {
+      console.error("Failed to fetch employee courses:", error);
+      setError(true);
+      toast.error("Failed to load employee courses");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     employees,
     loading,
@@ -113,5 +129,6 @@ export function useEmployee() {
     updateEmployee,
     getEmployee,
     deleteEmployee,
+    getEmployeeCourses,
   };
 }
