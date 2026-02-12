@@ -40,7 +40,7 @@ const EmployeeCourseCard: React.FC<EmployeeCourseCardProps> = ({ course }) => {
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="mb-2 flex items-start justify-between gap-2">

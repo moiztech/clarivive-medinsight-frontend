@@ -13,9 +13,15 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { EmployeeCourse } from "@/components/company/EmployeeCourseCard";
 
 function AssignCoursesPage() {
-  const { employees, getEmployees, loading: employeesLoading } = useEmployee();
+  const {
+    employees,
+    getEmployees,
+    loading: employeesLoading,
+    getEmployeeCourses,
+  } = useEmployee();
   const {
     courses,
     getCourses,
@@ -25,6 +31,8 @@ function AssignCoursesPage() {
 
   const [selectedEmployee, setSelectedEmployee] = useState<number | null>(null);
   const [selectedCourses, setSelectedCourses] = useState<number[]>([]);
+  const [assignedCourseIds, setAssignedCourseIds] = useState<number[]>([]);
+  const [fetchingCourses, setFetchingCourses] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [employeeSearch, setEmployeeSearch] = useState("");
 
@@ -32,6 +40,50 @@ function AssignCoursesPage() {
     getEmployees();
     getCourses();
   }, [getEmployees, getCourses]);
+
+  // Fetch employee courses when an employee is selected
+  useEffect(() => {
+    const fetchAssignedCourses = async () => {
+      if (selectedEmployee) {
+        setFetchingCourses(true);
+        const employeeCourses = await getEmployeeCourses(selectedEmployee);
+
+        let coursesList: EmployeeCourse[] = [];
+
+        if (employeeCourses) {
+          if (Array.isArray(employeeCourses)) {
+            coursesList = employeeCourses;
+          } else if (
+            typeof employeeCourses === "object" &&
+            "courses" in employeeCourses
+          ) {
+            const coursesWithIds = (
+              employeeCourses as { courses: EmployeeCourse[] }
+            ).courses;
+            if (Array.isArray(coursesWithIds)) {
+              coursesList = coursesWithIds;
+            }
+          }
+        }
+
+        if (coursesList.length > 0) {
+          const ids = coursesList.map((c) => c.id);
+          setAssignedCourseIds(ids);
+        } else {
+          setAssignedCourseIds([]);
+        }
+
+        setFetchingCourses(false);
+        // Clear selected courses when switching employees to avoid confusion
+        setSelectedCourses([]);
+      } else {
+        setAssignedCourseIds([]);
+        setSelectedCourses([]);
+      }
+    };
+
+    fetchAssignedCourses();
+  }, [selectedEmployee, getEmployeeCourses]);
 
   const filteredEmployees = useMemo(() => {
     return employees.filter(
@@ -46,6 +98,9 @@ function AssignCoursesPage() {
   }, [employees, selectedEmployee]);
 
   const toggleCourse = (courseId: number) => {
+    // Prevent toggling if course is already assigned
+    if (assignedCourseIds.includes(courseId)) return;
+
     setSelectedCourses((prev) =>
       prev.includes(courseId)
         ? prev.filter((id) => id !== courseId)
@@ -70,7 +125,12 @@ function AssignCoursesPage() {
     });
 
     if (result) {
-      setSelectedEmployee(null);
+      // Refresh the assigned courses list
+      const employeeCourses = await getEmployeeCourses(selectedEmployee);
+      if (employeeCourses && Array.isArray(employeeCourses)) {
+        const ids = (employeeCourses as EmployeeCourse[]).map((c) => c.id);
+        setAssignedCourseIds(ids);
+      }
       setSelectedCourses([]);
     }
     setIsSubmitting(false);
@@ -154,52 +214,78 @@ function AssignCoursesPage() {
                 <div className="size-8 rounded-full bg-primary-blue/10 flex items-center justify-center font-bold">
                   2
                 </div>
-                <h3 className="font-semibold text-lg">Select Courses</h3>
+                <h3 className="font-semibold text-lg flex items-center justify-between w-full">
+                  <span>Select Courses</span>
+                  {selectedEmployee && fetchingCourses && (
+                    <span className="text-xs flex items-center gap-1 font-normal text-muted-foreground">
+                      <Loader2 className="h-3 w-3 animate-spin" /> Checking
+                      assigned courses...
+                    </span>
+                  )}
+                </h3>
               </div>
 
               <Card className="border-none shadow-xl bg-card/60 backdrop-blur-md ring-1 ring-border/50">
                 <CardContent className="p-6">
                   <div className="grid grid-cols-1 gap-3">
-                    {courses.map((course) => (
-                      <div
-                        key={course.id}
-                        className={`flex items-start gap-4 p-4 rounded-xl border transition-all cursor-pointer group ${
-                          selectedCourses.includes(course.id)
-                            ? "bg-primary-blue/5 border-primary-blue shadow-sm"
-                            : "bg-background/30 border-border/50 hover:bg-muted/50"
-                        }`}
-                        onClick={() => toggleCourse(course.id)}
-                      >
-                        <Checkbox
-                          checked={selectedCourses.includes(course.id)}
-                          onCheckedChange={() => {}} // Controlled by parent div
-                          className="mt-1"
-                        />
-                        <div className="flex-1 space-y-1">
-                          <div className="flex items-center justify-between">
-                            <Image
-                              src={course.icon}
-                              alt={course.title}
-                              width={100}
-                              height={50}
-                              className="rounded-md text-xs"
-                            />
-                            <span className="font-semibold">
-                              {course.title}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Clock className="size-3" /> {course.duration}m
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Layout className="size-3" /> {course.modules}{" "}
-                              Modules
-                            </span>
+                    {courses.map((course) => {
+                      const isAssigned = assignedCourseIds.includes(course.id);
+                      return (
+                        <div
+                          key={course.id}
+                          className={`flex items-start gap-4 p-4 rounded-xl border transition-all ${
+                            isAssigned
+                              ? "bg-muted/50 border-border/30 opacity-60 cursor-not-allowed"
+                              : selectedCourses.includes(course.id)
+                                ? "bg-primary-blue/5 border-primary-blue shadow-sm cursor-pointer"
+                                : "bg-background/30 border-border/50 hover:bg-muted/50 cursor-pointer"
+                          }`}
+                          onClick={() => !isAssigned && toggleCourse(course.id)}
+                        >
+                          <Checkbox
+                            checked={
+                              selectedCourses.includes(course.id) || isAssigned
+                            }
+                            disabled={isAssigned}
+                            onCheckedChange={() => {}} // Controlled by parent div
+                            className="mt-1"
+                          />
+                          <div className="flex-1 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <Image
+                                  src={course.icon}
+                                  alt={course.title}
+                                  width={100}
+                                  height={50}
+                                  className="rounded-md text-xs h-10 w-16 object-cover"
+                                />
+                                <span className="font-semibold">
+                                  {course.title}
+                                </span>
+                              </div>
+                              {isAssigned && (
+                                <Badge
+                                  variant="secondary"
+                                  className="text-[10px] px-2 h-5"
+                                >
+                                  Assigned
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground ml-[76px]">
+                              <span className="flex items-center gap-1">
+                                <Clock className="size-3" /> {course.duration}m
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Layout className="size-3" /> {course.modules}{" "}
+                                Modules
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                     {courses.length === 0 && !isLoading && (
                       <div className="text-center py-10 text-muted-foreground italic">
                         No courses available subscription found.
