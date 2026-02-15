@@ -2,7 +2,7 @@
 
 import React from "react";
 import { DashboardLayoutContent } from "@/components/dashboard/dashboard-layout-content";
-import { Book, Home, Users } from "lucide-react";
+import { Book, Home, MessageCircle, Users } from "lucide-react";
 import { CompanySidebar } from "../_components/company-sidebar";
 import { CompanyHeader } from "../_components/company-header";
 import { useAuth } from "@/app/_contexts/AuthProvider";
@@ -44,6 +44,11 @@ const companyNavItems = [
         href: "/company/courses/list",
       },
     ],
+  },
+  {
+    icon: MessageCircle,
+    label: "Chats",
+    href: "/company/chats",
   },
 ];
 

@@ -88,8 +88,8 @@ export default function Header() {
                 <Image
                   src="/Clarivive medinsight logo-01.png"
                   alt="Logo"
-                  width={200}
-                  height={72}
+                  width={210}
+                  height={82}
                   priority
                 />
               </Link>

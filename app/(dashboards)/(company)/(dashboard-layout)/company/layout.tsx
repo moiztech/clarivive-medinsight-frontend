@@ -5,5 +5,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="relative min-h-screen">{children}</div>;
+  return <div className="relative min-h-full">{children}</div>;
 }
