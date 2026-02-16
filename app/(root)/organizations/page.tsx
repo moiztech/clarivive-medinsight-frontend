@@ -4,16 +4,6 @@ import LaboratoryAdvantages, {
 } from "@/components/about/laboratory-advantages";
 import BreadCrumb from "@/components/BreadCrumb";
 import { Blend, Pickaxe, RefreshCcw, ScanFace } from "lucide-react";
-import {
-  Heart,
-  Eye,
-  Brain,
-  Activity,
-  Syringe,
-  ClipboardList,
-  Stethoscope,
-  Microscope,
-} from "lucide-react";
 import React from "react";
 import OurMission from "@/components/about/our-mission";
 import QualityGovern from "@/components/for-organization/QualityGovern";
@@ -24,16 +14,6 @@ import ProcessSection, {
 import OrganizationInquiry from "@/components/for-organization/Organization-Inquiry";
 
 function page() {
-  const services = [
-    { title: "Angioplasty", icon: Heart },
-    { title: "Cardiology", icon: Activity },
-    { title: "Dental", icon: Stethoscope },
-    { title: "Endocrinology", icon: Syringe },
-    { title: "Eye Care", icon: Eye },
-    { title: "Neurology", icon: Brain },
-    { title: "Orthopaedics", icon: ClipboardList },
-    { title: "RMI", icon: Microscope },
-  ];
   const LaboratoryAdvantagesProps: LaboratoryAdvantagesProps = {
     badgeText: "What We Offer",
     heading: "What We ",
@@ -70,8 +50,7 @@ function page() {
   const ProcessSectionProps: ProcessSectionProps = {
     headingMain: "Employer ",
     headingHighlight: "Responsibilities",
-    imageSrc:
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageSrc: "/employer-responsibilities-img.png",
     description:
       "Training supports learning and awareness and must be applied within the employer’s governance framework. Employers retain responsibility for:",
     steps: [

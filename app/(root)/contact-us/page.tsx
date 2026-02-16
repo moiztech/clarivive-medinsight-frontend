@@ -83,6 +83,7 @@ export default function ContactPage() {
       <BreadCrumb
         paths={[{ label: "Contact Us", href: "/contact-us" }]}
         title="Contact Us"
+        coverImg="/CONTACT-US-IMG.png"
       />
 
       {/* Main Content */}
