@@ -1,13 +1,4 @@
 import React from "react";
-import {
-  HeartPulse,
-  Users,
-  Activity,
-  ShieldAlert,
-  BadgeCheck,
-  RefreshCcw,
-  Pill,
-} from "lucide-react";
 import AboutHero, { CoursesHeroProps } from "@/components/courses/courses-hero";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import ProcessSection, {
@@ -19,36 +10,6 @@ import { StatsBar } from "@/components/stats-bar";
 import BreadCrumb from "@/components/BreadCrumb";
 import ClientCoursesGrid from "@/app/(root)/courses/online/client-courses-grid";
 import { CategoryResponse } from "@/lib/types";
-const services = [
-  {
-    title: "First Aid",
-    icon: HeartPulse,
-  },
-  {
-    title: "People Moving & Handling",
-    icon: Users,
-  },
-  {
-    title: "Basic Life Support (BLS)",
-    icon: Activity,
-  },
-  {
-    title: "PMVA (Prevention & Management of Violence and Aggression)",
-    icon: ShieldAlert,
-  },
-  {
-    title: "Care Certificate Training",
-    icon: BadgeCheck,
-  },
-  {
-    title: "Mandatory Refreshers Course",
-    icon: RefreshCcw,
-  },
-  {
-    title: "Medication Administration",
-    icon: Pill,
-  },
-];
 
 const courseHeroContent: CoursesHeroProps = {
   headingPre: "",
@@ -119,12 +80,6 @@ async function page() {
         title="Face to Face Courses"
       />
       <AboutHero {...courseHeroContent} />
-      {/* <ServicesGrid
-        services={services}
-        title="Our Courses"
-        description="We provide various courses"
-        cardLinkPrefix="course/face-to-face"
-      /> */}
       <ClientCoursesGrid
         initialData={courseJson.data}
         type="face-to-face"

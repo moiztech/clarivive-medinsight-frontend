@@ -7,6 +7,7 @@ import CoursesGrid from "@/components/courses/courses-grid";
 import { CategoryResponse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { ArrowDown } from "lucide-react";
 
 export default function ClientCoursesGrid({
   initialData,
@@ -59,7 +60,7 @@ export default function ClientCoursesGrid({
           </h2>
         </div>
 
-        <div className="flex mx-2 gap-2 mb-10 justify-center items-center overflow-x-auto touch-pan-x">
+        <div className="flex max-w-full lg:max-w-3/5 mx-auto gap-2 mb-10 justify-center items-center flex-wrap">
           <Button
             variant={category === null ? "primary" : "outline"}
             className="capitalize rounded-full"
@@ -85,12 +86,9 @@ export default function ClientCoursesGrid({
 
         {query.hasNextPage && (
           <div className="flex justify-center mt-10">
-            <button
-              onClick={() => query.fetchNextPage()}
-              className="px-6 py-3 bg-blue-500 text-white rounded-lg"
-            >
-              Load more
-            </button>
+            <Button onClick={() => query.fetchNextPage()} variant="outline">
+              Load more <ArrowDown />
+            </Button>
           </div>
         )}
       </section>

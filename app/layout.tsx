@@ -20,9 +20,17 @@ export const metadata: Metadata = {
   description:
     "Expand your skills in development, testing, analysis, and designing. Join 50K+ students in our learning platform.",
   icons: {
-    icon: [{ url: "/favicon.png" }],
-    apple: "/favicon.png",
+    icon: [
+      { rel: "icon", url: "/favicon.png" },
+      { rel: "icon", url: "/favicon.png", sizes: "192x192" },
+      { rel: "icon", url: "/favicon.png", sizes: "512x512" },
+    ],
+    apple: [
+      { rel: "apple-touch-icon", url: "/favicon.png" },
+      { rel: "apple-touch-icon", url: "/favicon.png", sizes: "180x180" },
+    ],
   },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
