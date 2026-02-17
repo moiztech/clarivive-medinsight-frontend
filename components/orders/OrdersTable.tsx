@@ -97,7 +97,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
                 £{order.total_amount}
               </TableCell>
               <TableCell className="text-right">
-                <Link href={`/orders/${order.order_id}`}>
+                <Link href={`/dashboard/lms/orders/${order.order_id}`}>
                   <Button variant="outline">View</Button>
                 </Link>
               </TableCell>

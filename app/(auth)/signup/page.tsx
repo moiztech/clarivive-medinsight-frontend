@@ -7,23 +7,38 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/app/_contexts/AuthProvider"; // ✅
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     terms: false,
   });
 
-  const router = useRouter();
   const { signup } = useAuth();
 
+  // Check if passwords match
+  const passwordsMatch =
+    form.password && form.confirmPassword
+      ? form.password === form.confirmPassword
+      : true;
+  const showPasswordError = form.confirmPassword.length > 0 && !passwordsMatch;
+
   const handleSubmit = async () => {
+    // Validate passwords match
+    if (!passwordsMatch) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     setLoading(true);
     try {
       await signup(form.name, form.email, form.password);
@@ -61,12 +76,61 @@ export default function SignupPage() {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
 
-          <Input
-            placeholder="Enter your password"
-            type="password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
+          <div className="relative">
+            <Input
+              placeholder="Enter your password"
+              type={showPassword ? "text" : "password"}
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {showPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
+            </button>
+          </div>
+
+          <div className="space-y-1">
+            <div className="relative">
+              <Input
+                placeholder="Confirm your password"
+                type={showConfirmPassword ? "text" : "password"}
+                value={form.confirmPassword}
+                onChange={(e) =>
+                  setForm({ ...form, confirmPassword: e.target.value })
+                }
+                className={`pr-10 ${
+                  showPasswordError
+                    ? "border-red-500 focus-visible:ring-red-500"
+                    : ""
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+              </button>
+            </div>
+            {showPasswordError && (
+              <div className="flex items-center gap-1 text-xs text-red-500">
+                <AlertCircle className="size-3" />
+                <span>Passwords do not match</span>
+              </div>
+            )}
+          </div>
 
           <div className="flex items-center gap-2 text-sm">
             <Checkbox
@@ -84,7 +148,7 @@ export default function SignupPage() {
           <Button
             variant={"primary"}
             className="w-full rounded-xl"
-            disabled={loading || !form.terms}
+            disabled={loading || !form.terms || showPasswordError}
             onClick={handleSubmit}
           >
             {loading ? "Signing up..." : "Signup"}

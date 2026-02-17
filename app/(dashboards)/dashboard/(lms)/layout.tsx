@@ -2,7 +2,7 @@
 
 import React from "react";
 import { DashboardLayoutContent } from "@/components/dashboard/dashboard-layout-content";
-import { Home, BookOpen, Award, Settings } from "lucide-react";
+import { Home, BookOpen, MessageCircle, List } from "lucide-react";
 
 const lmsNavItems = [
   {
@@ -16,14 +16,14 @@ const lmsNavItems = [
     href: "/dashboard/lms/courses",
   },
   {
-    icon: Award,
-    label: "Certificates",
-    href: "/dashboard/lms/certificates",
+    icon: MessageCircle,
+    label: "Chats",
+    href: "/dashboard/lms/chats",
   },
   {
-    icon: Settings,
-    label: "Settings",
-    href: "/dashboard/lms/settings",
+    icon: List,
+    label: "Orders",
+    href: "/dashboard/lms/orders",
   },
 ];
 

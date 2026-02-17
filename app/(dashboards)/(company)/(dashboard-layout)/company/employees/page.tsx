@@ -14,8 +14,8 @@ import {
   Trash2,
   UserPlus,
   Eye,
-  Book,
   BookOpen,
+  MessageCircle,
 } from "lucide-react";
 import {
   Table,
@@ -39,6 +39,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEmployee } from "../_hooks/useEmployee";
+import protectedApi from "@/lib/axios/protected";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export interface Employee {
   id: number;
@@ -80,6 +83,7 @@ export interface Employee {
 }
 
 function EmployeesPage() {
+  const router = useRouter();
   const { employees, loading, getEmployees, deleteEmployee } = useEmployee();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
@@ -144,6 +148,24 @@ function EmployeesPage() {
 
   const handleDelete = async (id: number) => {
     await deleteEmployee(id);
+  };
+
+  const createOrGetConversation = async (employeeId: number) => {
+    try {
+      const response = await protectedApi.post("/conversations", {
+        user_id: employeeId,
+      });
+      const data = response.data;
+      if (data.status === 200) {
+        toast.success(data.message);
+        router.push(`/company/chats/${data.data.id}`);
+      } else {
+        toast.error(data.message || data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create conversation");
+    }
   };
 
   // Pagination Logic
@@ -328,6 +350,12 @@ function EmployeesPage() {
                                 <BookOpen className="size-4" /> Courses
                               </DropdownMenuItem>
                             </Link>
+                            <DropdownMenuItem
+                              className="gap-2 cursor-pointer"
+                              onClick={() => createOrGetConversation(emp.id)}
+                            >
+                              <MessageCircle className="size-4" /> Start Chat
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               onClick={() => handleDelete(emp.id)}
