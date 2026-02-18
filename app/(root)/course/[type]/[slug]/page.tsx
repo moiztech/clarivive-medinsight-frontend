@@ -4,10 +4,24 @@ import BreadCrumb from "@/components/BreadCrumb";
 import CourseDetailSection from "@/components/courses/CourseDetailSection";
 
 export async function generateStaticParams() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses`);
-  const courses = await res.json();
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  return courses.data.map((c: any) => ({
+  // Fetch both types of courses in parallel
+  const [faceToFaceRes, onlineRes] = await Promise.all([
+    fetch(`${baseUrl}/courses/type/face-to-face`),
+    fetch(`${baseUrl}/courses/type/online`),
+  ]);
+
+  const faceToFaceData = await faceToFaceRes.json();
+  const onlineData = await onlineRes.json();
+
+  // Combine both lists
+  const allCourses = [
+    ...(faceToFaceData.data || []),
+    ...(onlineData.data || []),
+  ];
+
+  return allCourses.map((c: any) => ({
     slug: c.slug,
     type: String(c.type).toLowerCase().trim(),
   }));

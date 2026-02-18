@@ -2,13 +2,18 @@
 
 import React from "react";
 import { DashboardLayoutContent } from "@/components/dashboard/dashboard-layout-content";
-import { Home, Loader2, MessageSquare } from "lucide-react";
+import { Book, Home, Loader2, MessageSquare } from "lucide-react";
 
 const lmsNavItems = [
   {
     icon: Home,
     label: "Dashboard",
     href: "/dashboard/trainer",
+  },
+  {
+    icon: Book,
+    label: "Assigned Courses",
+    href: "/dashboard/trainer/courses/list",
   },
   {
     icon: MessageSquare,
