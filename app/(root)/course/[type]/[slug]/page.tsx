@@ -12,19 +12,22 @@ export async function generateStaticParams() {
     fetch(`${baseUrl}/courses/type/online`),
   ]);
 
-  const faceToFaceData = await faceToFaceRes.json();
-  const onlineData = await onlineRes.json();
+  const ftf = await faceToFaceRes.json();
+  const online = await onlineRes.json();
 
-  // Combine both lists
-  const allCourses = [
-    ...(faceToFaceData.data || []),
-    ...(onlineData.data || []),
-  ];
-
-  return allCourses.map((c: any) => ({
+  // Map face-to-face courses using type from meta
+  const faceToFaceParams = (ftf.data || []).map((c: any) => ({
     slug: c.slug,
-    type: String(c.type).toLowerCase().trim(),
+    type: ftf.meta?.type?.slug || "face-to-face",
   }));
+
+  // Map online courses using type from meta
+  const onlineParams = (online.data || []).map((c: any) => ({
+    slug: c.slug,
+    type: online.meta?.type?.slug || "online",
+  }));
+
+  return [...faceToFaceParams, ...onlineParams];
 }
 
 const page = async ({
