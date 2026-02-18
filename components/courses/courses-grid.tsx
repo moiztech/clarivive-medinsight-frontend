@@ -18,17 +18,6 @@ export default function CoursesGrid({
   courses?: CourseData[];
   cardLinkPrefix?: string;
 }) {
-  const defaultCourses = [
-    { title: "Angioplasty", icon: Heart },
-    { title: "Cardiology", icon: Activity },
-    { title: "Dental", icon: Stethoscope },
-    { title: "Endocrinology", icon: Syringe },
-    { title: "Eye Care", icon: Eye },
-    { title: "Neurology", icon: Brain },
-    { title: "Orthopaedics", icon: ClipboardList },
-    { title: "RMI", icon: Microscope },
-  ];
-
   return (
     <section>
       <div className="container mx-auto px-4">

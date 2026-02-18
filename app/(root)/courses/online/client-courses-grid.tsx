@@ -1,5 +1,3 @@
-// app/courses/online/client-courses-grid.tsx
-
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";

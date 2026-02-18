@@ -25,6 +25,9 @@ const CoursesGridCard = ({
       >
         <div className="rounded-t-2xl overflow-hidden w-full">
           <Image
+            quality={80}
+            placeholder="blur"
+            blurDataURL="/placeholder.svg"
             src={course.thumbnail}
             alt={course.title}
             width={16}

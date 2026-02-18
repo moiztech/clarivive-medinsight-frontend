@@ -3,22 +3,15 @@
 import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Send, Loader2 } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Send, Loader2, Trash2 } from "lucide-react";
 import protectedApi from "@/lib/axios/protected";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/_contexts/AuthProvider";
 
-export type Message = {
-  id: number;
-  conversation_id: number;
-  sender_id: number;
-  message: string;
-  created_at: string;
-  updated_at: string;
-  sender: {
-    id: number;
-    name: string;
-  };
-};
+import { Message } from "./types";
+import MessageBubble from "./MessageBubble";
 
 interface ConversationProps {
   messages: Message[];
@@ -33,6 +26,34 @@ function Conversation({
 }: ConversationProps) {
   const [messageInput, setMessageInput] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleConversationDelete = async () => {
+    if (!confirm("Are you sure you want to delete this conversation?")) return;
+
+    setIsDeleting(true);
+    try {
+      await protectedApi.delete(`/delete/conversation/${conversationId}`);
+      toast.success("Conversation deleted successfully");
+
+      let linkPrefix;
+      if (user?.role.name === "company_admin") {
+        linkPrefix = "company";
+      } else if (user?.role.name === "trainer") {
+        linkPrefix = "dashboard/trainer";
+      } else {
+        linkPrefix = "dashboard/lms";
+      }
+      router.push(`/${linkPrefix}/chats`);
+    } catch (error) {
+      console.error("Failed to delete conversation:", error);
+      toast.error("Failed to delete conversation");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!messageInput.trim() || isSending) return;
@@ -64,42 +85,55 @@ function Conversation({
     }
   };
 
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <div className="bg-card relative rounded-r-3xl border-l border-border h-full flex flex-col">
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
-        {messages.length > 0 ? (
-          messages.map((message) => (
-            <div key={message.id} className="flex flex-col">
-              <div className="flex items-start gap-3">
-                <div className="bg-primary-blue/10 text-primary-blue rounded-full w-8 h-8 flex items-center justify-center text-xs font-semibold">
-                  {message.sender.name.charAt(0)}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <p className="text-sm font-semibold text-foreground">
-                      {message.sender.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(message.created_at).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                  <p className="text-sm text-foreground mt-1">
-                    {message.message}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-            <p className="text-sm">No messages yet. Start the conversation!</p>
-          </div>
-        )}
+    <div className="bg-card relative rounded-r-3xl border-l border-border h-full flex flex-col overflow-hidden">
+      {/* Header */}
+      <div className="p-4 border-b border-border flex items-center bg-card/25 justify-between shadow-sm backdrop-blur-lg sticky top-0 z-10">
+        <div className="flex items-center gap-3">
+          <p className="font-semibold text-sm">Conversation Details</p>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+          onClick={handleConversationDelete}
+          disabled={isDeleting}
+        >
+          {isDeleting ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Trash2 className="size-4" />
+          )}
+        </Button>
       </div>
+
+      {/* Messages Area */}
+      <ScrollArea className="flex-1 min-h-0">
+        <div className="p-6 space-y-4">
+          {messages.length > 0 ? (
+            messages.map((message) => (
+              <MessageBubble key={message.id} message={message} />
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+              <p className="text-sm">
+                No messages yet. Start the conversation!
+              </p>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </ScrollArea>
 
       {/* Chat Input Box */}
       <div className="p-6 border-t border-border/50 bg-card/50 backdrop-blur-sm">

@@ -4,6 +4,8 @@ import clsx from "clsx";
 import { Conversation } from "./ChatSidebar";
 import Link from "next/link";
 import { useAuth } from "@/app/_contexts/AuthProvider";
+import { Badge } from "../ui/badge";
+import { Circle, CircleAlertIcon, CircleDot } from "lucide-react";
 
 interface Props {
   conversation: Conversation;
@@ -24,20 +26,37 @@ export function ConversationItem({ conversation, isActive }: Props) {
     <Link
       href={`/${linkPrefix}/chats/${conversation.conversation_id}`}
       className="block"
+      onClick={(e) => {
+        if (isActive) {
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent("refresh-chat"));
+        }
+      }}
     >
       <Button
         variant="ghost"
         className={clsx(
           "w-full justify-start gap-3 px-3 py-3 h-auto",
           isActive && "bg-accent",
+          conversation.unread_count > 0 && "bg-accent/50",
         )}
       >
-        <Avatar className="h-8 w-8 shadow-md">
-          <AvatarImage src={""} />
-          <AvatarFallback>{conversation.user?.name.charAt(0)}</AvatarFallback>
-        </Avatar>
+        <div className="relative">
+          <Avatar className="h-8 w-8 shadow-md">
+            <AvatarImage src={conversation.user?.logo} />
+            <AvatarFallback>{conversation.user?.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          {conversation.unread_count > 0 && (
+            <Badge
+              variant="secondary"
+              className="rounded-full text-xs size-4 absolute -top-1 -right-1"
+            >
+              {conversation.unread_count}
+            </Badge>
+          )}
+        </div>
 
-        <div className="flex-1 text-left overflow-hidden">
+        <div className="flex-1 text-left overflow-hidden hidden xl:block">
           <div className="flex items-center justify-between">
             <p className="font-medium truncate text-sm">
               {conversation.user?.name}
@@ -45,9 +64,12 @@ export function ConversationItem({ conversation, isActive }: Props) {
           </div>
 
           <p className="text-xs text-muted-foreground truncate">
-            {conversation.last_message}
+            {conversation.last_message?.message}
           </p>
         </div>
+        {conversation.unread_count > 0 && (
+          <Circle className="size-4 fill-primary-blue text-primary-blue animate-pulse" />
+        )}
       </Button>
     </Link>
   );
