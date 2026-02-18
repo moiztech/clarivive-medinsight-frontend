@@ -1,13 +1,11 @@
 import Image from "next/image";
-import { Phone } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "./ui/button";
-import Link from "next/link";
+import { FaCertificate } from "react-icons/fa";
 
 const faqs = [
   {
@@ -103,15 +101,23 @@ export function FaqSection() {
                 className="object-cover"
               />
             </div>
-            <div className="bg-emerald-50 rounded-2xl p-8 flex items-center gap-6 border border-emerald-100">
-              <div className="p-4 bg-indigo-600 rounded-full text-white shadow-lg">
-                <Phone className="size-8" />
+            <div className="bg-primary-blue/10 rounded-2xl p-6 flex items-center gap-6 border border-primary-blue/20">
+              <div className="p-4 bg-primary-blue rounded-full text-white shadow-lg">
+                <FaCertificate className="size-9" />
               </div>
               <div>
-                <p className="text-slate-500 font-medium">Emergency Call</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  +44 (07345 052986)
+                <p className="text-slate-500 font-medium">
+                  Our Company Certification
                 </p>
+                <Image
+                  src="/tabs/resuscitation-council-uk.png"
+                  alt="Resuscitation Council UK"
+                  objectFit="cover"
+                  objectPosition="center"
+                  width={180}
+                  height={30}
+                  className="pt-2"
+                />
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { act, useState } from "react";
 import Image from "next/image";
 import {
   User,
@@ -89,6 +89,7 @@ export default function BusinessOutcomesSection() {
         },
       ],
       image: "/INDIVIDUAL-LARNER-ICON.svg",
+      showGradient: true,
     },
 
     employee: {
@@ -104,10 +105,11 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/organizations",
+          href: "/organization",
         },
       ],
-      image: "/home/Image 03.png",
+      image: "/tabs/FOR-ORGANIZATION.png",
+      showGradient: false,
     },
 
     onboarding: {
@@ -123,10 +125,11 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/organizations",
+          href: "/organization",
         },
       ],
-      image: "/home/Image 03.png",
+      image: "/tabs/health-care-providers.png",
+      showGradient: false,
     },
 
     revenue: {
@@ -145,7 +148,8 @@ export default function BusinessOutcomesSection() {
           href: "/organizations",
         },
       ],
-      image: "/home/Image 03.png",
+      image: "/tabs/SOCIAL-CARE-ORGANIZATION.png",
+      showGradient: false,
     },
 
     customer: {
@@ -164,7 +168,8 @@ export default function BusinessOutcomesSection() {
           href: "/organizations",
         },
       ],
-      image: "/home/Image 03.png",
+      image: "/tabs/health-care-providers.png",
+      showGradient: false,
     },
 
     member: {
@@ -184,7 +189,8 @@ export default function BusinessOutcomesSection() {
           href: "/organizations",
         },
       ],
-      image: "/home/Image 03.png",
+      image: "/tabs/independent-and-specialist-care-services.png",
+      showGradient: false,
     },
   };
 
@@ -266,7 +272,7 @@ export default function BusinessOutcomesSection() {
               <ul className="space-y-3">
                 {activeContent.points.map((point, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 rounded-full bg-gray-900 mt-2 flex-shrink-0" />
+                    <div className="w-2 h-2 rounded-full bg-gray-900 mt-2 shrink-0" />
                     <span className="text-gray-700 font-medium">{point}</span>
                   </li>
                 ))}
@@ -305,7 +311,9 @@ export default function BusinessOutcomesSection() {
 
             {/* Right Image */}
             <div className="relative">
-              <div className="relative aspect-square rounded-full overflow-hidden bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 p-8">
+              <div
+                className={`relative aspect-square rounded-full overflow-hidden ${activeContent?.showGradient ? "bg-gradient-to-br from-purple-200 via-blue-200 to-pink-200 p-8" : ""}`}
+              >
                 <Image
                   src={activeContent.image || "/placeholder.svg"}
                   alt={activeContent.headline}
@@ -315,14 +323,18 @@ export default function BusinessOutcomesSection() {
                 />
               </div>
               {/* Decorative Elements */}
-              <div
-                className="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-2xl animate-bounce"
-                style={{ animationDuration: "3s" }}
-              />
-              <div
-                className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-500 rounded-full animate-pulse"
-                style={{ animationDuration: "2s" }}
-              />
+              {activeContent?.showGradient && (
+                <>
+                  <div
+                    className="absolute -top-3 -right-2 w-20 h-20 bg-yellow-400 rounded-2xl animate-bounce"
+                    style={{ animationDuration: "3s" }}
+                  />
+                  <div
+                    className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-500 rounded-full animate-pulse"
+                    style={{ animationDuration: "2s" }}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
