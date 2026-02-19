@@ -18,7 +18,7 @@ export default function ClientCoursesGrid({
   categories?: CategoryResponse[] | null;
   type: "online" | "face-to-face";
 }) {
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<number | null>(null);
   const query = useInfiniteQuery({
     queryKey: ["courses", type, category],
     initialPageParam: 1,
@@ -33,15 +33,18 @@ export default function ClientCoursesGrid({
         ? lastPage.meta.current_page + 1
         : undefined;
     },
-    initialData: {
-      pages: [
-        {
-          data: initialData,
-          meta: initialMeta,
-        },
-      ],
-      pageParams: [1],
-    },
+    initialData:
+      category === null
+        ? {
+            pages: [
+              {
+                data: initialData,
+                meta: initialMeta,
+              },
+            ],
+            pageParams: [1],
+          }
+        : undefined,
   });
 
   const courses = query.data?.pages.flatMap((p) => p.data) || [];
@@ -69,9 +72,9 @@ export default function ClientCoursesGrid({
           {categories &&
             categories.map((c) => (
               <Button
-                variant={category === c.slug ? "primary" : "outline"}
+                variant={category === c.id ? "primary" : "outline"}
                 className="capitalize rounded-full"
-                onClick={() => setCategory(c.slug)}
+                onClick={() => setCategory(c.id)}
                 key={c.id}
               >
                 {c.name}
