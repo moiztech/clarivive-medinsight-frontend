@@ -50,8 +50,8 @@ function MessageBubble({ message }: MessageBubbleProps) {
           className={cn(
             "px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words",
             is_me
-              ? "bg-primary-blue text-primary-foreground rounded-br-sm"
-              : "bg-muted text-foreground rounded-bl-sm",
+              ? "bg-primary-blue text-white rounded-br-sm"
+              : "bg-muted text-secondary rounded-bl-sm",
           )}
         >
           {text}
