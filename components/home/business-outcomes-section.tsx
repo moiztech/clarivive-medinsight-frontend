@@ -168,7 +168,7 @@ export default function BusinessOutcomesSection() {
           href: "/organizations",
         },
       ],
-      image: "/tabs/health-care-providers.png",
+      image: "/tabs/healtcare-agencies.png",
       showGradient: false,
     },
 

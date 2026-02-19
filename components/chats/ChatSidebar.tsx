@@ -9,6 +9,7 @@ import protectedApi from "@/lib/axios/protected";
 import { useParams } from "next/navigation";
 import { Loader2, RefreshCcw } from "lucide-react";
 import { Button } from "../ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export type Conversation = {
   conversation_id: number;
@@ -90,25 +91,35 @@ export default function ChatSidebar() {
   }, [fetchData]);
 
   return (
-    <aside className="w-80 border-r rounded-l-3xl bg-card h-full flex flex-col overflow-hidden">
+    <aside className="xl:w-80 w-full border-r shadow-2xl xl:rounded-l-3xl bg-card h-full flex flex-col overflow-hidden">
       {/* Search & Refresh */}
-      <div className="p-2 border-b flex items-center gap-2">
+      <div className="p-2 py-4 border-b flex justify-center xl:justify-between items-center gap-2">
         <Input
-          className="rounded-full flex-1"
+          className="rounded-full hidden xl:block flex-1"
           onChange={(e) => {
             setSearch(e.target.value);
           }}
           placeholder="Search..."
         />
-        <Button
-          variant="ghost"
-          size="icon"
-          className="shrink-0 size-9 rounded-full"
-          onClick={() => fetchData()}
-          disabled={loading}
-        >
-          <RefreshCcw className={clsx("size-4", loading && "animate-spin")} />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 size-5 rounded-full"
+              onClick={() => fetchData()}
+              disabled={loading}
+              asChild
+            >
+              <RefreshCcw
+                className={clsx("size-4", loading && "animate-spin")}
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Refresh</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Conversation list */}

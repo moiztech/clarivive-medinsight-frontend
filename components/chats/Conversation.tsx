@@ -4,7 +4,13 @@ import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Loader2, Trash2 } from "lucide-react";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { Send, Loader2, Trash2, X } from "lucide-react";
 import protectedApi from "@/lib/axios/protected";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -12,6 +18,7 @@ import { useAuth } from "@/app/_contexts/AuthProvider";
 
 import { Message } from "./types";
 import MessageBubble from "./MessageBubble";
+import Link from "next/link";
 
 interface ConversationProps {
   messages: Message[];
@@ -29,7 +36,14 @@ function Conversation({
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
-
+  let linkPrefix;
+  if (user?.role.name === "company_admin") {
+    linkPrefix = "company";
+  } else if (user?.role.name === "trainer") {
+    linkPrefix = "dashboard/trainer";
+  } else {
+    linkPrefix = "dashboard/lms";
+  }
   const handleConversationDelete = async () => {
     if (!confirm("Are you sure you want to delete this conversation?")) return;
 
@@ -37,15 +51,6 @@ function Conversation({
     try {
       await protectedApi.delete(`/delete/conversation/${conversationId}`);
       toast.success("Conversation deleted successfully");
-
-      let linkPrefix;
-      if (user?.role.name === "company_admin") {
-        linkPrefix = "company";
-      } else if (user?.role.name === "trainer") {
-        linkPrefix = "dashboard/trainer";
-      } else {
-        linkPrefix = "dashboard/lms";
-      }
       router.push(`/${linkPrefix}/chats`);
     } catch (error) {
       console.error("Failed to delete conversation:", error);
@@ -91,16 +96,20 @@ function Conversation({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleCloseChat = () => {
+    router.push(`/${linkPrefix}/chats`);
+  };
+
   React.useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   return (
-    <div className="bg-card relative rounded-r-3xl border-l border-border h-full flex flex-col overflow-hidden">
+    <div className="bg-card relative xl:rounded-r-3xl border-l border-border h-full flex flex-col overflow-hidden">
       {/* Header */}
       <div className="p-4 border-b border-border flex items-center bg-card/25 justify-between shadow-sm backdrop-blur-lg sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <p className="font-semibold text-sm">Conversation Details</p>
+          <p className="font-semibold text-sm">Conversation</p>
         </div>
         <Button
           variant="ghost"
@@ -117,26 +126,41 @@ function Conversation({
         </Button>
       </div>
 
-      {/* Messages Area */}
-      <ScrollArea className="flex-1 min-h-0">
-        <div className="p-6 space-y-4">
-          {messages.length > 0 ? (
-            messages.map((message) => (
-              <MessageBubble key={message.id} message={message} />
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-              <p className="text-sm">
-                No messages yet. Start the conversation!
-              </p>
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          {/* Messages Area */}
+          <ScrollArea className="flex-1 min-h-0">
+            <div className="p-4 xl:p-6 space-y-4">
+              {messages.length > 0 ? (
+                messages.map((message) => (
+                  <MessageBubble key={message.id} message={message} />
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+                  <p className="text-sm">
+                    No messages yet. Start the conversation!
+                  </p>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
+          </ScrollArea>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem onClick={handleCloseChat}>
+            <X className="size-4" /> Close Chat
+          </ContextMenuItem>
+          <ContextMenuItem
+            variant="destructive"
+            onClick={handleConversationDelete}
+          >
+            <Trash2 className="size-4" /> Delete Conversation
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
 
       {/* Chat Input Box */}
-      <div className="p-6 border-t border-border/50 bg-card/50 backdrop-blur-sm">
+      <div className="p-4 xl:p-6 border-t border-border/50 bg-card/50 backdrop-blur-sm">
         <div className="flex items-end gap-3">
           {/* Action Buttons - Optional for future features */}
           {/* <div className="flex items-center gap-1 mb-2">

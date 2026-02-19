@@ -101,22 +101,27 @@ export function FaqSection() {
                 className="object-cover"
               />
             </div>
-            <div className="bg-primary-blue/10 rounded-2xl p-6 flex items-center gap-6 border border-primary-blue/20">
+            <div className="bg-primary-blue/40 rounded-2xl py-6 px-10 flex items-center gap-4 border border-primary-blue/20">
               <div className="p-4 bg-primary-blue rounded-full text-white shadow-lg">
-                <FaCertificate className="size-9" />
+                <Image
+                  src={"/tabs/CERTIFICATE-ICON-LOGO.png"}
+                  alt="Certificate Icon Logo"
+                  width={40}
+                  height={40}
+                />
               </div>
               <div>
-                <p className="text-slate-500 font-medium">
-                  Our Company Certification
+                <p className="text-white font-medium">
+                  Our trainer certified by :
                 </p>
                 <Image
-                  src="/tabs/resuscitation-council-uk.png"
+                  src="/tabs/council-uk.png"
                   alt="Resuscitation Council UK"
                   objectFit="cover"
                   objectPosition="center"
-                  width={180}
-                  height={30}
-                  className="pt-2"
+                  width={160}
+                  height={28}
+                  className="pt-1 "
                 />
               </div>
             </div>
