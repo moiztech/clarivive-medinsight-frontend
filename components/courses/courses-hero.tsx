@@ -1,8 +1,9 @@
-"use client"
+"use client";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import SectionBadge from "../SectionBadge";
 
 export type CoursesHeroProps = {
   subtitle?: string;
@@ -17,7 +18,7 @@ export type CoursesHeroProps = {
   services?: string[];
   buttonText?: string;
   showReadMore?: boolean;
-  order?: 0 | 1,
+  order?: 0 | 1;
 };
 
 export default function CoursesHero(props: CoursesHeroProps) {
@@ -48,26 +49,43 @@ export default function CoursesHero(props: CoursesHeroProps) {
   return (
     <section className="py-24 bg-white overflow-hidden lg:px-15 2xl:px-20">
       <div className="container mx-auto px-4">
-        <div className={`flex flex-col  ${order ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-16`}>
+        <div
+          className={`flex flex-col  ${order ? "lg:flex-row-reverse" : "lg:flex-row"} items-center gap-16`}
+        >
           <div className="w-full lg:w-1/2 relative">
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
-              <Image src={imageSrc} alt={imageAlt} width={imageWidth} height={imageHeight} className="w-full h-auto object-cover aspect-4/4" />
+              <Image
+                src={imageSrc}
+                alt={imageAlt}
+                width={imageWidth}
+                height={imageHeight}
+                className="w-full h-auto object-cover aspect-4/4"
+              />
             </div>
             <div className="absolute -bottom-8 -left-8 w-64 h-64 bg-medical-navy/5 rounded-full z-0 blur-3xl" />
           </div>
 
           <div className="w-full lg:w-1/2 space-y-8">
             <div className="space-y-4">
-              <span className="inline-block px-4 py-1.5 bg-blue-400/20 text-blue-400 text-sm font-normal rounded-md tracking-wide uppercase">{subtitle}</span>
+              <SectionBadge title={subtitle} />
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium text-medical-navy leading-[1.1]">
                 {headingPre}
-                <span className="text-blue-400 font-serif">{headingHighlight}</span>
+                <span className="text-primary-blue font-serif">
+                  {headingHighlight}
+                </span>
                 {headingPost}
               </h2>
               <div className="space-y-2">
-                <p className={`text-lg text-muted-foreground leading-relaxed max-w-xl transition-all ${showFullDescription ? "" : "line-clamp-4"}`}>{description}</p>
+                <p
+                  className={`text-lg text-muted-foreground leading-relaxed max-w-xl transition-all ${showFullDescription ? "" : "line-clamp-4"}`}
+                >
+                  {description}
+                </p>
 
-                <button onClick={() => setShowFullDescription((prev) => !prev)} className="text-blue-400 cursor-pointer hover:text-blue-500 font-medium text-sm transition-colors">
+                <button
+                  onClick={() => setShowFullDescription((prev) => !prev)}
+                  className="text-primary-blue cursor-pointer hover:text-blue-500 font-medium text-sm transition-colors"
+                >
                   {showFullDescription ? "Show Less" : "Read More"}
                 </button>
               </div>
@@ -76,10 +94,12 @@ export default function CoursesHero(props: CoursesHeroProps) {
             <ul className="grid grid-cols-1  gap-y-4 gap-x-8">
               {services.map((service, index) => (
                 <li key={index} className="flex items-center gap-3 group">
-                  <div className="shrink-0 w-6 h-6 rounded-full bg-blue-400/10 flex items-center justify-center transition-colors group-hover:bg-blue-400">
-                    <Check className="w-3.5 h-3.5 text-blue-400 transition-colors group-hover:text-white" />
+                  <div className="shrink-0 w-6 h-6 rounded-full bg-primary-blue/10 flex items-center justify-center transition-colors group-hover:bg-primary-blue">
+                    <Check className="w-3.5 h-3.5 text-primary-blue transition-colors group-hover:text-white" />
                   </div>
-                  <span className="text-medical-navy font-medium text-base">{service}</span>
+                  <span className="text-medical-navy font-medium text-base">
+                    {service}
+                  </span>
                 </li>
               ))}
             </ul>

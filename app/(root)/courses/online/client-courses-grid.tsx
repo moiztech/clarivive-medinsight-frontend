@@ -5,7 +5,8 @@ import CoursesGrid from "@/components/courses/courses-grid";
 import { CategoryResponse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Loader2 } from "lucide-react";
+import SectionBadge from "@/components/SectionBadge";
 
 export default function ClientCoursesGrid({
   initialData,
@@ -19,6 +20,11 @@ export default function ClientCoursesGrid({
   type: "online" | "face-to-face";
 }) {
   const [category, setCategory] = useState<number | null>(null);
+  const changeCategory = (id: number | null) => {
+    if (id === category) return;
+    // setLoading(true);
+    setCategory(id);
+  };
   const query = useInfiniteQuery({
     queryKey: ["courses", type, category],
     initialPageParam: 1,
@@ -53,11 +59,9 @@ export default function ClientCoursesGrid({
     <>
       <section className="pt-24 pb-30 bg-white lg:px-15 2xl:px-20">
         <div className="text-center mb-10 space-y-4">
-          <span className="inline-block px-4 py-1 bg-blue-400/10 text-blue-400 text-sm font-semibold rounded-md tracking-wider uppercase">
-            Our Courses
-          </span>
+          <SectionBadge title={`Our ${type} Courses`} />
           <h2 className="text-4xl md:text-5xl font-medium text-medical-navy">
-            We provide various courses
+            We provide various {type} courses
           </h2>
         </div>
 
@@ -74,15 +78,20 @@ export default function ClientCoursesGrid({
               <Button
                 variant={category === c.id ? "primary" : "outline"}
                 className="capitalize rounded-full"
-                onClick={() => setCategory(c.id)}
+                onClick={() => changeCategory(c.id)}
                 key={c.id}
               >
                 {c.name}
               </Button>
             ))}
         </div>
-        {courses.length > 0 && (
+
+        {courses.length > 0 ? (
           <CoursesGrid courses={courses} cardLinkPrefix={`course/${type}`} />
+        ) : (
+          <div className="text-center">
+            <p className="text-medical-navy">No courses found</p>
+          </div>
         )}
 
         {query.hasNextPage && (

@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/app/_contexts/AuthProvider";
 
 export default function SignupCTASection() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-
+  const { user } = useAuth();
+  if (user) return null;
   return (
     <section className="py-20 px-8 bg-gradient-to-br from-blue-50 to-purple-50 relative overflow-hidden">
       {/* Decorative background blobs */}

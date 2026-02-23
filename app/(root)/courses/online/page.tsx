@@ -76,11 +76,6 @@ async function page() {
         title="Online Courses"
       />
       <AboutHero {...courseHeroContent} />
-      {/* <ServicesGrid
-        cardLinkPrefix="course/online"
-        title="our courses"
-        services={services}
-      /> */}
       <ClientCoursesGrid
         initialData={courseJson.data}
         initialMeta={courseJson.meta}

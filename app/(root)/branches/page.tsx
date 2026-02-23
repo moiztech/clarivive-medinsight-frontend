@@ -1,7 +1,7 @@
 import BreadCrumb from "@/components/BreadCrumb";
-import ServicesGrid from "@/components/courses/services-grid";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import { LogoBar } from "@/components/logo-bar";
+import BranchesGrid from "./_components/branches-grid";
 
 export type Branch = {
   id: number;
@@ -16,6 +16,7 @@ async function page() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`, {
     next: { revalidate: 60 },
   });
+
   const branches: Branch[] = await res.json().then((res) => res.data);
   return (
     <div className="min-h-screen bg-white">
@@ -26,7 +27,7 @@ async function page() {
         ]}
         title="Our Branches"
       />
-      <ServicesGrid services={branches} />
+      <BranchesGrid branches={branches} />
       <LogoBar />
       <SignupCTASection />
     </div>

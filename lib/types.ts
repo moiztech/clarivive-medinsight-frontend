@@ -79,6 +79,16 @@ type CourseData = {
   price: number;
   rating?: number;
 };
+
+type Branch = {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  location: string;
+  icon: string | null;
+};
+
 export type {
   Service,
   EventType,
@@ -87,6 +97,7 @@ export type {
   CompanyType,
   CategoryResponse,
   CourseData,
+  Branch,
 };
 
 export type DetailCourse = {

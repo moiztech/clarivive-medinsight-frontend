@@ -67,6 +67,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     (async () => {
       try {
+        const token = tokenStore.get();
+        if (!token) {
+          setLoading(false);
+          return;
+        }
         const res = await protectedApi.get("/verify-token");
         if (res.status != 401) {
           setUser(res.data.data ?? null);

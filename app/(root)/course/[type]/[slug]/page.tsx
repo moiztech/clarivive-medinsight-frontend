@@ -2,6 +2,7 @@ import React from "react";
 import { DetailCourse } from "@/lib/types";
 import BreadCrumb from "@/components/BreadCrumb";
 import CourseDetailSection from "@/components/courses/CourseDetailSection";
+import CourseSchedule from "@/components/courses/CourseSchedule";
 
 export async function generateStaticParams() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -54,6 +55,7 @@ const page = async ({
         ]}
       />
       <CourseDetailSection course={courseData} />
+      {type == "face-to-face" && <CourseSchedule />}
     </>
   );
 };
