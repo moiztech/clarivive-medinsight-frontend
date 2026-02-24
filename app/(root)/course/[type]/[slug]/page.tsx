@@ -55,7 +55,9 @@ const page = async ({
         ]}
       />
       <CourseDetailSection course={courseData} />
-      {type == "face-to-face" && <CourseSchedule />}
+      {(type == "face-to-face" || courseData.schedules?.length) && (
+        <CourseSchedule schedules={courseData?.schedules} />
+      )}
     </>
   );
 };

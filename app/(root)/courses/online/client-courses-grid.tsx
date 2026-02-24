@@ -5,7 +5,7 @@ import CoursesGrid from "@/components/courses/courses-grid";
 import { CategoryResponse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { ArrowDown, Loader2 } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import SectionBadge from "@/components/SectionBadge";
 
 export default function ClientCoursesGrid({

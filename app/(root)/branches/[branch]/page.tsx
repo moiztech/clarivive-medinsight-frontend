@@ -1,8 +1,8 @@
 import BreadCrumb from "@/components/BreadCrumb";
-import CoursesGrid from "@/components/courses/courses-grid";
 import SectionBadge from "@/components/SectionBadge";
-import { Branch } from "@/lib/types";
+import { Branch, CategoryResponse } from "@/lib/types";
 import React from "react";
+import BranchCourse from "../_components/branches-course";
 
 export async function generateStaticParams() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`);
@@ -16,9 +16,9 @@ export async function generateStaticParams() {
 const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
   const { branch } = await params;
 
-  const [courseRes, branchRes] = await Promise.all([
+  const [courseRes, branchRes, categoryRes] = await Promise.all([
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/face-to-face?page=1`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/branch/${branch}?page=1`,
       {
         next: { revalidate: 60 },
       },
@@ -26,11 +26,16 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches/${branch}`, {
       next: { revalidate: 90 },
     }),
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      next: { revalidate: 300 },
+    }),
   ]);
 
   const courseJson = await courseRes.json();
   const courses = courseJson.data;
   const branchData: Branch = await branchRes.json().then((res) => res.data);
+  const { data: categoryJson }: { data: CategoryResponse[] } =
+    await categoryRes.json();
   // console.log(data);
   return (
     <>
@@ -54,9 +59,12 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
             </h2>
           </div>
           {courses.length > 0 ? (
-            <CoursesGrid
-              courses={courses}
-              cardLinkPrefix={`course/face-to-face`}
+            <BranchCourse
+              initialData={courses}
+              initialMeta={courseJson.meta}
+              categories={categoryJson}
+              branch={branchData.slug}
+              type="face-to-face"
             />
           ) : (
             <div className="text-center">

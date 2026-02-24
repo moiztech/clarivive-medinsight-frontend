@@ -44,45 +44,20 @@ export default function HomePage() {
         {/* <FlourishSection /> */}
         <LaboratoryAdvantages imageSrc="/book-icon-svg-01.svg" />
       </AnimateOnScroll>
-      {/* 
-      <AnimateOnScroll>
-        <TrainingDeliverySection />
-      </AnimateOnScroll>
 
-      <AnimateOnScroll>
-        <FeaturesSection />
-      </AnimateOnScroll> */}
-
-      <AnimateOnScroll>
-        <BusinessOutcomesSection />
-      </AnimateOnScroll>
-
-      {/* <StatsSection /> */}
       <DoctorsSection />
 
-      {/* <AudiencesSection /> */}
       <LogoBar />
 
       <AnimateOnScroll>
-        {/* <TestimonialCardSection /> */}
         <TestimonialSection />
       </AnimateOnScroll>
 
-      {/* <CustomersSection /> */}
       <StatsBar />
 
       <AnimateOnScroll>
-        {/* <LMSSection /> */}
         <FaqSection />
       </AnimateOnScroll>
-
-      {/* <AnimateOnScroll>
-        <TestimonialsSection />
-      </AnimateOnScroll>
-
-      <AnimateOnScroll>
-        <TrustSection />
-      </AnimateOnScroll> */}
 
       <AnimateOnScroll>
         <SignupCTASection />

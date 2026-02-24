@@ -100,6 +100,31 @@ export type {
   Branch,
 };
 
+export type Schedule = {
+  id: number;
+  schedule_no: number;
+  title: string;
+  date: string;
+  month: string;
+  start_time: string;
+  end_time: string;
+  spaces_available: number;
+  location: string;
+  description: string;
+  instruction: string;
+  image: string;
+  tickets: Ticket[];
+};
+
+export type Ticket = {
+  id: number;
+  title: string;
+  amount: number;
+  available_quantity: string;
+  due_date: string;
+  due_time: string;
+};
+
 export type DetailCourse = {
   id: number;
   title: string;
@@ -121,6 +146,7 @@ export type DetailCourse = {
     url: string;
     file: string | null;
   };
+  schedules?: Schedule[];
 };
 
 export interface Course {

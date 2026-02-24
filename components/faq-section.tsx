@@ -93,7 +93,7 @@ export function FaqSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Left Column: Image & Contact */}
           <div className="space-y-8 lg:sticky lg:top-24">
-            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden">
+            <div className="relative aspect-4/3 rounded-3xl overflow-hidden">
               <Image
                 src="/images/FAQ-SECTION-IMAGE.webp"
                 alt="Doctor and patient"
@@ -101,13 +101,13 @@ export function FaqSection() {
                 className="object-cover"
               />
             </div>
-            <div className="bg-primary-blue/40 rounded-2xl py-6 px-10 flex items-center gap-4 border border-primary-blue/20">
-              <div className="p-4 bg-primary-blue rounded-full text-white shadow-lg">
+            <div className="bg-primary-blue rounded-2xl py-6 px-10 flex items-center gap-6 border border-primary-blue/10">
+              <div className="p-1 rounded-full text-white shadow-lg">
                 <Image
                   src={"/tabs/CERTIFICATE-ICON-LOGO.png"}
                   alt="Certificate Icon Logo"
-                  width={40}
-                  height={40}
+                  width={60}
+                  height={60}
                 />
               </div>
               <div>
@@ -119,8 +119,8 @@ export function FaqSection() {
                   alt="Resuscitation Council UK"
                   objectFit="cover"
                   objectPosition="center"
-                  width={160}
-                  height={28}
+                  width={170}
+                  height={32}
                   className="pt-1 "
                 />
               </div>
