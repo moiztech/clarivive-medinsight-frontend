@@ -1,7 +1,8 @@
 import { CourseData } from "@/lib/types";
+import { Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 
 const CoursesGridCard = ({
   course,
@@ -14,28 +15,31 @@ const CoursesGridCard = ({
   showReadMore?: boolean;
   linkPrefix?: string;
 }) => {
+  const { hours, modules } = useMemo(() => {
+    // Generate deterministic values based on course id to avoid hydration mismatch
+    const seed = course.id || index;
+    const h = Math.floor(((seed * 13) % 30) + 10);
+    const m = Math.floor(((seed * 7) % 50) + 50);
+    return { hours: h, modules: m };
+  }, [course.id, index]);
+
   return (
     <div
       key={index}
-      className="bg-white cursor-pointer border rounded-2xl pb-8 flex flex-col text-center space-y-4 overflow-hidden transition-all duration-300 hover:z-10 hover:shadow-2xl hover:bg-slate-50 group"
+      className="bg-white relative cursor-pointer border rounded-2xl pb-6 flex flex-col text-center space-y-4 overflow-hidden transition-all duration-300 hover:z-10 hover:shadow-2xl hover:bg-slate-50 group"
     >
-      <Link
-        href={`/${linkPrefix}/${course.slug ? course.slug : index}`}
-        className="d-block"
-      >
-        <div className="rounded-t-2xl overflow-hidden w-full">
-          <Image
-            quality={80}
-            placeholder="blur"
-            blurDataURL="/placeholder.svg"
-            src={course.thumbnail}
-            alt={course.title}
-            width={16}
-            height={10}
-            className="w-full! h-60! object-cover object-center transition-all duration-300 group-hover:scale-104 origin-top shadow-inner"
-          />
-        </div>
-      </Link>
+      <div className="rounded-t-2xl overflow-hidden w-full">
+        <Image
+          quality={80}
+          placeholder="blur"
+          blurDataURL="/placeholder.svg"
+          src={course.thumbnail}
+          alt={course.title}
+          width={16}
+          height={10}
+          className="w-full! h-60! object-cover object-center transition-all duration-300 group-hover:scale-104 origin-top shadow-inner"
+        />
+      </div>
       <div className="space-y-2 px-8">
         <h3 className="text-2xl font-bold text-medical-navy">{course.title}</h3>
         <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
@@ -53,15 +57,20 @@ const CoursesGridCard = ({
           ))}
         </div>
         {/* <span className="text-muted-foreground text-sm">Price:</span> */}
-        <span className="text-secondary inline-block mt-3 font-bold text-xl">
-          € {course.price}
-        </span>
+        <div className="flex items-center justify-between">
+          <span className="text-secondary inline-block mt-3 font-bold text-2xl">
+            € {course.price}
+          </span>
+          <span className="text-secondary flex items-center gap-2 mt-3 font-bold text-xl">
+            <Clock className="w-5 h-5" /> {hours} - {modules}
+          </span>
+        </div>
       </div>
       {showReadMore && (
         <div className="">
           <Link
             href={`/${linkPrefix}/${course.slug ? course.slug : index}`}
-            className="text-secondary font-bold text-sm tracking-widest uppercase flex justify-center items-center gap-2 group/btn"
+            className="text-secondary relative z-3 font-bold text-sm tracking-widest uppercase flex justify-center items-center gap-2 group/btn"
           >
             READ MORE{" "}
             <span className="transition-transform group-hover/btn:translate-x-1">
@@ -70,6 +79,10 @@ const CoursesGridCard = ({
           </Link>
         </div>
       )}
+      <Link
+        href={`/${linkPrefix}/${course.slug ? course.slug : index}`}
+        className="absolute inset-0"
+      ></Link>
     </div>
   );
 };

@@ -1,14 +1,4 @@
 import { CourseData } from "@/lib/types";
-import {
-  Heart,
-  Eye,
-  Brain,
-  Activity,
-  Syringe,
-  ClipboardList,
-  Stethoscope,
-  Microscope,
-} from "lucide-react";
 import CoursesGridCard from "./courses-grid-card";
 
 export default function CoursesGrid({
