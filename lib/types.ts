@@ -78,6 +78,7 @@ type CourseData = {
   topics?: TopicData[];
   price: number;
   rating?: number;
+  duration?: string;
 };
 
 type Branch = {
@@ -113,6 +114,7 @@ export type Schedule = {
   description: string;
   instruction: string;
   image: string;
+  branch: Branch;
   tickets: Ticket[];
 };
 

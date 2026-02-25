@@ -2,7 +2,7 @@ import { CourseData } from "@/lib/types";
 import { Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useMemo } from "react";
+import React from "react";
 
 const CoursesGridCard = ({
   course,
@@ -15,14 +15,6 @@ const CoursesGridCard = ({
   showReadMore?: boolean;
   linkPrefix?: string;
 }) => {
-  const { hours, modules } = useMemo(() => {
-    // Generate deterministic values based on course id to avoid hydration mismatch
-    const seed = course.id || index;
-    const h = Math.floor(((seed * 13) % 30) + 10);
-    const m = Math.floor(((seed * 7) % 50) + 50);
-    return { hours: h, modules: m };
-  }, [course.id, index]);
-
   return (
     <div
       key={index}
@@ -62,7 +54,7 @@ const CoursesGridCard = ({
             € {course.price}
           </span>
           <span className="text-secondary flex items-center gap-2 mt-3 font-bold text-xl">
-            <Clock className="w-5 h-5" /> {hours} - {modules}
+            <Clock className="w-5 h-5" /> {course?.duration}
           </span>
         </div>
       </div>

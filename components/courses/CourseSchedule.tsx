@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import { Schedule } from "@/lib/types";
+import { Badge } from "../ui/badge";
+import Link from "next/link";
 
 // Dummy Data
 // const SCHEDULE_DATA = [
@@ -113,6 +115,10 @@ const CourseSchedule = ({ schedules }: { schedules?: Schedule[] }) => {
     null,
   );
 
+  if (!schedules?.length || schedules?.length === 0) {
+    return null;
+  }
+
   const activeId = selectedSessionId ?? schedules?.[0]?.id ?? null;
   const selectedSession = schedules?.find((s) => s.id === activeId);
 
@@ -173,7 +179,8 @@ const CourseSchedule = ({ schedules }: { schedules?: Schedule[] }) => {
                         {session.start_time} - {session.end_time}
                       </span>
                       <span className="flex-1 text-gray-700 truncate">
-                        {session.title}
+                        {session.title} <br />
+                        <Badge variant="outline">{session.branch?.title}</Badge>
                       </span>
                     </button>
                   ))}
@@ -191,7 +198,10 @@ const CourseSchedule = ({ schedules }: { schedules?: Schedule[] }) => {
             {/* Header */}
             <div className="p-4 flex justify-between items-center border-b border-gray-100">
               <h3 className="text-lg font-bold text-gray-800">
-                {selectedSession?.title}
+                {selectedSession?.title}{" "}
+                {selectedSession?.branch
+                  ? `(${selectedSession?.branch?.title})`
+                  : ""}
               </h3>
             </div>
 
@@ -237,7 +247,7 @@ const CourseSchedule = ({ schedules }: { schedules?: Schedule[] }) => {
                   <AccordionTrigger className="px-6 py-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest hover:no-underline">
                     Information
                   </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-6 space-y-6">
+                  <AccordionContent className="px-6 pb-6 space-y-3">
                     <div>
                       <h4 className="font-bold text-gray-800 text-sm mb-1">
                         Details
@@ -246,7 +256,29 @@ const CourseSchedule = ({ schedules }: { schedules?: Schedule[] }) => {
                         {selectedSession?.description}
                       </p>
                     </div>
-                    <div className="pt-4 border-t border-gray-50">
+                    {selectedSession?.branch && (
+                      <div>
+                        <Link
+                          href={`/branches/${selectedSession?.branch?.slug}`}
+                        >
+                          <h4 className="font-bold text-gray-800 text-sm mb-1 hover:underline underline-offset-2 decoration-1">
+                            Branch
+                          </h4>
+                        </Link>
+                        <p className="text-sm text-gray-600 flex gap-1 items-center">
+                          {selectedSession?.branch?.title}, <MapPin size={16} />{" "}
+                          <a
+                            href={`${selectedSession?.branch?.location}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {selectedSession?.branch?.location}
+                          </a>
+                        </p>
+                      </div>
+                    )}
+                    <div className="border-t border-gray-50">
                       <h4 className="font-bold text-gray-800 text-sm mb-2">
                         Instructions
                       </h4>
