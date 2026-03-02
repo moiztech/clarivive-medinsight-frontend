@@ -2,13 +2,13 @@
 
 import CheckoutPageContent from "@/components/checkout/CheckoutPageContent";
 import { useAuth } from "@/app/_contexts/AuthProvider";
-import { useRouter } from "next/navigation";
 import { Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function CheckoutPage() {
   const { user } = useAuth();
-  const router = useRouter();
+  const searchParams = new URLSearchParams(window.location.search);
+  const callbackUrl = searchParams.get("callBackUrl") || "/";
 
   if (user?.company_id && user?.role.name === "employee") {
     return (
@@ -17,12 +17,12 @@ export default function CheckoutPage() {
           You cannot purchase courses directly. Please login as an individual
           learner to buy courses.
         </p>
-        <Link href="/">
+        <Link href={callbackUrl}>
           <Button>Go to Home</Button>
         </Link>
       </div>
     );
   }
 
-  return <CheckoutPageContent />;
+  return <CheckoutPageContent callbackUrl={callbackUrl} />;
 }

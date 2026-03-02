@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,17 +13,39 @@ import Image from "next/image";
 import protectedApi from "@/lib/axios/protected";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import { serverApi } from "@/lib/axios";
 
-const CheckoutPageContent = () => {
+const CheckoutPageContent = ({ callbackUrl }: { callbackUrl: string }) => {
   const { user } = useAuth();
   const { items, totalPrice, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState("");
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      const res = await serverApi.get("/branches");
+      if (res?.data?.status === true) {
+        setBranches(res?.data?.data);
+      }
+    };
+    fetchBranches();
+  }, []);
   const router = useRouter();
   const handleCompleteOrder = async () => {
     setLoading(true);
     try {
       const res = await protectedApi.post("/checkout", {
         course_ids: items.map((item) => item.id),
+        branch_id: selectedBranch,
         // payment_method: "cod",
       });
       if (res?.data?.status === 200) {
@@ -53,7 +75,7 @@ const CheckoutPageContent = () => {
         <p className="text-slate-500 mb-6">
           Add some courses to your cart before checking out.
         </p>
-        <Link href="/courses/online">
+        <Link href={callbackUrl}>
           <Button className="bg-primary-blue">Browse Courses</Button>
         </Link>
       </div>
@@ -66,7 +88,7 @@ const CheckoutPageContent = () => {
       <header className="border-b border-slate-100 py-6 px-4 md:px-8">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link
-            href="/"
+            href={callbackUrl}
             className="text-2xl font-bold tracking-tight text-primary-blue"
           >
             CLARIVIVE
@@ -191,22 +213,22 @@ const CheckoutPageContent = () => {
         </div>
 
         {/* Right Column: Summary */}
-        <div className="bg-slate-50/50 p-4 md:p-8 lg:p-12 space-y-8">
+        <div className="bg-slate-50/50 p-4 pb-32 lg:pb-0 md:p-8 lg:p-12 space-y-4">
           <h2 className="text-xl font-semibold">Order Summary</h2>
 
           {/* Cart Items */}
-          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+          <div className="space-y-2 md:max-h-[400px] overflow-y-auto pr-2">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex gap-4 mt-4 items-center animate-in fade-in slide-in-from-right-4 duration-300"
+                className="flex gap-4 mt-5 flex-col md:flex-row md:items-center animate-in fade-in slide-in-from-right-4 duration-300"
               >
                 <div className="relative">
-                  <div className="w-16 h-16 rounded-xl border border-slate-200 overflow-hidden bg-white shrink-0">
+                  <div className="w-full md:w-26 h-50 md:h-16 rounded-xl border border-slate-200 overflow-hidden bg-white shrink-0">
                     <Image
                       src={item.thumbnail}
                       alt={item.title}
-                      width={64}
+                      width={104}
                       height={64}
                       className="w-full h-full object-cover"
                     />
@@ -215,7 +237,7 @@ const CheckoutPageContent = () => {
                     1
                   </span>
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 text-start min-w-0">
                   <h3 className="text-sm font-medium leading-tight truncate">
                     {item.title}
                   </h3>
@@ -223,8 +245,34 @@ const CheckoutPageContent = () => {
                     Course
                   </p>
                 </div>
-                <div className="text-sm font-semibold">
+                <div className="text-sm text-end font-semibold">
                   £{item.price.toFixed(2)}
+                  {item.type === "face-to-face" && (
+                    <div className="grid gap-2 mt-2">
+                      <Combobox required items={branches} autoHighlight>
+                        <ComboboxInput
+                          onChange={(e) => setSelectedBranch(e.target.value)}
+                          placeholder="Select a Branch"
+                        />
+                        <ComboboxContent>
+                          <ComboboxEmpty>No branches found.</ComboboxEmpty>
+                          <ComboboxList>
+                            {(item) => (
+                              <ComboboxItem key={item.id} value={item.title}>
+                                <Image
+                                  width={80}
+                                  height={70}
+                                  src={item.icon}
+                                  alt={item.title}
+                                />
+                                {item.title}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -249,7 +297,7 @@ const CheckoutPageContent = () => {
             </div>
 
             {/* Totals */}
-            <div className="space-y-2 pt-4">
+            <div className="fixed md:static bottom-0 left-0 right-0 md:bottom-auto space-y-2 pt-4 px-4 md:px-0 pb-4 md:pb-0 bg-white md:bg-transparent border-t md:border-t-0 border-slate-200 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] md:shadow-none z-50">
               <div className="flex justify-between text-sm text-slate-600">
                 <span>Subtotal</span>
                 <span className="font-medium text-slate-900">

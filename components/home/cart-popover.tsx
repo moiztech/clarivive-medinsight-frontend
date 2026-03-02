@@ -101,7 +101,10 @@ export default function CartPopover() {
               </span>
             </div>
             <div className="grid gap-2">
-              <Link href={`/checkout/${id} || "cart"}`} className="w-full">
+              <Link
+                href={`/checkout/${id}?callBackUrl=${pathname || "/"}`}
+                className="w-full"
+              >
                 <Button className="w-full bg-blue-600 hover:bg-blue-700">
                   Checkout Now
                 </Button>

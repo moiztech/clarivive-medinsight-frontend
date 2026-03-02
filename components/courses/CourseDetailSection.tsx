@@ -1,6 +1,6 @@
 "use client";
 
-import { CourseData, DetailCourse } from "@/lib/types";
+import { DetailCourse } from "@/lib/types";
 import { Button } from "../ui/button";
 import { Clock, Grid3x2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
@@ -12,9 +12,10 @@ import { useId } from "react";
 
 interface Props {
   course: DetailCourse;
+  type: string;
 }
 
-const CourseDetailSection = ({ course }: Props) => {
+const CourseDetailSection = ({ course, type }: Props) => {
   const { addItem, removeItem, items } = useCart();
   const isInCart = items.some((it) => it.id === course.id);
   const link = usePathname();
@@ -34,6 +35,7 @@ const CourseDetailSection = ({ course }: Props) => {
         price: course.price,
         topics: course.topics,
         link: link,
+        type: type,
       };
       addItem(courseData);
       toast.success("Added to cart!");
@@ -108,7 +110,10 @@ const CourseDetailSection = ({ course }: Props) => {
               <ShoppingCart size={20} />
               {isInCart ? "Remove from Cart" : "Add to Cart"}
             </Button>
-            <Link href={`/checkout/${id}`} className="w-full">
+            <Link
+              href={`/checkout/${id}?callBackUrl=${link || "/"}`}
+              className="w-full"
+            >
               <Button
                 size={"lg"}
                 variant="outline"

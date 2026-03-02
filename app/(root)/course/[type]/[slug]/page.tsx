@@ -1,5 +1,5 @@
 import React from "react";
-import { DetailCourse } from "@/lib/types";
+import { CourseData, DetailCourse } from "@/lib/types";
 import BreadCrumb from "@/components/BreadCrumb";
 import CourseDetailSection from "@/components/courses/CourseDetailSection";
 import CourseSchedule from "@/components/courses/CourseSchedule";
@@ -17,13 +17,13 @@ export async function generateStaticParams() {
   const online = await onlineRes.json();
 
   // Map face-to-face courses using type from meta
-  const faceToFaceParams = (ftf.data || []).map((c: any) => ({
+  const faceToFaceParams = (ftf.data || []).map((c: CourseData) => ({
     slug: c.slug,
     type: ftf.meta?.type?.slug || "face-to-face",
   }));
 
   // Map online courses using type from meta
-  const onlineParams = (online.data || []).map((c: any) => ({
+  const onlineParams = (online.data || []).map((c: CourseData) => ({
     slug: c.slug,
     type: online.meta?.type?.slug || "online",
   }));
@@ -54,7 +54,7 @@ const page = async ({
           { label: courseData.title, href: `/course/${type}/${slug}` },
         ]}
       />
-      <CourseDetailSection course={courseData} />
+      <CourseDetailSection course={courseData} type={type} />
       {(type == "face-to-face" || courseData.schedules) && (
         <CourseSchedule schedules={courseData?.schedules} />
       )}

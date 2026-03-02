@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { CourseData } from "@/lib/types";
 export type cartItem = CourseData & {
   link?: string;
+  type?: string;
 };
 interface CartContextType {
   items: cartItem[];
