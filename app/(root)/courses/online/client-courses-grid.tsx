@@ -57,7 +57,7 @@ export default function ClientCoursesGrid({
 
   return (
     <>
-      <section className="pt-24 pb-30 bg-white lg:px-15 2xl:px-20">
+      <section className="pt-24 pb-30 lg:px-15 2xl:px-20">
         <div className="text-center mb-10 space-y-4">
           <SectionBadge title={`Our ${type} Courses`} />
           <h2 className="text-4xl md:text-5xl font-medium text-medical-navy">

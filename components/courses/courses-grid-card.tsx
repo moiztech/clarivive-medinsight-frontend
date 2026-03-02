@@ -18,9 +18,9 @@ const CoursesGridCard = ({
   return (
     <div
       key={index}
-      className="bg-white relative cursor-pointer border rounded-2xl pb-6 flex flex-col text-center space-y-4 overflow-hidden transition-all duration-300 hover:z-10 hover:shadow-2xl hover:bg-slate-50 group"
+      className="bg-white relative cursor-pointer border pb-6 flex flex-col text-center space-y-4 overflow-hidden transition-all duration-300 hover:z-10 hover:shadow-2xl hover:bg-slate-50 group"
     >
-      <div className="rounded-t-2xl overflow-hidden w-full">
+      <div className="overflow-hidden w-full">
         <Image
           quality={80}
           placeholder="blur"
@@ -50,11 +50,11 @@ const CoursesGridCard = ({
         </div>
         {/* <span className="text-muted-foreground text-sm">Price:</span> */}
         <div className="flex items-center justify-between">
-          <span className="text-secondary inline-block mt-3 font-bold text-2xl">
-            € {course.price}
+          <span className="text-secondary flex items-center gap-1 mt-3 font-medium text-sm">
+            <Clock className="w-6 h-6" /> {course?.duration}
           </span>
-          <span className="text-secondary flex items-center gap-2 mt-3 font-bold text-xl">
-            <Clock className="w-5 h-5" /> {course?.duration}
+          <span className="text-secondary inline-block mt-3 font-bold text-2xl">
+            <small className="text-sm font-normal">From</small> €{course.price}
           </span>
         </div>
       </div>
