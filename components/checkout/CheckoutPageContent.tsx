@@ -22,13 +22,16 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox";
 import { serverApi } from "@/lib/axios";
+import { Branch } from "@/lib/types";
 
 const CheckoutPageContent = ({ callbackUrl }: { callbackUrl: string }) => {
   const { user } = useAuth();
   const { items, totalPrice, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
-  const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState("");
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [selectedBranches, setSelectedBranches] = useState<
+    Record<number, number | null>
+  >({});
 
   useEffect(() => {
     const fetchBranches = async () => {
@@ -44,8 +47,13 @@ const CheckoutPageContent = ({ callbackUrl }: { callbackUrl: string }) => {
     setLoading(true);
     try {
       const res = await protectedApi.post("/checkout", {
-        course_ids: items.map((item) => item.id),
-        branch_id: selectedBranch,
+        courses: items.map((item) => ({
+          id: item.id,
+          branch_id:
+            item.type === "face-to-face"
+              ? (selectedBranches[item.id] ?? null)
+              : null,
+        })),
         // payment_method: "cod",
       });
       if (res?.data?.status === 200) {
@@ -249,9 +257,24 @@ const CheckoutPageContent = ({ callbackUrl }: { callbackUrl: string }) => {
                   £{item.price.toFixed(2)}
                   {item.type === "face-to-face" && (
                     <div className="grid gap-2 mt-2">
-                      <Combobox required items={branches} autoHighlight>
+                      {/* filter branches based on item.branches */}
+                      <Combobox
+                        required
+                        items={branches.filter((branch) =>
+                          item.branches?.includes(branch?.id),
+                        )}
+                        autoHighlight
+                      >
                         <ComboboxInput
-                          onChange={(e) => setSelectedBranch(e.target.value)}
+                          onChange={(e) => {
+                            const selected = branches.find(
+                              (b) => b.title === e.target.value,
+                            );
+                            setSelectedBranches((prev) => ({
+                              ...prev,
+                              [item.id]: selected?.id ?? null,
+                            }));
+                          }}
                           placeholder="Select a Branch"
                         />
                         <ComboboxContent>

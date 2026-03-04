@@ -5,6 +5,7 @@ import { CourseData } from "@/lib/types";
 export type cartItem = CourseData & {
   link?: string;
   type?: string;
+  branches?: number[];
 };
 interface CartContextType {
   items: cartItem[];

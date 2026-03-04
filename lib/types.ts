@@ -137,6 +137,7 @@ export type DetailCourse = {
   duration: string;
   modules: number;
   rating?: number;
+  is_purchased?: boolean;
   type?: {
     id: number;
     name: string;
@@ -148,6 +149,7 @@ export type DetailCourse = {
     url: string;
     file: string | null;
   };
+  branches: Branch[];
   schedules?: Schedule[];
 };
 

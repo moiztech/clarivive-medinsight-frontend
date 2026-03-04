@@ -25,10 +25,17 @@ export function proxy(request: NextRequest) {
   // 1. If user is trying to access a protected route and has no token
   if (protectedRoutes.some((route) => pathname.startsWith(route))) {
     if (!token) {
-      const loginUrl = new URL("/login", request.url);
-      // Store the destination to redirect back after login
-      loginUrl.searchParams.set("callbackUrl", pathname + search);
-      return NextResponse.redirect(loginUrl);
+      if (pathname.startsWith("/checkout")) {
+        const loginUrl = new URL("/login", request.url);
+        const callBackUrl = request.nextUrl.searchParams.get("callBackUrl");
+        loginUrl.searchParams.set("callbackUrl", callBackUrl || pathname);
+        return NextResponse.redirect(loginUrl);
+      } else {
+        const loginUrl = new URL("/login", request.url);
+        // Store the destination to redirect back after login
+        loginUrl.searchParams.set("callbackUrl", pathname + search);
+        return NextResponse.redirect(loginUrl);
+      }
     }
   }
 

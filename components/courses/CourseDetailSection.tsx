@@ -36,6 +36,7 @@ const CourseDetailSection = ({ course, type }: Props) => {
         topics: course.topics,
         link: link,
         type: type,
+        branches: course?.branches?.map((branch) => branch.id),
       };
       addItem(courseData);
       toast.success("Added to cart!");
@@ -101,28 +102,30 @@ const CourseDetailSection = ({ course, type }: Props) => {
               £{course.price}
             </p>
           </div>
-          <div className="flex flex-col gap-3">
-            <Button
-              size={"lg"}
-              onClick={handleToggleCart}
-              className="bg-primary-blue rounded-md w-full text-lg hover:bg-primary-blue/80 font-medium flex items-center justify-center gap-2"
-            >
-              <ShoppingCart size={20} />
-              {isInCart ? "Remove from Cart" : "Add to Cart"}
-            </Button>
-            <Link
-              href={`/checkout/${id}?callBackUrl=${link || "/"}`}
-              className="w-full"
-            >
+          {course?.is_purchased == false && (
+            <div className="flex flex-col gap-3">
               <Button
                 size={"lg"}
-                variant="outline"
-                className="rounded-md w-full text-lg font-medium"
+                onClick={handleToggleCart}
+                className="bg-primary-blue rounded-md w-full text-lg hover:bg-primary-blue/80 font-medium flex items-center justify-center gap-2"
               >
-                Buy Now
+                <ShoppingCart size={20} />
+                {isInCart ? "Remove from Cart" : "Add to Cart"}
               </Button>
-            </Link>
-          </div>
+              <Link
+                href={`/checkout/${id}?callBackUrl=${link || "/"}`}
+                className="w-full"
+              >
+                <Button
+                  size={"lg"}
+                  variant="outline"
+                  className="rounded-md w-full text-lg font-medium"
+                >
+                  Buy Now
+                </Button>
+              </Link>
+            </div>
+          )}
 
           <div className="border-t border-b font-medium py-4 flex items-center justify-center gap-6 xl:gap-8 text-sm text-slate-600">
             <div className="flex items-center gap-2">
