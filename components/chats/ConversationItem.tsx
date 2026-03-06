@@ -5,7 +5,14 @@ import { Conversation } from "./ChatSidebar";
 import Link from "next/link";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { Badge } from "../ui/badge";
-import { Circle, CircleAlertIcon, CircleDot } from "lucide-react";
+import {
+  CheckCircle,
+  CheckCircle2Icon,
+  CheckIcon,
+  Circle,
+  CircleAlertIcon,
+  CircleDot,
+} from "lucide-react";
 
 interface Props {
   conversation: Conversation;
@@ -54,6 +61,11 @@ export function ConversationItem({ conversation, isActive }: Props) {
               {conversation.unread_count}
             </Badge>
           )}
+          {conversation.user?.role === "super_admin" && (
+            <span className="bg-primary-blue w-4 h-4 flex items-center justify-center rounded-full text-xs size-3 absolute -bottom-1 -right-1">
+              <CheckIcon className="size-3 text-white" />
+            </span>
+          )}
         </div>
 
         <div className="flex-1 text-left overflow-hidden hidden xl:block">
@@ -69,6 +81,11 @@ export function ConversationItem({ conversation, isActive }: Props) {
         </div>
         {conversation.unread_count > 0 && (
           <Circle className="size-4 fill-primary-blue text-primary-blue animate-pulse" />
+        )}
+        {conversation.user?.role === "super_admin" && (
+          <Badge variant={"destructive"} className="text-[10px]">
+            admin
+          </Badge>
         )}
       </Button>
     </Link>

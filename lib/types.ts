@@ -101,30 +101,30 @@ export type {
   Branch,
 };
 
-export type Schedule = {
+export type Session = {
   id: number;
-  schedule_no: number;
-  title: string;
   date: string;
   month: string;
   start_time: string;
   end_time: string;
+};
+
+export type Schedule = {
+  id: number;
+  title: string;
   spaces_available: number;
   location: string;
   description: string;
   instruction: string;
   image: string;
-  branch: Branch;
-  tickets: Ticket[];
-};
-
-export type Ticket = {
-  id: number;
-  title: string;
-  amount: number;
-  available_quantity: string;
-  due_date: string;
-  due_time: string;
+  branch?: {
+    id: number;
+    title: string;
+    slug: string;
+    description: string | null;
+    location: string;
+  };
+  sessions?: Session[];
 };
 
 export type DetailCourse = {

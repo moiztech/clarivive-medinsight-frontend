@@ -3,12 +3,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import clsx from "clsx";
 import { ConversationItem } from "./ConversationItem";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import protectedApi from "@/lib/axios/protected";
 
 import { useParams } from "next/navigation";
-import { Loader2, RefreshCcw } from "lucide-react";
+import { Loader2, RefreshCcw, UserPlus } from "lucide-react";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export type Conversation = {
@@ -16,7 +17,7 @@ export type Conversation = {
   user: {
     id: number;
     name: string;
-    role_id: number;
+    role?: string;
     logo?: string;
   };
   unread_count: number;
@@ -34,6 +35,10 @@ export default function ChatSidebar() {
   const [search, setSearch] = useState("");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [adminId, setAdminId] = useState<number | null>(null);
+  const [isAdminChatExists, setIsAdminChatExists] = useState(false);
+  const [creatingChat, setCreatingChat] = useState(false);
+  const hasLoadedOnce = useRef(false);
 
   const fetchData = useCallback(
     async (isAuto = false) => {
@@ -65,8 +70,54 @@ export default function ChatSidebar() {
   );
 
   useEffect(() => {
-    fetchData();
+    fetchData(hasLoadedOnce.current);
+    hasLoadedOnce.current = true;
   }, [fetchData]);
+
+  // Listen for sidebar refresh events from other components
+  useEffect(() => {
+    const handleSidebarRefresh = () => {
+      fetchData(true);
+    };
+    window.addEventListener("sidebar-refresh", handleSidebarRefresh);
+    return () =>
+      window.removeEventListener("sidebar-refresh", handleSidebarRefresh);
+  }, [fetchData]);
+
+  const checkAdminStatus = useCallback(async () => {
+    try {
+      const response = await protectedApi.get("/get-admin");
+      const admin = response.data?.data;
+      if (admin?.id) {
+        setAdminId(admin.id);
+        const exists = conversations.some((conv) => conv.user.id === admin.id);
+        setIsAdminChatExists(exists);
+      }
+    } catch (error) {
+      console.error("Failed to fetch admin:", error);
+    }
+  }, [conversations]);
+
+  useEffect(() => {
+    if (conversations.length > 0) {
+      checkAdminStatus();
+    }
+  }, [conversations, checkAdminStatus]);
+
+  const handleContactAdmin = async () => {
+    if (!adminId) return;
+    try {
+      setCreatingChat(true);
+      await protectedApi.post("/conversations", { user_id: adminId });
+      toast.success("Conversation with admin created");
+      fetchData(); // Reload sidebar
+    } catch (error) {
+      console.error("Failed to create conversation:", error);
+      toast.error("Failed to contact admin");
+    } finally {
+      setCreatingChat(false);
+    }
+  };
 
   // Auto-refresh logic
   useEffect(() => {
@@ -156,6 +207,24 @@ export default function ChatSidebar() {
           )}
         </div>
       </ScrollArea>
+
+      {/* Contact Admin Button */}
+      {!loading && adminId && !isAdminChatExists && (
+        <div className="p-4 border-t bg-muted/30">
+          <Button
+            onClick={handleContactAdmin}
+            disabled={creatingChat}
+            className="w-full gap-2 rounded-full bg-primary-blue hover:bg-primary-blue/90"
+          >
+            {creatingChat ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <UserPlus className="size-4" />
+            )}
+            Contact Admin
+          </Button>
+        </div>
+      )}
     </aside>
   );
 }

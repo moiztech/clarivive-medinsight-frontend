@@ -67,7 +67,11 @@ export default function LoginPage() {
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
               <span>Password</span>
-              <Link href="#" className="text-primary">
+              <Link
+                href="/forgot-password"
+                title="Forgot Password"
+                className="text-primary"
+              >
                 forgot password
               </Link>
             </div>

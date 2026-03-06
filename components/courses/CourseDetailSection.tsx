@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useId } from "react";
+import CourseSchedule from "./CourseSchedule";
 
 interface Props {
   course: DetailCourse;
@@ -47,7 +48,9 @@ const CourseDetailSection = ({ course, type }: Props) => {
     <section className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-10">
         {/* LEFT CONTENT */}
-        <div className="lg:col-span-2 space-y-8">
+        <div
+          className={`lg:col-span-2 space-y-8 ${type === "face-to-face" ? "lg:order-2" : ""}`}
+        >
           {/* Header */}
           <div>
             <h1 className="text-3xl font-semibold text-slate-800">
@@ -95,14 +98,14 @@ const CourseDetailSection = ({ course, type }: Props) => {
         </div>
 
         {/* RIGHT SIDEBAR */}
-        <aside className="p-6 space-y-5 h-fit lg:sticky lg:top-20">
-          <div className="text-center">
-            <p className="text-sm text-slate-500">From only</p>
-            <p className="text-4xl mt-2 font-bold text-primary-blue">
-              £{course.price}
-            </p>
-          </div>
-          {course?.is_purchased == false && (
+        {type !== "face-to-face" ? (
+          <aside className="p-6 space-y-5 h-fit lg:sticky lg:top-20">
+            <div className="text-center">
+              <p className="text-sm text-slate-500">From only</p>
+              <p className="text-4xl mt-2 font-bold text-primary-blue">
+                £{course.price}
+              </p>
+            </div>
             <div className="flex flex-col gap-3">
               <Button
                 size={"lg"}
@@ -125,25 +128,30 @@ const CourseDetailSection = ({ course, type }: Props) => {
                 </Button>
               </Link>
             </div>
-          )}
 
-          <div className="border-t border-b font-medium py-4 flex items-center justify-center gap-6 xl:gap-8 text-sm text-slate-600">
-            <div className="flex items-center gap-2">
-              <Clock size={35} />{" "}
-              <p>
-                Duration: <br />
-                {course.duration}
-              </p>
+            <div className="border-t border-b font-medium py-4 flex items-center justify-center gap-6 xl:gap-8 text-sm text-slate-600">
+              <div className="flex items-center gap-2">
+                <Clock size={35} />{" "}
+                <p>
+                  Duration: <br />
+                  {course.duration}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Grid3x2 size={35} />{" "}
+                <p>
+                  Modules: <br />
+                  {course.modules}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Grid3x2 size={35} />{" "}
-              <p>
-                Modules: <br />
-                {course.modules}
-              </p>
-            </div>
-          </div>
-        </aside>
+          </aside>
+        ) : (
+          <CourseSchedule
+            schedules={course?.schedules}
+            courseThumbnail={course.thumbnail}
+          />
+        )}
       </div>
     </section>
   );

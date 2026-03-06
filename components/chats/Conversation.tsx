@@ -16,9 +16,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 
-import { Message } from "./types";
 import MessageBubble from "./MessageBubble";
-import Link from "next/link";
 
 interface ConversationProps {
   messages: Message[];
@@ -51,6 +49,7 @@ function Conversation({
     try {
       await protectedApi.delete(`/delete/conversation/${conversationId}`);
       toast.success("Conversation deleted successfully");
+      window.dispatchEvent(new CustomEvent("sidebar-refresh"));
       router.push(`/${linkPrefix}/chats`);
     } catch (error) {
       console.error("Failed to delete conversation:", error);
@@ -73,8 +72,9 @@ function Conversation({
       setMessageInput("");
       toast.success("Message sent!");
 
-      // Trigger callback to refresh messages
+      // Trigger callback and global event to sync sidebar
       onMessageSent?.();
+      window.dispatchEvent(new CustomEvent("sidebar-refresh"));
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error("Failed to send message. Please try again.");
