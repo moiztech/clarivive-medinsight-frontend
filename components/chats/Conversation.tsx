@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 
 import MessageBubble from "./MessageBubble";
+import { Message } from "./types";
 
 interface ConversationProps {
   messages: Message[];
