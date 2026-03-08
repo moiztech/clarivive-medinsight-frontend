@@ -70,13 +70,15 @@ export default function Header() {
   const { user } = useAuth();
   const { logout } = useAuth();
   let dashboardLink = "/dashboard/lms";
+  let isLearner = true;
 
   if (user?.role.name === "trainer") {
     dashboardLink = "/dashboard/trainer";
+    isLearner = false;
   } else if (user?.role.name === "company_admin") {
     dashboardLink = "/company";
+    isLearner = false;
   }
-
   return (
     <header className="bg-card border-b sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -170,9 +172,11 @@ export default function Header() {
                       <span className="text-xs">{user?.email}</span>
                     </div>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Link href={dashboardLink}>Go to Dashboard</Link>
-                  </DropdownMenuItem>
+                  <Link href={dashboardLink}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Go to Dashboard
+                    </DropdownMenuItem>
+                  </Link>
                   {user.role.name === "learner" && (
                     <DropdownMenuItem className="cursor-pointer">
                       <Link href={"/orders"}>My Orders</Link>
@@ -199,16 +203,20 @@ export default function Header() {
                 </Button>
               </Link>
             )}
-            <Button
-              size={"lg"}
-              className="bg-[#1321F1] py-0! hover:bg-[#1321F1]/80 ps-0! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex"
-            >
-              <Link className="ps-4! py-2!" href={"/dashboard/lms"}>
-                LMS
-              </Link>
+            {isLearner || !user ? (
+              <Button
+                size={"lg"}
+                className="bg-[#1321F1] py-0! hover:bg-[#1321F1]/80 ps-0! pe-2! text-md group rounded-md text-secondary-foreground hidden md:flex"
+              >
+                <Link className="ps-4! py-2!" href={"/dashboard/lms"}>
+                  LMS
+                </Link>
+                <NavOffcanvas />
+                {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
+              </Button>
+            ) : (
               <NavOffcanvas />
-              {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
-            </Button>
+            )}
 
             <Button
               variant="ghost"

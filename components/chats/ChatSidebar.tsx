@@ -84,25 +84,29 @@ export default function ChatSidebar() {
       window.removeEventListener("sidebar-refresh", handleSidebarRefresh);
   }, [fetchData]);
 
-  const checkAdminStatus = useCallback(async () => {
-    try {
-      const response = await protectedApi.get("/get-admin");
-      const admin = response.data?.data;
-      if (admin?.id) {
-        setAdminId(admin.id);
-        const exists = conversations.some((conv) => conv.user.id === admin.id);
-        setIsAdminChatExists(exists);
-      }
-    } catch (error) {
-      console.error("Failed to fetch admin:", error);
-    }
-  }, [conversations]);
-
+  // Fetch admin status on mount
   useEffect(() => {
-    if (conversations.length > 0) {
-      checkAdminStatus();
+    const fetchAdmin = async () => {
+      try {
+        const response = await protectedApi.get("/get-admin");
+        const admin = response.data?.data;
+        if (admin?.id) {
+          setAdminId(admin.id);
+        }
+      } catch (error) {
+        console.error("Failed to fetch admin:", error);
+      }
+    };
+    fetchAdmin();
+  }, []);
+
+  // Check if a conversation with the admin already exists
+  useEffect(() => {
+    if (adminId) {
+      const exists = conversations.some((conv) => conv.user?.id === adminId);
+      setIsAdminChatExists(exists);
     }
-  }, [conversations, checkAdminStatus]);
+  }, [conversations, adminId]);
 
   const handleContactAdmin = async () => {
     if (!adminId) return;

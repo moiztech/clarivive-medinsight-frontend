@@ -10,11 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Bell, LogOut, Settings, User, Moon, Sun, Menu } from "lucide-react";
+import { Bell, LogOut, User, Moon, Sun, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useSidebarToggle } from "@/components/dashboard/dashboard-layout-content";
+import Link from "next/link";
 
 export function CompanyHeader() {
   const { theme, setTheme } = useTheme();
@@ -97,14 +98,16 @@ export function CompanyHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem className="gap-2 cursor-pointer">
-                <User className="h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2 cursor-pointer">
+              <Link href="/company/profile">
+                <DropdownMenuItem className="gap-2 cursor-pointer">
+                  <User className="h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+              </Link>
+              {/* <DropdownMenuItem className="gap-2 cursor-pointer">
                 <Settings className="h-4 w-4" />
                 <span>Settings</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="gap-2 cursor-pointer text-destructive"

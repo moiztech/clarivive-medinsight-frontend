@@ -26,7 +26,7 @@ import { useAuth } from "@/app/_contexts/AuthProvider";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { LmsSidebar } from "../(lms)/_components/lms-sidebar";
+import { TrainerSidebar } from "./_components/trainer-sidebar";
 import { TrainerHeader } from "./_components/TrainerHeader";
 
 export default function TrainerLayout({
@@ -63,7 +63,7 @@ export default function TrainerLayout({
 
   return (
     <DashboardLayoutContent
-      sidebar={<LmsSidebar navItems={lmsNavItems} />}
+      sidebar={<TrainerSidebar navItems={lmsNavItems} />}
       header={<TrainerHeader />}
     >
       {children}

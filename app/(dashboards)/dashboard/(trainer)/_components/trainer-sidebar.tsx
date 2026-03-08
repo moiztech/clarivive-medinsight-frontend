@@ -10,54 +10,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronRight, LogOut, User, User2 } from "lucide-react";
+import { ChevronRight, LogOut, User, BookOpen, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
 
-interface CompanySidebarProps {
+interface TrainerSidebarProps {
   navItems: NavItem[];
 }
 
-export function CompanySidebar({ navItems }: CompanySidebarProps) {
-  const { user, logout, loading } = useAuth();
+export function TrainerSidebar({ navItems }: TrainerSidebarProps) {
+  const { user, logout } = useAuth();
 
   const Header = (isExpanded: boolean) => (
     <>
       {isExpanded && (
-        <Link href={"/company"}>
-          {loading ? (
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-10 w-10 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-            </div>
-          ) : user?.logo ? (
-            <div className="relative h-11 w-full flex items-center gap-2">
-              {/* Use a valid image component or just standard img if the token/auth is needed */}
-              <Image
-                src={user.logo} // Ensure this is a full URL or proxy
-                alt={user.name}
-                width={150}
-                height={50}
-                className="object-contain h-10 rounded-full w-auto"
-                priority
-              />
-              <span className="font-bold text-base truncate flex flex-col">
-                {user?.name || "Company"}
-                <span className="text-xs text-muted-foreground">
-                  {user?.email}
-                </span>
-              </span>
-            </div>
-          ) : (
-            <span className="font-bold text-lg truncate block">
-              {user?.name || "Company"}
-            </span>
-          )}
+        <Link href={"/dashboard/trainer"}>
+          <Image
+            src="/Clarivive medinsight logo-01.png"
+            alt="Clarivive Medinsight"
+            width={180}
+            height={72}
+            priority
+            className="object-contain h-12 w-auto"
+          />
         </Link>
       )}
     </>
@@ -72,13 +48,14 @@ export function CompanySidebar({ navItems }: CompanySidebarProps) {
             className={`w-full ${isExpanded ? "ps-2! justify-between " : "px-0! justify-center"} h-full! flex items-center gap-3`}
           >
             <User2 className="h-4 w-4" />
+
             {isExpanded && (
               <div className="min-w-0 flex-1 text-left">
                 <p className="text-sm font-semibold text-sidebar-foreground truncate">
-                  {user?.name ?? "Company"}
+                  {user?.name ?? "Trainer"}
                 </p>
                 <p className="text-xs text-sidebar-accent-foreground truncate">
-                  {user?.email ?? "Company Admin"}
+                  {user?.role.name ?? "Trainer"}
                 </p>
               </div>
             )}
@@ -88,10 +65,10 @@ export function CompanySidebar({ navItems }: CompanySidebarProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-56 mb-2">
-          <Link href="/company/profile">
+          <Link href={"/dashboard/trainer/profile"}>
             <DropdownMenuItem className="gap-2 cursor-pointer">
               <User className="h-4 w-4" />
-              <span>Profile</span>
+              Profile
             </DropdownMenuItem>
           </Link>
           {/* <DropdownMenuItem className="gap-2 cursor-pointer">

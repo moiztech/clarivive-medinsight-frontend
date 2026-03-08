@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +14,7 @@ import { Bell, LogOut, Settings, User, Moon, Sun, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { useSidebarToggle } from "@/components/dashboard/dashboard-layout-content";
+import Link from "next/link";
 
 export function TrainerHeader() {
   const { theme, setTheme } = useTheme();
@@ -81,6 +82,7 @@ export function TrainerHeader() {
                 className="gap-2 w-auto h-12 rounded-2xl px-2"
               >
                 <Avatar className="h-9 w-9 border border-primary">
+                  <AvatarImage src={user?.logo} />
                   <AvatarFallback>
                     {user?.name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -94,14 +96,16 @@ export function TrainerHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem className="gap-2 cursor-pointer">
-                <User className="h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2 cursor-pointer">
+              <Link href={"/dashboard/trainer/profile"}>
+                <DropdownMenuItem className="gap-2 cursor-pointer">
+                  <User className="h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+              </Link>
+              {/* <DropdownMenuItem className="gap-2 cursor-pointer">
                 <Settings className="h-4 w-4" />
                 <span>Settings</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="gap-2 cursor-pointer text-destructive"

@@ -10,9 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronRight, LogOut, Settings, User, BookOpen } from "lucide-react";
+import { ChevronRight, LogOut, User, BookOpen, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -48,12 +47,7 @@ export function LmsSidebar({ navItems }: LmsSidebarProps) {
             variant={"ghost"}
             className={`w-full ${isExpanded ? "ps-2! justify-between " : "px-0! justify-center"} h-full! flex items-center gap-3`}
           >
-            <Avatar className="h-8 w-8 border border-primary">
-              {/* Use user avatar if available, else fallback */}
-              <AvatarFallback>
-                {user?.name?.slice(0, 2).toUpperCase() || "ST"}
-              </AvatarFallback>
-            </Avatar>
+            <User2 className="h-4 w-4" />
 
             {isExpanded && (
               <div className="min-w-0 flex-1 text-left">
@@ -71,18 +65,22 @@ export function LmsSidebar({ navItems }: LmsSidebarProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-56 mb-2">
-          <DropdownMenuItem className="gap-2 cursor-pointer">
-            <User className="h-4 w-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2 cursor-pointer">
-            <BookOpen className="h-4 w-4" />
-            <span>My Courses</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2 cursor-pointer">
+          <Link href={"/dashboard/lms/profile"}>
+            <DropdownMenuItem className="gap-2 cursor-pointer">
+              <User className="h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
+          </Link>
+          <Link href={"/dashboard/lms/courses"}>
+            <DropdownMenuItem className="gap-2 cursor-pointer">
+              <BookOpen className="h-4 w-4" />
+              My Courses
+            </DropdownMenuItem>
+          </Link>
+          {/* <DropdownMenuItem className="gap-2 cursor-pointer">
             <Settings className="h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="gap-2 cursor-pointer text-destructive"
