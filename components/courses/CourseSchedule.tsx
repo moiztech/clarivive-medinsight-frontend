@@ -31,6 +31,12 @@ const CourseSchedule = ({
   );
   const detailsRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
+  const [userTimeZone, setUserTimeZone] = useState("");
+
+  useEffect(() => {
+    // Only get timezone on client to avoid hydration mismatch
+    setUserTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -99,6 +105,42 @@ const CourseSchedule = ({
     // Implement booking logic here
     if (!scheduleId) return;
     console.log("Booking schedule:", scheduleId);
+  };
+
+  const formatInLocalTime = (dateStr: string, timeStr: string) => {
+    if (!timeStr) return "";
+    try {
+      // Treat the input string as a UTC representation base for London
+      const baseDate = new Date(`${dateStr}T${timeStr}Z`);
+
+      // Calculate London's offset at that specific time using Intl
+      const dtf = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/London",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23",
+      });
+
+      const parts = dtf.formatToParts(baseDate);
+      const getP = (type: string) => parts.find((p) => p.type === type)?.value;
+
+      const londonEquivalentInUTC = new Date(
+        `${getP("year")}-${getP("month")}-${getP("day")}T${getP("hour")}:${getP("minute")}:${getP("second")}Z`,
+      );
+
+      // The offset is the difference between our UTC assumption and London's actual time
+      const offset = baseDate.getTime() - londonEquivalentInUTC.getTime();
+      const trueUTC = new Date(baseDate.getTime() + offset);
+
+      // Format to local viewer's HH:mm
+      return format(trueUTC, "HH:mm");
+    } catch {
+      return timeStr.substring(0, 5);
+    }
   };
 
   return (
@@ -303,12 +345,26 @@ const CourseSchedule = ({
                               </span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-gray-200 shadow-sm">
-                            <Clock size={14} className="text-primary-blue" />
-                            <span className="text-xs font-semibold text-gray-700">
-                              {session.start_time.substring(0, 5)} -{" "}
-                              {session.end_time.substring(0, 5)}
-                            </span>
+                          <div className="flex flex-col items-end gap-1">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-gray-200 shadow-sm">
+                              <Clock size={14} className="text-primary-blue" />
+                              <span className="text-xs font-semibold text-gray-700">
+                                {formatInLocalTime(
+                                  session.date,
+                                  session.start_time,
+                                )}{" "}
+                                -{" "}
+                                {formatInLocalTime(
+                                  session.date,
+                                  session.end_time,
+                                )}
+                              </span>
+                            </div>
+                            {userTimeZone && (
+                              <span className="text-[9px] text-gray-400 px-1 font-medium bg-gray-100/30 rounded-sm pointer-events-none">
+                                Shown in {userTimeZone} time
+                              </span>
+                            )}
                           </div>
                         </div>
                       ))}
