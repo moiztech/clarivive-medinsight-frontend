@@ -15,13 +15,16 @@ import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { ScrollArea } from "../ui/scroll-area";
+import { Button } from "../ui/button";
 
 const CourseSchedule = ({
   schedules,
   courseThumbnail,
+  coursePrice,
 }: {
   schedules?: Schedule[];
   courseThumbnail?: string;
+  coursePrice?: number;
 }) => {
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
     null,
@@ -91,6 +94,12 @@ const CourseSchedule = ({
     },
     {} as Record<string, Schedule[]>,
   );
+
+  const handleBooking = (scheduleId: number | null) => {
+    // Implement booking logic here
+    if (!scheduleId) return;
+    console.log("Booking schedule:", scheduleId);
+  };
 
   return (
     <>
@@ -242,6 +251,25 @@ const CourseSchedule = ({
                       </span>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div className="px-6 pb-6 pt-2 border-b border-gray-100 bg-gray-50/30 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Price
+                  </span>
+                  <span className="text-2xl font-bold text-primary-blue">
+                    £{coursePrice || "0.00"}
+                  </span>
+                </div>
+
+                <div className="flex w-full md:w-auto gap-3">
+                  <Button
+                    className="flex-1 md:flex-none px-8 py-6 bg-primary-blue hover:bg-primary-blue/90 text-white font-bold rounded-sm shadow-md transition-all active:scale-95"
+                    onClick={() => handleBooking(selectedScheduleId)}
+                  >
+                    BOOK THIS SCHEDULE
+                  </Button>
                 </div>
               </div>
             </div>

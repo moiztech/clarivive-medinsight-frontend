@@ -2,7 +2,6 @@ import React from "react";
 import { CourseData, DetailCourse } from "@/lib/types";
 import BreadCrumb from "@/components/BreadCrumb";
 import CourseDetailSection from "@/components/courses/CourseDetailSection";
-import CourseSchedule from "@/components/courses/CourseSchedule";
 
 export async function generateStaticParams() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -29,6 +28,24 @@ export async function generateStaticParams() {
   }));
 
   return [...faceToFaceParams, ...onlineParams];
+}
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const course = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${slug}`,
+    {
+      next: { revalidate: 60 },
+    },
+  );
+  const courseData: DetailCourse = (await course.json()).data;
+  return {
+    title: courseData.title,
+    description: courseData.description,
+  };
 }
 
 const page = async ({

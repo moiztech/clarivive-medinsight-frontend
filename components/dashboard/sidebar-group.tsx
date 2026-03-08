@@ -71,7 +71,7 @@ function SidebarGroup({
 
       <CollapsibleContent className="transition-all duration-200">
         <div className="relative ml-6 mt-2 space-y-1">
-          <span className="absolute left-3 top-0 h-[85%] w-px bg-border" />
+          <span className="absolute left-3 -top-1 h-[85%] w-px bg-border" />
 
           {item.children?.map((child) => {
             const href = child.href ?? "#";

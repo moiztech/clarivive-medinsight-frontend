@@ -112,7 +112,7 @@ function CourseDetailPage() {
                     rel="noopener noreferrer"
                   >
                     <PlayCircle className="w-6 h-6" />
-                    Watch Trailer
+                    Start/Resume Learning
                   </a>
                 </Button>
               </div>
@@ -137,15 +137,6 @@ function CourseDetailPage() {
                   <p className="text-sm font-bold">{course.duration} Min</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 col-span-2 sm:col-span-1">
-                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                  <CheckCircle2 className="w-5 h-5 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">Difficulty</p>
-                  <p className="text-sm font-bold">Standard</p>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -156,11 +147,11 @@ function CourseDetailPage() {
             </CardHeader>
             <CardContent className="p-6">
               <div className="prose prose-blue dark:prose-invert max-w-none">
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                   {course.description}
                 </p>
                 <div
-                  className="mt-6 rich-text-content"
+                  className="mt-3 rich-text-content"
                   dangerouslySetInnerHTML={{ __html: course.content }}
                 />
               </div>
@@ -198,18 +189,6 @@ function CourseDetailPage() {
               </div>
             ))}
           </div>
-
-          <Card className="rounded-3xl border-primary-blue/20 bg-primary-blue overflow-hidden shadow-lg">
-            <CardContent className="p-6 text-white">
-              <h4 className="font-bold text-lg mb-2">Ready to start?</h4>
-              <p className="text-blue-100 text-sm mb-6">
-                Join thousands of professionals already learning this course.
-              </p>
-              <Button className="w-full bg-white text-primary-blue hover:bg-gray-100 rounded-xl font-bold py-6">
-                Enrol Now
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </ContentWrapper>
