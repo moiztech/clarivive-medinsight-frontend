@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getCookie } from "../cookies";
+import { tokenStore } from "../auth/tokenStore";
 
 const protectedApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -19,6 +20,19 @@ protectedApi.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error),
+);
+
+protectedApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      tokenStore.clear();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  },
 );
 
 export default protectedApi;

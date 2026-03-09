@@ -120,12 +120,18 @@ const CourseSchedule = ({
       return;
     }
 
+    if (user?.role.name != "learner") {
+      toast.error("You are not authorized to book a schedule");
+      return;
+    }
+
     try {
       setIsBooking(true);
       const res = await protectedApi.post("/book-schedule", {
         schedule_id: scheduleId,
       });
       toast.success(res.data?.message || "Schedule booked successfully");
+      router.push("/dashboard/lms/booked-sessions");
     } catch (error) {
       const err = error as {
         response?: { data?: { message?: string } };

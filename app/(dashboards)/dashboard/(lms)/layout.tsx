@@ -25,6 +25,7 @@ const lmsNavItems = [
     label: "Chats",
     href: "/dashboard/lms/chats",
   },
+  // if user role is employee, skip this one:
   {
     icon: List,
     label: "Orders",
@@ -69,9 +70,14 @@ export default function LMSLayout({ children }: { children: React.ReactNode }) {
     return null; // Will redirect via useEffect
   }
 
+  const filteredNavItems = lmsNavItems.filter((item) => {
+    if (user?.role.name === "employee" && item.label === "Orders") return false;
+    return true;
+  });
+
   return (
     <DashboardLayoutContent
-      sidebar={<LmsSidebar navItems={lmsNavItems} />}
+      sidebar={<LmsSidebar navItems={filteredNavItems} />}
       header={<LmsHeader />}
     >
       {children}

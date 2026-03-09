@@ -11,6 +11,7 @@ import { Loader2, RefreshCcw, UserPlus } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { useAuth } from "@/app/_contexts/AuthProvider";
 
 export type Conversation = {
   conversation_id: number;
@@ -37,8 +38,12 @@ export default function ChatSidebar() {
   const [loading, setLoading] = useState(true);
   const [adminId, setAdminId] = useState<number | null>(null);
   const [isAdminChatExists, setIsAdminChatExists] = useState(false);
+  const [isCompanyAdminChatExists, setIsCompanyAdminChatExists] =
+    useState(false);
   const [creatingChat, setCreatingChat] = useState(false);
   const hasLoadedOnce = useRef(false);
+
+  const { user } = useAuth();
 
   const fetchData = useCallback(
     async (isAuto = false) => {
@@ -100,20 +105,31 @@ export default function ChatSidebar() {
     fetchAdmin();
   }, []);
 
-  // Check if a conversation with the admin already exists
+  // Check if a conversation with the admin or company admin already exists
   useEffect(() => {
     if (adminId) {
       const exists = conversations.some((conv) => conv.user?.id === adminId);
       setIsAdminChatExists(exists);
     }
-  }, [conversations, adminId]);
+    if (user?.role?.name === "employee" && user?.company_id) {
+      const exists = conversations.some(
+        (conv) => conv.user?.id === user.company_id,
+      );
+      setIsCompanyAdminChatExists(exists);
+    }
+  }, [conversations, adminId, user]);
 
-  const handleContactAdmin = async () => {
-    if (!adminId) return;
+  const handleContactAdmin = async (targetUserId?: number | null) => {
+    const idToContact = targetUserId || adminId;
+    if (!idToContact) return;
     try {
       setCreatingChat(true);
-      await protectedApi.post("/conversations", { user_id: adminId });
-      toast.success("Conversation with admin created");
+      await protectedApi.post("/conversations", { user_id: idToContact });
+      toast.success(
+        targetUserId
+          ? "Conversation with company admin created"
+          : "Conversation with admin created",
+      );
       fetchData(); // Reload sidebar
     } catch (error) {
       console.error("Failed to create conversation:", error);
@@ -213,22 +229,32 @@ export default function ChatSidebar() {
       </ScrollArea>
 
       {/* Contact Admin Button */}
-      {!loading && adminId && !isAdminChatExists && (
-        <div className="p-4 border-t bg-muted/30">
-          <Button
-            onClick={handleContactAdmin}
-            disabled={creatingChat}
-            className="w-full gap-2 rounded-full bg-primary-blue hover:bg-primary-blue/90"
-          >
-            {creatingChat ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <UserPlus className="size-4" />
-            )}
-            Contact Admin
-          </Button>
-        </div>
-      )}
+      {!loading &&
+        ((adminId && !isAdminChatExists && user?.role.name !== "employee") ||
+          (user?.role.name === "employee" &&
+            user?.company_id &&
+            !isCompanyAdminChatExists)) && (
+          <div className="p-4 border-t bg-muted/30">
+            <Button
+              onClick={() =>
+                handleContactAdmin(
+                  user?.role.name === "employee" ? user.company_id : null,
+                )
+              }
+              disabled={creatingChat}
+              className="w-full gap-2 rounded-full bg-primary-blue hover:bg-primary-blue/90"
+            >
+              {creatingChat ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <UserPlus className="size-4" />
+              )}
+              {user?.role.name === "employee"
+                ? "Contact Company Admin"
+                : "Contact Admin"}
+            </Button>
+          </div>
+        )}
     </aside>
   );
 }
