@@ -16,6 +16,11 @@ import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
+import { useAuth } from "@/app/_contexts/AuthProvider";
+import { useRouter, usePathname } from "next/navigation";
+import { toast } from "sonner";
+import protectedApi from "@/lib/axios/protected";
+import { Loader2 } from "lucide-react";
 
 const CourseSchedule = ({
   schedules,
@@ -29,6 +34,11 @@ const CourseSchedule = ({
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
     null,
   );
+  const { user } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isBooking, setIsBooking] = useState(false);
+
   const detailsRef = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
   const [userTimeZone, setUserTimeZone] = useState("");
@@ -101,10 +111,32 @@ const CourseSchedule = ({
     {} as Record<string, Schedule[]>,
   );
 
-  const handleBooking = (scheduleId: number | null) => {
-    // Implement booking logic here
+  const handleBooking = async (scheduleId: number | null) => {
     if (!scheduleId) return;
-    console.log("Booking schedule:", scheduleId);
+
+    if (!user) {
+      toast.error("Please login to book a schedule");
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    try {
+      setIsBooking(true);
+      const res = await protectedApi.post("/book-schedule", {
+        schedule_id: scheduleId,
+      });
+      toast.success(res.data?.message || "Schedule booked successfully");
+    } catch (error) {
+      const err = error as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const message =
+        err.response?.data?.message || err.message || "Failed to book schedule";
+      toast.error(message);
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   const formatInLocalTime = (dateStr: string, timeStr: string) => {
@@ -307,10 +339,18 @@ const CourseSchedule = ({
 
                 <div className="flex w-full md:w-auto gap-3">
                   <Button
-                    className="flex-1 md:flex-none px-8 py-6 bg-primary-blue hover:bg-primary-blue/90 text-white font-bold rounded-sm shadow-md transition-all active:scale-95"
+                    className="flex-1 md:flex-none px-8 py-6 bg-primary-blue hover:bg-primary-blue/90 text-white font-bold rounded-sm shadow-md transition-all active:scale-95 disabled:opacity-70"
                     onClick={() => handleBooking(selectedScheduleId)}
+                    disabled={isBooking}
                   >
-                    BOOK THIS SCHEDULE
+                    {isBooking ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        BOOKING...
+                      </>
+                    ) : (
+                      "BOOK THIS SCHEDULE"
+                    )}
                   </Button>
                 </div>
               </div>

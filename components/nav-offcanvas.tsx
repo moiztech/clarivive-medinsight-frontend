@@ -80,9 +80,7 @@ export default function NavOffcanvas() {
             <div className="p-2 rounded-full bg-indigo-500/20 flex items-center justify-center">
               <Mail className="w-5 h-5 text-indigo-400" />
             </div>
-            <p className="text-sm text-gray-300">
-              info@clarivivemedinsight.com
-            </p>
+            <p className="text-sm text-gray-300">info@clarivive.co.uk</p>
           </div>
 
           <div className="flex gap-4 p-2 items-center duration-100 rounded-2xl hover:shadow-2xl hover:bg-blue-900/30 cursor-pointer">

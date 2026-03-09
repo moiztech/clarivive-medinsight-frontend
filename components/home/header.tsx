@@ -136,7 +136,7 @@ export default function Header() {
                       <NavigationMenuLink asChild>
                         <Link
                           href={item.href}
-                          className="text-sm font-medium text-foreground hover:text-secondary transition-colors cursor-pointer"
+                          className="text-sm font-medium text-foreground hover:text-primary-blue transition-colors cursor-pointer"
                         >
                           {item.label}
                         </Link>

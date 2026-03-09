@@ -10,8 +10,9 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
-  UserCheck,
-  Users,
+  Clock,
+  BookOpen,
+  Info,
 } from "lucide-react";
 import {
   Table,
@@ -25,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import { TrainerCalendar } from "../../_components/trainer-calendar";
+import { TrainerCalendar } from "@/app/(dashboards)/dashboard/(trainer)/_components/trainer-calendar";
 import { parseISO, format } from "date-fns";
 import protectedApi from "@/lib/axios/protected";
 import { toast } from "sonner";
@@ -36,108 +37,82 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
-interface TrainerSchedule {
-  id: number;
-  course_id: number;
-  branch_id: number;
-  trainer_id: number;
-  title: string;
-  spaces_available: number;
-  location: string;
-  description: string;
-  instruction: string;
-  image: string | null;
-  created_at: string;
-  updated_at: string;
-  course: {
-    id: number;
-    course_type_id: number;
-    category_id: number;
-    icon: string;
-    title: string;
-    slug: string;
-    price: string;
-    duration: string;
-    modules: number;
-    description: string;
-    content: string;
-    created_at: string;
-    updated_at: string;
-  };
-  branch: {
-    id: number;
-    title: string;
-    icon: string | null;
-    slug: string;
-    location: string;
-    description: string | null;
-    created_at: string;
-    updated_at: string;
-  };
-  sessions?: {
-    id: number;
-    schedule_id: number;
-    date: string;
-    start_time: string;
-    end_time: string;
-    created_at: string;
-    updated_at: string;
-  }[];
-}
-
-interface ScheduleLearner {
+interface BookedSchedule {
   id: number;
   user_id: number;
   schedule_id: number;
   status: string;
   created_at: string;
   updated_at: string;
-  user: {
+  schedule: {
     id: number;
-    name: string;
-    email: string;
-    logo: string;
-    contact: string;
-    address: string;
-    primary_contact_name: string | null;
-    no_of_employees: number | null;
-    role_id: number;
+    course_id: number;
+    branch_id: number;
+    trainer_id: number;
+    title: string;
+    spaces_available: number;
+    location: string;
+    description: string;
+    instruction: string;
+    image: string | null;
+    created_at: string;
+    updated_at: string;
+    sessions: {
+      id: number;
+      schedule_id: number;
+      date: string;
+      start_time: string;
+      end_time: string;
+      created_at: string;
+      updated_at: string;
+    }[];
+    course: {
+      id: number;
+      title: string;
+      slug: string;
+      description: string;
+      course_type_id: number;
+      icon: string;
+      course_type: {
+        id: number;
+        name: string;
+        slug: string;
+      };
+    };
   };
 }
 
-function AssignedTrainingsPage() {
-  const [schedules, setSchedules] = useState<TrainerSchedule[]>([]);
+function BookedSessionsPage() {
+  const [bookings, setBookings] = useState<BookedSchedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [sortConfig, setSortConfig] = useState<{
-    key: "course_title" | "schedule_title" | "location";
+    key: "course_title" | "schedule_title" | "status";
     direction: "asc" | "desc";
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const [selectedSchedule, setSelectedSchedule] =
-    useState<TrainerSchedule | null>(null);
-  const [learners, setLearners] = useState<ScheduleLearner[]>([]);
-  const [loadingLearners, setLoadingLearners] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<BookedSchedule | null>(
+    null,
+  );
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const fetchSchedules = useCallback(async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await protectedApi.get("/trainer/schedules");
+      const res = await protectedApi.get("/booked-schedules");
       if (res.data?.status) {
-        setSchedules(res.data.data);
+        setBookings(res.data.data);
       }
     } catch (error) {
-      toast.error("Failed to fetch schedules");
+      toast.error("Failed to fetch booked sessions");
       console.error(error);
     } finally {
       setLoading(false);
@@ -145,32 +120,15 @@ function AssignedTrainingsPage() {
   }, []);
 
   useEffect(() => {
-    fetchSchedules();
-  }, [fetchSchedules]);
+    fetchBookings();
+  }, [fetchBookings]);
 
-  const fetchLearners = async (scheduleId: number) => {
-    try {
-      setLoadingLearners(true);
-      const res = await protectedApi.get(`/schedule/${scheduleId}/learners`);
-      if (res.data?.status) {
-        setLearners(res.data.data);
-      }
-    } catch (error) {
-      toast.error("Failed to fetch learners");
-      console.error(error);
-    } finally {
-      setLoadingLearners(false);
-    }
-  };
-
-  const handleViewLearners = (schedule: TrainerSchedule) => {
-    setSelectedSchedule(schedule);
-    setLearners([]);
+  const handleViewDetails = (booking: BookedSchedule) => {
+    setSelectedBooking(booking);
     setIsSheetOpen(true);
-    fetchLearners(schedule.id);
   };
 
-  const handleSort = (key: "course_title" | "schedule_title" | "location") => {
+  const handleSort = (key: "course_title" | "schedule_title" | "status") => {
     let direction: "asc" | "desc" = "asc";
     if (
       sortConfig &&
@@ -184,28 +142,30 @@ function AssignedTrainingsPage() {
 
   const bookedDates = useMemo(() => {
     const dates: Date[] = [];
-    schedules.forEach((s) => {
-      if (s.sessions && s.sessions.length > 0) {
-        s.sessions.forEach((session) => {
+    bookings.forEach((b) => {
+      if (b.schedule.sessions && b.schedule.sessions.length > 0) {
+        b.schedule.sessions.forEach((session) => {
           dates.push(parseISO(session.date));
         });
       }
     });
     return dates;
-  }, [schedules]);
+  }, [bookings]);
 
-  const filteredTrainings = useMemo(() => {
-    let result = schedules.filter(
-      (s) =>
-        s.course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.location.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filteredBookings = useMemo(() => {
+    let result = bookings.filter(
+      (b) =>
+        b.schedule.course.title
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        b.schedule.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        b.schedule.location.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     if (selectedDate) {
       const dayStr = format(selectedDate, "yyyy-MM-dd");
-      result = result.filter((s) =>
-        s.sessions?.some((session) => session.date === dayStr),
+      result = result.filter((b) =>
+        b.schedule.sessions?.some((session) => session.date === dayStr),
       );
     }
 
@@ -216,14 +176,14 @@ function AssignedTrainingsPage() {
         let bValue = "";
 
         if (key === "course_title") {
-          aValue = a.course.title;
-          bValue = b.course.title;
+          aValue = a.schedule.course.title;
+          bValue = b.schedule.course.title;
         } else if (key === "schedule_title") {
-          aValue = a.title;
-          bValue = b.title;
+          aValue = a.schedule.title;
+          bValue = b.schedule.title;
         } else {
-          aValue = a.location;
-          bValue = b.location;
+          aValue = a.status;
+          bValue = b.status;
         }
 
         if (aValue < bValue) return direction === "asc" ? -1 : 1;
@@ -233,10 +193,10 @@ function AssignedTrainingsPage() {
     }
 
     return result;
-  }, [schedules, searchTerm, sortConfig, selectedDate]);
+  }, [bookings, searchTerm, sortConfig, selectedDate]);
 
-  const totalPages = Math.ceil(filteredTrainings.length / itemsPerPage);
-  const currentData = filteredTrainings.slice(
+  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+  const currentData = filteredBookings.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
@@ -244,7 +204,7 @@ function AssignedTrainingsPage() {
   const formatDateRange = (sessions?: { date: string }[]) => {
     if (!sessions || sessions.length === 0) return "No dates scheduled";
     if (sessions.length === 1) {
-      return format(parseISO(sessions[0].date), "dd MMMM");
+      return format(parseISO(sessions[0].date), "dd MMMM yyyy");
     }
 
     const sortedSessions = [...sessions].sort(
@@ -254,23 +214,23 @@ function AssignedTrainingsPage() {
     const endDate = parseISO(sortedSessions[sortedSessions.length - 1].date);
 
     if (format(startDate, "MMMM") === format(endDate, "MMMM")) {
-      return `${format(startDate, "dd")} to ${format(endDate, "dd MMMM")}`;
+      return `${format(startDate, "dd")} to ${format(endDate, "dd MMMM yyyy")}`;
     }
 
-    return `${format(startDate, "dd MMMM")} to ${format(endDate, "dd MMMM")}`;
+    return `${format(startDate, "dd MMMM")} to ${format(endDate, "dd MMMM yyyy")}`;
   };
 
   return (
     <ContentWrapper
-      heading="Assigned Trainings"
-      subHeading="View all assigned trainings with calendar and list view"
+      heading="My Booked Schedules"
+      subHeading="Track your progress and view upcoming study sessions"
     >
       <div className="flex flex-col xl:flex-row gap-6 items-start">
         {/* Left: Calendar Sidebar */}
         <div className="w-full xl:w-auto xl:sticky xl:top-24">
           <div className="flex flex-col gap-4">
             <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest px-2">
-              Select date
+              Study Calendar
             </h3>
             <TrainerCalendar
               selected={selectedDate}
@@ -297,7 +257,7 @@ function AssignedTrainingsPage() {
             <div className="relative flex-1 max-w-md group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary-blue transition-colors" />
               <Input
-                placeholder="Search by course, schedule or location..."
+                placeholder="Search by course or schedule..."
                 className="pl-10 h-10 bg-background/50 border-border/50"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -326,7 +286,7 @@ function AssignedTrainingsPage() {
                         onClick={() => handleSort("course_title")}
                         className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
                       >
-                        Assigned Training
+                        Booked Course
                         <ArrowUpDown className="size-3" />
                       </button>
                     </TableHead>
@@ -335,11 +295,19 @@ function AssignedTrainingsPage() {
                         onClick={() => handleSort("schedule_title")}
                         className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
                       >
-                        Schedule Info
+                        Schedule Details
                         <ArrowUpDown className="size-3" />
                       </button>
                     </TableHead>
-                    <TableHead>Branch Details</TableHead>
+                    <TableHead>
+                      <button
+                        onClick={() => handleSort("status")}
+                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                      >
+                        Status
+                        <ArrowUpDown className="size-3" />
+                      </button>
+                    </TableHead>
                     <TableHead className="text-right font-semibold pr-6">
                       Actions
                     </TableHead>
@@ -361,41 +329,40 @@ function AssignedTrainingsPage() {
                       </TableRow>
                     ))
                   ) : currentData.length > 0 ? (
-                    currentData.map((training) => (
+                    currentData.map((booking) => (
                       <TableRow
-                        key={training.id}
+                        key={booking.id}
                         className="group border-border/40 hover:bg-muted/30 transition-colors"
                       >
                         <TableCell>
                           <div className="flex items-center gap-4">
-                            <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted">
+                            <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted shadow-sm">
                               <Image
                                 src={
-                                  training.image ||
-                                  training.course.icon ||
+                                  booking.schedule.image ||
+                                  booking.schedule.course.icon ||
                                   "/placeholder.jpg"
                                 }
-                                alt={training.course.title}
+                                alt={booking.schedule.course.title}
                                 fill
                                 className="object-cover"
                               />
                             </div>
                             <div className="flex flex-col min-w-0">
                               <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
-                                {training.course.title}
+                                {booking.schedule.course.title}
                               </span>
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-muted-foreground font-medium truncate max-w-[150px]">
-                                  {training.title}
-                                </span>
-                                {training.sessions && (
-                                  <Badge
-                                    variant="outline"
-                                    className="h-4 text-[9px] px-1.5 font-bold bg-primary-blue/5 text-primary-blue border-primary-blue/20"
-                                  >
-                                    {training.sessions.length} SESSION
-                                    {training.sessions.length !== 1 ? "S" : ""}
-                                  </Badge>
+                                <Badge
+                                  variant="secondary"
+                                  className="text-[10px] h-4 px-1.5 font-bold bg-primary-blue/10 text-primary-blue border-none"
+                                >
+                                  {booking.schedule.course.course_type.name}
+                                </Badge>
+                                {booking.schedule.sessions && (
+                                  <span className="text-[10px] text-muted-foreground font-bold">
+                                    {booking.schedule.sessions.length} SESSIONS
+                                  </span>
                                 )}
                               </div>
                             </div>
@@ -405,33 +372,35 @@ function AssignedTrainingsPage() {
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue">
                               <Calendar className="size-3.5" />
-                              {formatDateRange(training.sessions)}
+                              {formatDateRange(booking.schedule.sessions)}
                             </div>
                             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                               <MapPin className="size-3" />
-                              {training.location}
+                              {booking.schedule.location}
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-bold text-foreground">
-                              {training.branch.title}
-                            </span>
-                            <span className="text-[10px] text-muted-foreground line-clamp-1">
-                              {training.branch.location}
-                            </span>
-                          </div>
+                          <Badge
+                            className={
+                              booking.status === "paid"
+                                ? "bg-green-500/10 text-green-600 border-green-500/20 font-bold"
+                                : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
+                            }
+                            variant="outline"
+                          >
+                            {booking.status.toUpperCase()}
+                          </Badge>
                         </TableCell>
                         <TableCell className="text-right pr-6">
                           <Button
                             variant="primary"
                             size="sm"
                             className="gap-2 text-[11px] font-bold h-9 px-4"
-                            onClick={() => handleViewLearners(training)}
+                            onClick={() => handleViewDetails(booking)}
                           >
-                            <UserCheck className="size-3.5" />
-                            VIEW LEARNERS
+                            <Info className="size-3.5" />
+                            VIEW DETAILS
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -444,16 +413,16 @@ function AssignedTrainingsPage() {
                       >
                         <div className="flex flex-col items-center gap-4">
                           <div className="p-4 bg-muted/50 rounded-full">
-                            <Calendar className="size-8 opacity-40" />
+                            <BookOpen className="size-8 opacity-40" />
                           </div>
                           <div>
                             <p className="font-bold text-foreground">
-                              No trainings found
+                              No bookings found
                             </p>
                             <p className="text-sm">
                               {selectedDate
-                                ? "Nothing scheduled for this specific date."
-                                : "No results for your current search criteria."}
+                                ? "You have no sessions on this specific date."
+                                : "You haven't booked any course schedules yet."}
                             </p>
                           </div>
                           {(searchTerm || selectedDate) && (
@@ -486,7 +455,7 @@ function AssignedTrainingsPage() {
               </span>{" "}
               of{" "}
               <span className="text-foreground font-bold">
-                {filteredTrainings.length}
+                {filteredBookings.length}
               </span>{" "}
               entries
             </p>
@@ -521,96 +490,95 @@ function AssignedTrainingsPage() {
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent side="right" className="w-[400px] sm:w-[540px]">
           <SheetHeader className="mb-6">
-            <VisuallyHidden>Course Learners</VisuallyHidden>
+            <VisuallyHidden>Session Details</VisuallyHidden>
           </SheetHeader>
-          <SheetTitle className="text-2xl font-bold flex items-center px-4 gap-2">
-            <Users className="text-primary-blue" />
-            Course Learners
+          <SheetTitle className="text-2xl font-bold flex items-center px-4 gap-2 mb-2">
+            <BookOpen className="text-primary-blue" />
+            Session Details
           </SheetTitle>
-          <SheetDescription className="px-4">
-            Viewing all learners currently booked for:{" "}
+          <SheetDescription className="px-4 mb-6">
+            Detailed schedule for:{" "}
             <span className="font-bold text-foreground">
-              {selectedSchedule?.course.title}
-            </span>{" "}
-            ({selectedSchedule?.title})
+              {selectedBooking?.schedule.course.title}
+            </span>
           </SheetDescription>
 
-          <ScrollArea className="h-[calc(100vh-180px)] pr-4">
-            {loadingLearners ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-4 p-4 border rounded-lg"
-                  >
-                    <Skeleton className="h-12 w-12 rounded-full" />
-                    <div className="space-y-2 flex-1">
-                      <Skeleton className="h-4 w-1/3" />
-                      <Skeleton className="h-3 w-1/2" />
+          <ScrollArea className="h-[calc(100vh-200px)] px-4">
+            <div className="space-y-6">
+              {/* Schedule Info */}
+              <div className="bg-primary-blue/5 border border-primary-blue/10 rounded-xl p-4">
+                <h4 className="text-xs font-bold text-primary-blue uppercase tracking-widest mb-3">
+                  Schedule Overview
+                </h4>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-white rounded-lg shadow-sm">
+                      <Calendar size={14} className="text-primary-blue" />
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : learners.length > 0 ? (
-              <div className="space-y-4">
-                {learners.map((learner) => (
-                  <div
-                    key={learner.id}
-                    className="flex items-start gap-4 p-4 border border-border/50 rounded-xl bg-card/30 hover:bg-card/50 transition-colors"
-                  >
-                    <Avatar className="h-12 w-12 border-2 border-primary-blue/20">
-                      <AvatarImage src={learner.user.logo} />
-                      <AvatarFallback className="bg-primary-blue/10 text-primary-blue font-bold">
-                        {learner.user.name.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <p className="font-bold text-foreground truncate">
-                          {learner.user.name}
-                        </p>
-                        <Badge
-                          variant={
-                            learner.status === "paid" ? "secondary" : "outline"
-                          }
-                          className={
-                            learner.status === "paid"
-                              ? "bg-green-500/10 text-green-600 border-green-500/20"
-                              : ""
-                          }
-                        >
-                          {learner.status.toUpperCase()}
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2 truncate">
-                        {learner.user.email}
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        Schedule Title
                       </p>
-                      <div className="flex flex-col gap-1">
-                        <p className="text-[11px] font-medium flex items-center gap-1.5 text-foreground/70">
-                          <MapPin size={12} className="text-primary-blue" />
-                          {learner.user.address || "No address provided"}
-                        </p>
-                        <p className="text-[11px] font-medium flex items-center gap-1.5 text-foreground/70">
-                          <UserCheck size={12} className="text-primary-blue" />
-                          Booked on:{" "}
-                          {format(parseISO(learner.created_at), "PPP")}
-                        </p>
+                      <p className="text-sm font-bold text-foreground">
+                        {selectedBooking?.schedule.title}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-white rounded-lg shadow-sm">
+                      <MapPin size={14} className="text-primary-blue" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        Location
+                      </p>
+                      <p className="text-sm font-bold text-foreground">
+                        {selectedBooking?.schedule.location}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sessions List */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  Individual Sessions
+                </h4>
+                {selectedBooking?.schedule.sessions.map((session, index) => (
+                  <div
+                    key={session.id}
+                    className="flex items-center gap-4 p-4 border border-border/50 rounded-xl bg-card/30 hover:bg-card/50 transition-colors"
+                  >
+                    <div className="h-10 w-10 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue font-bold shrink-0">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-foreground truncate">
+                        {format(parseISO(session.date), "EEEE, dd MMMM yyyy")}
+                      </p>
+                      <div className="flex items-center gap-3 mt-1">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <Clock size={12} className="text-primary-blue" />
+                          {session.start_time.substring(0, 5)} -{" "}
+                          {session.end_time.substring(0, 5)}
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-64 text-center">
-                <div className="p-4 bg-muted/50 rounded-full mb-4">
-                  <Users className="size-8 opacity-40" />
-                </div>
-                <p className="font-bold text-foreground">No learners found</p>
-                <p className="text-sm text-muted-foreground px-8">
-                  No one has booked this schedule yet.
+
+              {/* Special Instructions */}
+              <div className="bg-yellow-500/5 border border-yellow-500/10 rounded-xl p-4">
+                <h4 className="text-xs font-bold text-yellow-600 uppercase tracking-widest mb-2">
+                  Instructions
+                </h4>
+                <p className="text-sm text-foreground/80 leading-relaxed italic">
+                  &ldquo;{selectedBooking?.schedule.instruction}&rdquo;
                 </p>
               </div>
-            )}
+            </div>
           </ScrollArea>
         </SheetContent>
       </Sheet>
@@ -618,4 +586,4 @@ function AssignedTrainingsPage() {
   );
 }
 
-export default AssignedTrainingsPage;
+export default BookedSessionsPage;

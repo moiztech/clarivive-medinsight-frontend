@@ -16,6 +16,11 @@ const lmsNavItems = [
     href: "/dashboard/lms/courses",
   },
   {
+    icon: BookOpen,
+    label: "Booked Sessions",
+    href: "/dashboard/lms/booked-sessions",
+  },
+  {
     icon: MessageCircle,
     label: "Chats",
     href: "/dashboard/lms/chats",
