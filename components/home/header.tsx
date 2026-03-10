@@ -68,7 +68,7 @@ export default function Header() {
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(
     null,
   );
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { logout } = useAuth();
   let dashboardLink = "/dashboard/lms";
   let isLearner = true;
@@ -159,7 +159,6 @@ export default function Header() {
             </Button>
 
             <CartPopover />
-
             {user ? (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger className="cursor-pointer">
@@ -202,7 +201,7 @@ export default function Header() {
                   size={"lg"}
                   className="bg-[#1321F1] py-4! hover:bg-[#1321F1]/80 px-4 text-md group rounded-md text-secondary-foreground hidden md:flex"
                 >
-                  Login
+                  {loading ? "Loading..." : "Login"}
                   {/* <span className="ml-1 bg-white p-2 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-indigo-600 group-hover:before:translate-x-0 rounded-sm text-secondary"><Diamond className="w-5 h-5 relative z-2" /></span> */}
                 </Button>
               </Link>

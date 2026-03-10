@@ -47,7 +47,7 @@ function ContactLearner({ learner_id }: { learner_id: number }) {
         </Button>
       </TooltipTrigger>
       <TooltipContent>
-        <p>Chat with learner</p>
+        <p>Start Chat</p>
       </TooltipContent>
     </Tooltip>
   );

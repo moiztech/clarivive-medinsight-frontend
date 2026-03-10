@@ -10,7 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import { Schedule, Session } from "@/lib/types";
+import { Schedule } from "@/lib/types";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
@@ -21,6 +21,43 @@ import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 import protectedApi from "@/lib/axios/protected";
 import { Loader2 } from "lucide-react";
+import { formatSessionDates } from "@/app/(dashboards)/dashboard/(lms)/lms/booked-sessions/page";
+
+export const formatInLocalTime = (dateStr: string, timeStr: string) => {
+  if (!timeStr) return "";
+  try {
+    // Treat the input string as a UTC representation base for London
+    const baseDate = new Date(`${dateStr}T${timeStr}Z`);
+
+    // Calculate London's offset at that specific time using Intl
+    const dtf = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Europe/London",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    });
+
+    const parts = dtf.formatToParts(baseDate);
+    const getP = (type: string) => parts.find((p) => p.type === type)?.value;
+
+    const londonEquivalentInUTC = new Date(
+      `${getP("year")}-${getP("month")}-${getP("day")}T${getP("hour")}:${getP("minute")}:${getP("second")}Z`,
+    );
+
+    // The offset is the difference between our UTC assumption and London's actual time
+    const offset = baseDate.getTime() - londonEquivalentInUTC.getTime();
+    const trueUTC = new Date(baseDate.getTime() + offset);
+
+    // Format to local viewer's HH:mm
+    return format(trueUTC, "HH:mm");
+  } catch {
+    return timeStr.substring(0, 5);
+  }
+};
 
 const CourseSchedule = ({
   schedules,
@@ -76,25 +113,6 @@ const CourseSchedule = ({
   const activeId = selectedScheduleId ?? schedules?.[0]?.id ?? null;
   const selectedSchedule = schedules?.find((s) => s.id === activeId);
 
-  const formatDateRange = (sessions?: Session[]) => {
-    if (!sessions || sessions.length === 0) return "No dates scheduled";
-    if (sessions.length === 1) {
-      return format(parseISO(sessions[0].date), "dd MMMM");
-    }
-
-    const sortedSessions = [...sessions].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
-    const startDate = parseISO(sortedSessions[0].date);
-    const endDate = parseISO(sortedSessions[sortedSessions.length - 1].date);
-
-    if (format(startDate, "MMMM") === format(endDate, "MMMM")) {
-      return `${format(startDate, "dd")} to ${format(endDate, "dd MMMM")}`;
-    }
-
-    return `${format(startDate, "dd MMMM")} to ${format(endDate, "dd MMMM")}`;
-  };
-
   const groupedSchedules = schedules?.reduce(
     (acc, schedule) => {
       const month =
@@ -127,10 +145,10 @@ const CourseSchedule = ({
 
     try {
       setIsBooking(true);
-      const res = await protectedApi.post("/book-schedule", {
+      await protectedApi.post("/create-learner-booking", {
         schedule_id: scheduleId,
       });
-      toast.success(res.data?.message || "Schedule booked successfully");
+      toast.success("Schedule booked successfully");
       router.push("/dashboard/lms/booked-sessions");
     } catch (error) {
       const err = error as {
@@ -144,47 +162,8 @@ const CourseSchedule = ({
       setIsBooking(false);
     }
   };
-
-  const formatInLocalTime = (dateStr: string, timeStr: string) => {
-    if (!timeStr) return "";
-    try {
-      // Treat the input string as a UTC representation base for London
-      const baseDate = new Date(`${dateStr}T${timeStr}Z`);
-
-      // Calculate London's offset at that specific time using Intl
-      const dtf = new Intl.DateTimeFormat("en-US", {
-        timeZone: "Europe/London",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hourCycle: "h23",
-      });
-
-      const parts = dtf.formatToParts(baseDate);
-      const getP = (type: string) => parts.find((p) => p.type === type)?.value;
-
-      const londonEquivalentInUTC = new Date(
-        `${getP("year")}-${getP("month")}-${getP("day")}T${getP("hour")}:${getP("minute")}:${getP("second")}Z`,
-      );
-
-      // The offset is the difference between our UTC assumption and London's actual time
-      const offset = baseDate.getTime() - londonEquivalentInUTC.getTime();
-      const trueUTC = new Date(baseDate.getTime() + offset);
-
-      // Format to local viewer's HH:mm
-      return format(trueUTC, "HH:mm");
-    } catch {
-      return timeStr.substring(0, 5);
-    }
-  };
-
   return (
     <>
-      {/* <div className="max-w-7xl mx-auto px-4 py-12 bg-[#F9FAFB] min-h-screen"> */}
-      {/* <div className="flex flex-col lg:flex-row gap-6"> */}
       {/* LEFT SIDEBAR - SESSIONS LIST */}
       <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden h-fit lg:sticky lg:top-28 lg:row-span-2 lg:order-1 order-2">
         <div className="p-4 border-b border-gray-100 flex items-center gap-2 text-slate-500 text-sm">
@@ -217,7 +196,7 @@ const CourseSchedule = ({
                           </span>
                           <span className="text-primary-blue font-medium flex items-center gap-1.5 ">
                             <Calendar size={14} />
-                            {formatDateRange(schedule.sessions)}
+                            {formatSessionDates(schedule.sessions)}
                           </span>
                           <div className="flex items-center gap-2 mt-1">
                             <Badge
@@ -290,7 +269,7 @@ const CourseSchedule = ({
                       </span>
                       <span className="font-medium text-gray-800">
                         {selectedSchedule
-                          ? formatDateRange(selectedSchedule.sessions)
+                          ? formatSessionDates(selectedSchedule.sessions)
                           : "Select a schedule"}
                       </span>
                     </div>

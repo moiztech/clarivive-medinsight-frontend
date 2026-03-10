@@ -151,18 +151,21 @@ export function LearnersSheet({
                       <p className="font-bold text-foreground truncate">
                         {learner.user.name}
                       </p>
-                      <Badge
-                        variant={
-                          learner.status === "paid" ? "secondary" : "outline"
-                        }
-                        className={
-                          learner.status === "paid"
-                            ? "bg-green-500/10 text-green-600 border-green-500/20"
-                            : ""
-                        }
-                      >
-                        {learner.status.toUpperCase()}
-                      </Badge>
+                      <div className="flex items-center gap-1">
+                        <Badge
+                          variant={
+                            learner.status === "paid" ? "secondary" : "outline"
+                          }
+                          className={
+                            learner.status === "paid"
+                              ? "bg-green-500/10 text-green-600 border-green-500/20"
+                              : ""
+                          }
+                        >
+                          {learner.status.toUpperCase()}
+                        </Badge>
+                        <Badge variant={"default"}># {learner.id}</Badge>
+                      </div>
                     </div>
                     <p className="text-xs text-muted-foreground mb-2 truncate">
                       {learner.user.email}

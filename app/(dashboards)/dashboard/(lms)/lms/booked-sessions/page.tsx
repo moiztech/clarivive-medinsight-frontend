@@ -13,6 +13,7 @@ import {
   Clock,
   BookOpen,
   Info,
+  User,
 } from "lucide-react";
 import {
   Table,
@@ -41,52 +42,90 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { formatInLocalTime } from "@/components/courses/CourseSchedule";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ContactLearner from "../../../(trainer)/_components/ContactLearner";
 
 interface BookedSchedule {
   id: number;
-  user_id: number;
+  student_id: number;
+  branch_id?: number;
+  course_id?: number;
   schedule_id: number;
   status: string;
   created_at: string;
   updated_at: string;
+  course: {
+    id: number;
+    title: string;
+    slug: string;
+    course_type_id: number;
+    icon: string;
+    course_type: {
+      id: number;
+      name: string;
+    };
+  };
+  branch: {
+    id: number;
+    title: string;
+    slug: string;
+    icon?: string;
+  };
   schedule: {
     id: number;
-    course_id: number;
-    branch_id: number;
-    trainer_id: number;
     title: string;
-    spaces_available: number;
-    location: string;
+    location?: string;
     description: string;
-    instruction: string;
+    instruction?: string;
     image: string | null;
-    created_at: string;
-    updated_at: string;
+    trainer_id: number;
     sessions: {
       id: number;
       schedule_id: number;
       date: string;
       start_time: string;
       end_time: string;
-      created_at: string;
-      updated_at: string;
     }[];
-    course: {
+    trainer?: {
       id: number;
-      title: string;
-      slug: string;
-      description: string;
-      course_type_id: number;
-      icon: string;
-      course_type: {
-        id: number;
-        name: string;
-        slug: string;
-      };
+      name: string;
+      email: string;
+      logo?: string;
     };
   };
 }
+export const formatSessionDates = (
+  sessions?: { date: string }[],
+  visibleCount: number = 2,
+) => {
+  if (!sessions || sessions.length === 0) return "No dates scheduled";
 
+  const sorted = [...sessions].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+  );
+
+  const dates = sorted.map((s) => parseISO(s.date));
+
+  // only one date
+  if (dates.length === 1) {
+    return format(dates[0], "dd MMM yyyy");
+  }
+
+  const visibleDates = dates.slice(0, visibleCount);
+  const remaining = dates.length - visibleDates.length;
+
+  const formatted = visibleDates.map((d) => format(d, "dd MMM"));
+
+  let result = formatted.join(", ");
+
+  if (remaining > 0) {
+    result += ` +${remaining} more`;
+  }
+
+  return result;
+};
 function BookedSessionsPage() {
   const [bookings, setBookings] = useState<BookedSchedule[]>([]);
   const [loading, setLoading] = useState(true);
@@ -103,11 +142,17 @@ function BookedSessionsPage() {
     null,
   );
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [userTimeZone, setUserTimeZone] = useState("");
+
+  useEffect(() => {
+    // Only get timezone on client to avoid hydration mismatch
+    setUserTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, []);
 
   const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await protectedApi.get("/booked-schedules");
+      const res = await protectedApi.get("/learner-bookings");
       if (res.data?.status) {
         setBookings(res.data.data);
       }
@@ -155,11 +200,9 @@ function BookedSessionsPage() {
   const filteredBookings = useMemo(() => {
     let result = bookings.filter(
       (b) =>
-        b.schedule.course.title
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
+        b.course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.schedule.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        b.schedule.location.toLowerCase().includes(searchTerm.toLowerCase()),
+        b.schedule?.location?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     if (selectedDate) {
@@ -176,8 +219,8 @@ function BookedSessionsPage() {
         let bValue = "";
 
         if (key === "course_title") {
-          aValue = a.schedule.course.title;
-          bValue = b.schedule.course.title;
+          aValue = a.course.title;
+          bValue = b.course.title;
         } else if (key === "schedule_title") {
           aValue = a.schedule.title;
           bValue = b.schedule.title;
@@ -200,25 +243,6 @@ function BookedSessionsPage() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
-
-  const formatDateRange = (sessions?: { date: string }[]) => {
-    if (!sessions || sessions.length === 0) return "No dates scheduled";
-    if (sessions.length === 1) {
-      return format(parseISO(sessions[0].date), "dd MMMM yyyy");
-    }
-
-    const sortedSessions = [...sessions].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
-    const startDate = parseISO(sortedSessions[0].date);
-    const endDate = parseISO(sortedSessions[sortedSessions.length - 1].date);
-
-    if (format(startDate, "MMMM") === format(endDate, "MMMM")) {
-      return `${format(startDate, "dd")} to ${format(endDate, "dd MMMM yyyy")}`;
-    }
-
-    return `${format(startDate, "dd MMMM")} to ${format(endDate, "dd MMMM yyyy")}`;
-  };
 
   return (
     <ContentWrapper
@@ -281,6 +305,7 @@ function BookedSessionsPage() {
               <Table>
                 <TableHeader className="bg-muted/30">
                   <TableRow className="hover:bg-transparent border-border/50">
+                    <TableHead className="text-nowrap">Booking ID</TableHead>
                     <TableHead className="w-[350px]">
                       <button
                         onClick={() => handleSort("course_title")}
@@ -334,30 +359,36 @@ function BookedSessionsPage() {
                         key={booking.id}
                         className="group border-border/40 hover:bg-muted/30 transition-colors"
                       >
+                        <TableCell>{booking.id}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-4">
                             <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted shadow-sm">
                               <Image
                                 src={
                                   booking.schedule.image ||
-                                  booking.schedule.course.icon ||
+                                  booking.course.icon ||
                                   "/placeholder.jpg"
                                 }
-                                alt={booking.schedule.course.title}
+                                alt={booking.course.title}
                                 fill
                                 className="object-cover"
                               />
                             </div>
                             <div className="flex flex-col min-w-0">
-                              <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
-                                {booking.schedule.course.title}
-                              </span>
+                              <Link
+                                href={`/course/face-to-face/${booking.course.slug}`}
+                                target="_blank"
+                              >
+                                <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
+                                  {booking.course.title}
+                                </span>
+                              </Link>
                               <div className="flex items-center gap-2">
                                 <Badge
                                   variant="secondary"
                                   className="text-[10px] h-4 px-1.5 font-bold bg-primary-blue/10 text-primary-blue border-none"
                                 >
-                                  {booking.schedule.course.course_type.name}
+                                  {booking.course.course_type.name}
                                 </Badge>
                                 {booking.schedule.sessions && (
                                   <span className="text-[10px] text-muted-foreground font-bold">
@@ -369,14 +400,26 @@ function BookedSessionsPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="space-y-1">
+                          <div
+                            className="space-y-1 cursor-pointer"
+                            onClick={() => handleViewDetails(booking)}
+                          >
                             <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue">
                               <Calendar className="size-3.5" />
-                              {formatDateRange(booking.schedule.sessions)}
+                              {formatSessionDates(booking.schedule.sessions)}
                             </div>
                             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                               <MapPin className="size-3" />
                               {booking.schedule.location}
+                            </div>
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                              <div className="size-4 rounded-full bg-primary-blue/10 flex items-center justify-center shrink-0">
+                                <User className="size-2.5 text-primary-blue" />
+                              </div>
+                              Trainer:{" "}
+                              <span className="font-medium text-foreground/80">
+                                {booking.schedule.trainer?.name || "TBA"}
+                              </span>
                             </div>
                           </div>
                         </TableCell>
@@ -499,7 +542,7 @@ function BookedSessionsPage() {
           <SheetDescription className="px-4 mb-6">
             Detailed schedule for:{" "}
             <span className="font-bold text-foreground">
-              {selectedBooking?.schedule.course.title}
+              {selectedBooking?.course.title}
             </span>
           </SheetDescription>
 
@@ -533,7 +576,7 @@ function BookedSessionsPage() {
                         Location
                       </p>
                       <p className="text-sm font-bold text-foreground">
-                        {selectedBooking?.schedule.location}
+                        {selectedBooking?.schedule?.location}
                       </p>
                     </div>
                   </div>
@@ -560,10 +603,18 @@ function BookedSessionsPage() {
                       <div className="flex items-center gap-3 mt-1">
                         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                           <Clock size={12} className="text-primary-blue" />
-                          {session.start_time.substring(0, 5)} -{" "}
-                          {session.end_time.substring(0, 5)}
+                          {formatInLocalTime(
+                            session.date,
+                            session.start_time,
+                          )}{" "}
+                          - {formatInLocalTime(session.date, session.end_time)}
                         </div>
                       </div>
+                      {userTimeZone && (
+                        <span className="text-[9px] text-gray-400 px-1 font-medium bg-gray-100/30 rounded-sm pointer-events-none">
+                          Shown in {userTimeZone} time
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -578,6 +629,37 @@ function BookedSessionsPage() {
                   &ldquo;{selectedBooking?.schedule.instruction}&rdquo;
                 </p>
               </div>
+              {/* Trainer Information */}
+              {selectedBooking?.schedule.trainer && (
+                <div className="bg-card border border-border/50 rounded-xl p-4 shadow-sm">
+                  <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+                    Your Trainer
+                  </h4>
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-12 w-12 border-2 border-primary-blue/20">
+                      <AvatarImage
+                        src={selectedBooking.schedule.trainer.logo}
+                      />
+                      <AvatarFallback className="bg-primary-blue/10 text-primary-blue font-bold">
+                        {selectedBooking.schedule.trainer.name
+                          .substring(0, 2)
+                          .toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-foreground truncate">
+                        {selectedBooking.schedule.trainer.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {selectedBooking.schedule.trainer.email}
+                      </p>
+                    </div>
+                    <ContactLearner
+                      learner_id={selectedBooking.schedule.trainer.id}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </ScrollArea>
         </SheetContent>

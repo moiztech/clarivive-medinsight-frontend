@@ -35,6 +35,9 @@ import {
   ScheduleLearner,
   TrainerSchedule,
 } from "../../_components/learners-sheet";
+import { formatSessionDates } from "../../../(lms)/lms/booked-sessions/page";
+import { TrainingSessionsSheet } from "../../_components/training-sessions-sheet";
+import { Clock } from "lucide-react";
 
 function AssignedTrainingsPage() {
   const [schedules, setSchedules] = useState<TrainerSchedule[]>([]);
@@ -53,6 +56,9 @@ function AssignedTrainingsPage() {
   const [learners, setLearners] = useState<ScheduleLearner[]>([]);
   const [loadingLearners, setLoadingLearners] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [selectedSessionsSchedule, setSelectedSessionsSchedule] =
+    useState<TrainerSchedule | null>(null);
+  const [isSessionsSheetOpen, setIsSessionsSheetOpen] = useState(false);
 
   const fetchSchedules = useCallback(async () => {
     try {
@@ -93,6 +99,11 @@ function AssignedTrainingsPage() {
     setLearners([]);
     setIsSheetOpen(true);
     fetchLearners(schedule.id);
+  };
+
+  const handleViewSessions = (schedule: TrainerSchedule) => {
+    setSelectedSessionsSchedule(schedule);
+    setIsSessionsSheetOpen(true);
   };
 
   const handleSort = (key: "course_title" | "schedule_title" | "location") => {
@@ -166,25 +177,6 @@ function AssignedTrainingsPage() {
     currentPage * itemsPerPage,
   );
 
-  const formatDateRange = (sessions?: { date: string }[]) => {
-    if (!sessions || sessions.length === 0) return "No dates scheduled";
-    if (sessions.length === 1) {
-      return format(parseISO(sessions[0].date), "dd MMMM");
-    }
-
-    const sortedSessions = [...sessions].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
-    const startDate = parseISO(sortedSessions[0].date);
-    const endDate = parseISO(sortedSessions[sortedSessions.length - 1].date);
-
-    if (format(startDate, "MMMM") === format(endDate, "MMMM")) {
-      return `${format(startDate, "dd")} to ${format(endDate, "dd MMMM")}`;
-    }
-
-    return `${format(startDate, "dd MMMM")} to ${format(endDate, "dd MMMM")}`;
-  };
-
   return (
     <ContentWrapper
       heading="Assigned Trainings"
@@ -246,7 +238,7 @@ function AssignedTrainingsPage() {
               <Table>
                 <TableHeader className="bg-muted/30">
                   <TableRow className="hover:bg-transparent border-border/50">
-                    <TableHead className="w-[350px]">
+                    <TableHead className="max-w-[300px]">
                       <button
                         onClick={() => handleSort("course_title")}
                         className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
@@ -293,7 +285,7 @@ function AssignedTrainingsPage() {
                       >
                         <TableCell>
                           <div className="flex items-center gap-4">
-                            <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted">
+                            <div className="relative w-22 h-14 rounded overflow-hidden shrink-0 bg-muted">
                               <Image
                                 src={
                                   training.image ||
@@ -327,37 +319,54 @@ function AssignedTrainingsPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue">
+                          <div
+                            className="space-y-1 max-w-35 cursor-pointer group/info"
+                            onClick={() => handleViewSessions(training)}
+                          >
+                            <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue group-hover/info:underline underline-offset-4">
                               <Calendar className="size-3.5" />
-                              {formatDateRange(training.sessions)}
+                              {formatSessionDates(training.sessions)}
                             </div>
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground group-hover/info:text-foreground/70 transition-colors">
                               <MapPin className="size-3" />
                               {training.location}
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex flex-col">
+                          <div className="flex flex-col w-30">
                             <span className="text-sm font-bold text-foreground">
                               {training.branch.title}
                             </span>
-                            <span className="text-[10px] text-muted-foreground line-clamp-1">
+                            <span
+                              title={training.branch.location}
+                              className="text-[10px] text-muted-foreground line-clamp-1"
+                            >
                               {training.branch.location}
                             </span>
                           </div>
                         </TableCell>
                         <TableCell className="text-right pr-6">
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            className="gap-2 text-[11px] font-bold h-9 px-4"
-                            onClick={() => handleViewLearners(training)}
-                          >
-                            <UserCheck className="size-3.5" />
-                            VIEW LEARNERS
-                          </Button>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-2 text-[11px] font-bold h-9 px-4 border-primary-blue/30 text-primary-blue hover:bg-primary-blue/5"
+                              onClick={() => handleViewSessions(training)}
+                            >
+                              <Clock className="size-3.5" />
+                              SESSIONS
+                            </Button>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              className="gap-2 text-[11px] font-bold h-9 px-4"
+                              onClick={() => handleViewLearners(training)}
+                            >
+                              <UserCheck className="size-3.5" />
+                              VIEW LEARNERS
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
@@ -449,6 +458,11 @@ function AssignedTrainingsPage() {
         selectedSchedule={selectedSchedule}
         learners={learners}
         loading={loadingLearners}
+      />
+      <TrainingSessionsSheet
+        isOpen={isSessionsSheetOpen}
+        onOpenChange={setIsSessionsSheetOpen}
+        schedule={selectedSessionsSchedule}
       />
     </ContentWrapper>
   );
