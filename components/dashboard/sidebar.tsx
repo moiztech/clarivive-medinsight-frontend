@@ -27,7 +27,7 @@ export function Sidebar({ navItems, header, footer }: SidebarProps) {
       } flex flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300 h-screen overflow-hidden sticky top-0`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
+      <div className="flex items-center justify-between p-3 border-b border-sidebar-border">
         {header ? header(isExpanded) : null}
         <Button
           variant="ghost"

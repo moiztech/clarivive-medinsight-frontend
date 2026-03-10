@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import protectedApi from "@/lib/axios/protected";
 
 import { useParams } from "next/navigation";
-import { Loader2, RefreshCcw, UserPlus } from "lucide-react";
+import { Loader2, RefreshCcw, ShieldUser, UserPlus } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -244,14 +244,23 @@ export default function ChatSidebar() {
               disabled={creatingChat}
               className="w-full gap-2 rounded-full bg-primary-blue hover:bg-primary-blue/90"
             >
-              {creatingChat ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <UserPlus className="size-4" />
-              )}
-              {user?.role.name === "employee"
-                ? "Contact Company Admin"
-                : "Contact Admin"}
+              <div className="hidden lg:flex items-center gap-2">
+                {creatingChat ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <UserPlus className="size-4" />
+                )}
+                {user?.role.name === "employee"
+                  ? "Contact Company Admin"
+                  : "Contact Admin"}
+              </div>
+              <div className="lg:hidden">
+                {creatingChat ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <ShieldUser className="size-4" />
+                )}
+              </div>
             </Button>
           </div>
         )}

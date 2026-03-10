@@ -25,6 +25,7 @@ import {
 import NavOffcanvas from "../nav-offcanvas";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import CartPopover from "./cart-popover";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 // import { useAuthActions } from "@/app/_hooks/useAuthActions";
 
 interface NavItem {
@@ -162,7 +163,10 @@ export default function Header() {
             {user ? (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger className="cursor-pointer">
-                  <User className="w-5 h-5" />
+                  <Avatar>
+                    <AvatarImage src={user?.logo} />
+                    <AvatarFallback>{user?.name[0]}</AvatarFallback>
+                  </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>

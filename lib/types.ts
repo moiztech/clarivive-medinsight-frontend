@@ -36,6 +36,21 @@ type UserType = {
     created_at?: string;
     updated_at?: string;
   };
+  company?: {
+    id: number;
+    company_id: number | null;
+    name: string;
+    email: string;
+    primary_contact_name: string;
+    no_of_employees: string;
+    logo?: string;
+    contact: string | null;
+    address: string | null;
+    email_verified_at: string | null;
+    created_at: string;
+    updated_at: string;
+    role_id: number;
+  };
 };
 
 type CompanyType = {

@@ -14,6 +14,7 @@ import { ChevronRight, LogOut, User, BookOpen, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface LmsSidebarProps {
   navItems: NavItem[];
@@ -26,14 +27,31 @@ export function LmsSidebar({ navItems }: LmsSidebarProps) {
     <>
       {isExpanded && (
         <Link href={"/dashboard/lms"}>
-          <Image
-            src="/Clarivive medinsight logo-01.png"
-            alt="Clarivive Medinsight"
-            width={180}
-            height={72}
-            priority
-            className="object-contain h-12 w-auto"
-          />
+          {user?.role.name == "learner" ? (
+            <Image
+              src="/Clarivive medinsight logo-01.png"
+              alt="Clarivive Medinsight"
+              width={180}
+              height={72}
+              priority
+              className="object-contain h-12 w-auto"
+            />
+          ) : (
+            <div className="flex items-center gap-2 p-1 rounded-lg hover:bg-primary-blue/10 cursor-pointer">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src={user?.company?.logo} />
+                <AvatarFallback>
+                  {user?.company?.name?.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <p className="text-sm max-w-36 font-semibold text-sidebar-foreground truncate">
+                {user?.company?.name ?? "Company"} <br />
+                <span className="text-xs font-semibold text-muted-foreground">
+                  {user?.company?.email}
+                </span>
+              </p>
+            </div>
+          )}
         </Link>
       )}
     </>
