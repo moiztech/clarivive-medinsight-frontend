@@ -34,7 +34,7 @@ export function LmsSidebar({ navItems }: LmsSidebarProps) {
               width={180}
               height={72}
               priority
-              className="object-contain h-12 w-auto"
+              className="object-contain h-13 w-auto"
             />
           ) : (
             <div className="flex items-center gap-2 p-1 rounded-lg hover:bg-primary-blue/10 cursor-pointer">
