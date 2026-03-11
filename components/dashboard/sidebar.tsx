@@ -33,7 +33,7 @@ export function Sidebar({ navItems, header, footer }: SidebarProps) {
           variant="ghost"
           size="icon-sm"
           onClick={() => setIsExpanded(!isExpanded)}
-          className={`${isExpanded ? "ml-auto" : "mx-auto"}`}
+          className={`${isExpanded ? "ml-auto" : "mx-auto"} hidden md:flex justify-center items-center`}
         >
           {isExpanded ? (
             <ArrowLeftFromLine className="h-4 w-4" />

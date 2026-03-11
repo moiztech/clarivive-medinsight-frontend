@@ -31,12 +31,20 @@ export function useEmployee() {
       setError(false);
       try {
         const res = await protectedApi.post("/company/employee", empData);
+        if (res.status !== 200 && res.status !== 201) {
+          setError(true);
+          toast.error(res.data?.message || "Failed to add employee");
+          return false;
+        }
         toast.success(res.data?.message || "Employee added successfully");
         await getEmployees(); // Refresh the list
-      } catch (error) {
+        return true;
+      } catch (error: unknown) {
         console.error("Failed to store employee:", error);
         setError(true);
-        toast.error("Failed to add employee");
+        const err = error as { response?: { data?: { message?: string } } };
+        toast.error(err.response?.data?.message || "Failed to add employee");
+        return false;
       } finally {
         setLoading(false);
       }

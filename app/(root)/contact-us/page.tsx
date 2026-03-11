@@ -38,8 +38,6 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: "" });
-
-    // Simulate API call
     try {
       await serverApi.post("/contact-inquiry", formData).catch((error) => {
         console.error("Error sending message:", error);
@@ -93,12 +91,13 @@ export default function ContactPage() {
           <div>
             <div className="p-8 lg:border-r lg:border-slate-200 lg:sticky lg:top-16">
               <h2 className="text-3xl font-normal text-slate-800 mb-6">
-                In Case of Emergency
+                Learning Support & Assistance
               </h2>
               <p className="text-slate-600 mb-6">
-                If you are experiencing a medical emergency please call{" "}
-                <strong className="text-slate-800">911</strong> immediately or
-                go to your nearest emergency room.
+                If you need help with your medical courses or platform access,
+                please contact our support team. Our team is available to guide
+                you with course enrollment, technical issues, and learning
+                assistance.
               </p>
 
               {/* Contact Info */}
@@ -109,10 +108,11 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800 mb-1">
-                      Visit Our Clinic
+                      VISIT US
                     </h3>
                     <p className="text-slate-600 text-sm">
-                      5th Street, 21st Floor, New York, USA
+                      No: 02 Block no : 146, Street 29, Sector G-9-4, Islamabad,
+                      ISB, PK 44000
                     </p>
                   </div>
                 </div>
@@ -126,7 +126,7 @@ export default function ContactPage() {
                       General Inquiries
                     </h3>
                     <p className="text-primary-blue text-sm">
-                      info@example.com
+                      info@clarivive.co.uk
                     </p>
                   </div>
                 </div>
@@ -137,9 +137,14 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800 mb-1">
-                      Appointment Scheduling
+                      Student Support & Enrollment
                     </h3>
-                    <p className="text-primary-blue text-sm">(888) 4567890</p>
+                    <a
+                      href="tel:+4407345052986"
+                      className="text-primary-blue text-sm"
+                    >
+                      +44 (07345 052986)
+                    </a>
                   </div>
                 </div>
               </div>

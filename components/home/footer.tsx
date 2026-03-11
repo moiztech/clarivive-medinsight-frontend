@@ -7,7 +7,7 @@ export function Footer() {
   return (
     <footer className="relative px-5 bg-black text-white overflow-hidden">
       {/* Geometric background pattern */}
-      <div className="absolute inset-0 opacity-5">
+      {/* <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 left-0 w-full h-full">
           {[...Array(20)].map((_, i) => (
             <div
@@ -23,7 +23,7 @@ export function Footer() {
             />
           ))}
         </div>
-      </div>
+      </div> */}
 
       <div className="relative container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
@@ -31,10 +31,10 @@ export function Footer() {
           <div className="space-y-6">
             <div className="flex items-center gap-2">
               <Image
-                src="/Clarivive medinsight logo-01.png"
+                src="/clarivive-logo-dark-resize.png"
                 alt="Logo"
-                width={200}
-                height={72}
+                width={260}
+                height={102}
                 priority
               />
               {/* <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center">

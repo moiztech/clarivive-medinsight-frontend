@@ -34,13 +34,17 @@ function AddEmployeePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await storeEmployee({
+    const success = await storeEmployee({
       name: formData.name,
       email: formData.email,
       contact: formData.phone,
     });
-    router.push("/company/employees");
+
     setLoading(false);
+
+    if (success) {
+      router.push("/company/employees");
+    }
   };
 
   return (

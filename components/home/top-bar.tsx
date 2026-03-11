@@ -15,7 +15,7 @@ export default function TopBar() {
               <span> +44 (07345 052986)</span>
             </a>
             <a
-              href="mailto:info@clarivivemedinsight.com"
+              href="mailto:info@clarivive.co.uk"
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <Mail className="w-4 h-4" />

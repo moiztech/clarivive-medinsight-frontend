@@ -69,7 +69,7 @@ export function CompanySidebar({ navItems }: CompanySidebarProps) {
         <DropdownMenuTrigger asChild>
           <Button
             variant={"ghost"}
-            className={`w-full ${isExpanded ? "ps-2! justify-between " : "px-0! justify-center"} h-full! flex items-center gap-3`}
+            className={`w-full ${isExpanded ? "ps-2! justify-between " : "px-0! justify-center!"} h-full! flex items-center gap-3`}
           >
             <User2 className="h-4 w-4" />
             {isExpanded && (

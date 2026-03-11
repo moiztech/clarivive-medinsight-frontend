@@ -40,6 +40,10 @@ const companyNavItems = [
         href: "/company/courses/assign",
       },
       {
+        label: "Book Trainings",
+        href: "/company/courses/book",
+      },
+      {
         label: "Courses List",
         href: "/company/courses/list",
       },

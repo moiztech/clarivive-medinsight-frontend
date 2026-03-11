@@ -28,7 +28,9 @@ function AssignCoursesPage() {
     assignCourses,
     loading: coursesLoading,
   } = useCourse();
-
+  const filteredCourses = useMemo(() => {
+    return courses.filter((course) => course.course_type.slug === "online");
+  }, [courses]);
   const [selectedEmployee, setSelectedEmployee] = useState<number | null>(null);
   const [selectedCourses, setSelectedCourses] = useState<number[]>([]);
   const [assignedCourseIds, setAssignedCourseIds] = useState<number[]>([]);
@@ -228,7 +230,7 @@ function AssignCoursesPage() {
               <Card className="border-none shadow-xl bg-card/60 backdrop-blur-md ring-1 ring-border/50">
                 <CardContent className="p-6">
                   <div className="grid grid-cols-1 gap-3">
-                    {courses.map((course) => {
+                    {filteredCourses.map((course) => {
                       const isAssigned = assignedCourseIds.includes(course.id);
                       return (
                         <div
@@ -281,12 +283,18 @@ function AssignCoursesPage() {
                                 <Layout className="size-3" /> {course.modules}{" "}
                                 Modules
                               </span>
+                              <Badge
+                                variant="outline"
+                                className="text-[10px] px-2 h-5"
+                              >
+                                {course.course_type.name}
+                              </Badge>
                             </div>
                           </div>
                         </div>
                       );
                     })}
-                    {courses.length === 0 && !isLoading && (
+                    {filteredCourses.length === 0 && !isLoading && (
                       <div className="text-center py-10 text-muted-foreground italic">
                         No courses available subscription found.
                       </div>

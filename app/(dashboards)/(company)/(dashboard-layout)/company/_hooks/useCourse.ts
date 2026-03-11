@@ -24,6 +24,23 @@ export interface Course {
     created_at: string;
     updated_at: string;
   };
+  course_type: {
+    id: number;
+    name: string;
+    slug: string;
+  };
+  branches?: {
+    id: number;
+    title: string;
+    slug: string;
+    icon: string;
+    pivot: {
+      course_id: number;
+      branch_id: number;
+      created_at: string;
+      updated_at: string;
+    };
+  }[];
 }
 
 export function useCourse() {
