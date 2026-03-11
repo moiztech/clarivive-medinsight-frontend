@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useEmployee } from "../../_hooks/useEmployee";
 import { useCourse } from "../../_hooks/useCourse";
+import { useCompanyBookings } from "../../_hooks/useCompanyBookings";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -61,6 +62,7 @@ export interface Schedule {
 function BookTrainingsPage() {
   const { employees, getEmployees, loading: employeesLoading } = useEmployee();
   const { courses, getCourses, loading: coursesLoading } = useCourse();
+  const { data: bookingsData, getBookings } = useCompanyBookings();
 
   // Local state
   const [branches, setBranches] = useState<Branch[]>([]);
@@ -105,7 +107,8 @@ function BookTrainingsPage() {
     getEmployees();
     getCourses();
     fetchBranches();
-  }, [getEmployees, getCourses]);
+    getBookings(1, 1000); // Fetch a large number of schedules to get all bookings for checking
+  }, [getEmployees, getCourses, getBookings]);
 
   const fetchBranches = async () => {
     setLoadingBranches(true);
@@ -161,6 +164,21 @@ function BookTrainingsPage() {
     setSelectedSchedule(null);
     fetchSchedules();
   }, [selectedCourse, selectedBranch]);
+
+  // Prune selected employees when schedule changes
+  useEffect(() => {
+    if (selectedSchedule && bookingsData) {
+      const scheduleBooking = bookingsData.find(
+        (b) => b.schedule_id === selectedSchedule,
+      );
+      if (scheduleBooking) {
+        const alreadyBookedIds = scheduleBooking.students.map((s) => s.id);
+        setSelectedEmployees((prev) =>
+          prev.filter((id) => !alreadyBookedIds.includes(id)),
+        );
+      }
+    }
+  }, [selectedSchedule, bookingsData]);
 
   const filteredEmployees = useMemo(() => {
     return employees.filter(
@@ -497,19 +515,33 @@ function BookTrainingsPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                     {filteredEmployees.map((emp) => {
+                      // Check if the employee is already booked for the selected schedule
+                      const isAlreadyBooked = bookingsData?.some(
+                        (booking) =>
+                          booking.schedule_id === selectedSchedule &&
+                          booking.students.some((s) => s.id === emp.id)
+                      );
                       const isSelected = selectedEmployees.includes(emp.id);
+
                       return (
                         <div
                           key={emp.id}
                           className={`flex items-start gap-4 p-3 rounded-xl border transition-all ${
-                            isSelected
+                            isAlreadyBooked
+                              ? "bg-muted/30 border-border/50 opacity-60 cursor-not-allowed"
+                              : isSelected
                               ? "bg-primary-blue/5 border-primary-blue shadow-sm cursor-pointer"
                               : "bg-background/30 border-border/50 hover:bg-muted/50 cursor-pointer"
                           }`}
-                          onClick={() => toggleEmployee(emp.id)}
+                          onClick={() => {
+                            if (!isAlreadyBooked) {
+                              toggleEmployee(emp.id);
+                            }
+                          }}
                         >
                           <Checkbox
                             checked={isSelected}
+                            disabled={isAlreadyBooked}
                             onCheckedChange={() => {}} // Controlled by parent div
                             className="mt-1"
                           />
@@ -522,6 +554,11 @@ function BookTrainingsPage() {
                           <div className="flex-1 space-y-1">
                             <span className="font-semibold text-sm block">
                               {emp.name}
+                              {isAlreadyBooked && (
+                                <span className="ml-2 text-[10px] text-primary-blue bg-primary-blue/10 px-1.5 py-0.5 rounded font-normal uppercase tracking-wider">
+                                  Booked
+                                </span>
+                              )}
                             </span>
                             <span className="text-xs text-muted-foreground block truncate">
                               {emp.email}

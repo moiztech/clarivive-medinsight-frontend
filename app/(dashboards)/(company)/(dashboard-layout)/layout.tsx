@@ -44,6 +44,10 @@ const companyNavItems = [
         href: "/company/courses/book",
       },
       {
+        label: "Booked Schedules",
+        href: "/company/bookings",
+      },
+      {
         label: "Courses List",
         href: "/company/courses/list",
       },
