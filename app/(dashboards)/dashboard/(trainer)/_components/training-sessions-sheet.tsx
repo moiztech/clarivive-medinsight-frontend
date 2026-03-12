@@ -18,6 +18,7 @@ import {
   Info,
   Play,
   UserCheck,
+  CheckCheck,
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { formatInLocalTime } from "@/components/courses/CourseSchedule";
@@ -25,17 +26,21 @@ import { TrainerSchedule } from "./learners-sheet";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import protectedApi from "@/lib/axios/protected";
+import { Badge } from "@/components/ui/badge";
 
 interface TrainingSessionsSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   schedule: TrainerSchedule | null;
+  setSchedules: React.Dispatch<React.SetStateAction<TrainerSchedule[]>>;
 }
 
 export function TrainingSessionsSheet({
   isOpen,
   onOpenChange,
   schedule,
+  setSchedules,
 }: TrainingSessionsSheetProps) {
   const router = useRouter();
 
@@ -45,23 +50,24 @@ export function TrainingSessionsSheet({
     typeof window !== "undefined"
       ? Intl.DateTimeFormat().resolvedOptions().timeZone
       : "";
-
-  /**
-   * Mock Start Session API
-   */
   const handleStartSession = async (sessionId: number) => {
     try {
       setStartingSession(sessionId);
-
-      // mock delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Session started successfully");
-
-      // later replace with:
-      // await protectedApi.post(`/trainer/sessions/${sessionId}/start`);
-    } catch (error) {
-      toast.error("Failed to start session");
+      const res = await protectedApi.post(
+        `/trainer/session/${sessionId}/start`,
+      );
+      toast.success(res.data?.message || "Session started successfully");
+      setSchedules((prev) =>
+        prev.map((s) => ({
+          ...s,
+          sessions: s.sessions?.map((ss) =>
+            ss.id === sessionId ? { ...ss, status: res.data?.data.status } : ss,
+          ),
+        })),
+      );
+      // console.log(res.data?.data.status);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to start session");
       console.error(error);
     } finally {
       setStartingSession(null);
@@ -183,32 +189,63 @@ export function TrainingSessionsSheet({
                           )}{" "}
                           - {formatInLocalTime(session.date, session.end_time)}
                         </div>
+                        <Badge
+                          variant={
+                            session.status === "completed"
+                              ? "primary"
+                              : "outline"
+                          }
+                        >
+                          {session.status}
+                        </Badge>
                       </div>
                     </div>
                   </div>
 
                   {/* Action Buttons */}
                   <div className="flex gap-2 mt-4">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-2 text-[11px] font-bold"
-                      onClick={() => handleStartSession(session.id)}
-                      disabled={startingSession === session.id}
-                    >
-                      <Play size={14} />
-                      {startingSession === session.id
-                        ? "Starting..."
-                        : "Start Session"}
-                    </Button>
+                    {session?.status === "completed" ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-2 text-[11px] font-bold"
+                        disabled={true}
+                        title="Session is completed"
+                      >
+                        <CheckCheck size={14} />
+                        Completed
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-2 text-[11px] font-bold"
+                        onClick={() => handleStartSession(session.id)}
+                        disabled={
+                          startingSession === session.id ||
+                          session.status === "in_progress"
+                        }
+                      >
+                        <Play size={14} />
+                        {startingSession === session.id
+                          ? "Starting..."
+                          : session.status === "in_progress"
+                            ? "Started"
+                            : "Start Session"}
+                      </Button>
+                    )}
 
                     <Button
                       size="sm"
                       className="gap-2 text-[11px] font-bold"
+                      disabled={
+                        session.status === "scheduled" || !session.status
+                      }
                       onClick={() => handleMarkAttendance(session.id)}
                     >
                       <UserCheck size={14} />
-                      Mark Attendance
+                      {session.status !== "completed" ? "Mark" : "View"}{" "}
+                      Attendance
                     </Button>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ContentWrapper from "@/components/dashboard/content-wrapper";
 import protectedApi from "@/lib/axios/protected";
 import { toast } from "sonner";
@@ -24,14 +24,19 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-import { UserCheck, MapPin, Clock } from "lucide-react";
-import { useParams } from "next/navigation";
+import { UserCheck, MapPin, Clock, ArrowLeft, CheckCheck } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { formatInLocalTime } from "@/components/courses/CourseSchedule";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 
 interface Learner {
   id: number;
   name: string;
   company: string;
   attendance_status: string | null;
+  logo?: string;
 }
 
 interface SessionInfo {
@@ -40,10 +45,11 @@ interface SessionInfo {
   start_time: string;
   end_time: string;
   location: string;
+  status?: string;
   course_title: string;
 }
 
-const statuses = ["present", "absent", "late", "no_show", "cancelled"];
+const statuses = ["present", "absent", "late", "excused"];
 
 export default function AttendancePage() {
   const params = useParams();
@@ -51,49 +57,31 @@ export default function AttendancePage() {
 
   const [learners, setLearners] = useState<Learner[]>([]);
   const [session, setSession] = useState<SessionInfo | null>(null);
+  const [savedAttendance, setSavedAttendance] = useState(0);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  const fetchSessionAttendance = async () => {
+  const userTimeZone =
+    typeof window !== "undefined"
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : "";
+  const fetchSessionAttendance = useCallback(async () => {
     try {
-      //   const res = await protectedApi.get(
-      //     `/trainer/sessions/${sessionId}/attendance`,
-      //   );
-      const res = {
-        data: JSON.parse(
-          `{
-      "status": true,
-      "data": {
-        "session": {
-          "id": 5,
-          "date": "2026-03-12",
-          "start_time": "10:00",
-          "end_time": "12:00",
-          "location": "Main Branch",
-          "course_title": "Manual Handling Training"
-        },
-        "learners": [
-          {
-            "id": 1,
-            "name": "Ali Raza",
-            "company": "ABC Ltd",
-            "attendance_status": "present"
-          },
-          {
-            "id": 2,
-            "name": "Sarah Khan",
-            "company": "XYZ Ltd",
-            "attendance_status": null
-          }
-        ]
-      }
-    }`,
-        ),
-        status: true,
-      };
+      const res = await protectedApi.get(
+        `/trainer/session/${sessionId}/attendance`,
+      );
       //   console.log(res);
+      if (res?.data?.data?.session.status === "scheduled") {
+        toast.error("Session is not started yet");
+        router.back();
+      }
       if (res?.status) {
         setSession(res.data.data.session);
         setLearners(res.data.data.learners);
+        setSavedAttendance(
+          res.data.data.learners.filter((l: Learner) => l.attendance_status)
+            .length,
+        );
       }
     } catch (error) {
       toast.error("Failed to load attendance data");
@@ -101,11 +89,11 @@ export default function AttendancePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [sessionId]);
 
   useEffect(() => {
     fetchSessionAttendance();
-  }, [sessionId]);
+  }, [fetchSessionAttendance]);
 
   const updateStatus = (learnerId: number, status: string) => {
     setLearners((prev) =>
@@ -124,28 +112,57 @@ export default function AttendancePage() {
     );
   };
 
-  const saveAttendance = async (finalize = false) => {
+  const saveAttendance = async () => {
     try {
+      /*
+      example payload
+      {
+  "attendance": [
+    {
+      "student_id": 31,
+      "status": "present" 
+    },
+    {
+      "student_id": 28,
+      "status": "present" 
+    }
+  ]
+}
+      */
       const payload = learners.map((l) => ({
-        learner_id: l.id,
+        student_id: l.id,
         status: l.attendance_status || "absent",
       }));
 
-      await protectedApi.post(`/trainer/sessions/${sessionId}/attendance`, {
-        attendance: payload,
-      });
-
-      if (finalize) {
-        await protectedApi.post(`/trainer/sessions/${sessionId}/finalize`);
-      }
-
-      toast.success(
-        finalize
-          ? "Attendance finalized successfully"
-          : "Attendance saved successfully",
+      const res = await protectedApi.post(
+        `/trainer/session/${sessionId}/attendance`,
+        {
+          attendance: payload,
+        },
       );
-    } catch (error) {
-      toast.error("Failed to save attendance");
+
+      if (res?.status) {
+        toast.success("Attendance saved successfully");
+      }
+    } catch (error: any) {
+      toast.error("Failed to save attendance." + error.response?.data?.message);
+      console.error(error);
+    }
+  };
+
+  const completeSession = async () => {
+    try {
+      const res = await protectedApi.post(
+        `/trainer/session/${sessionId}/complete`,
+      );
+      if (res?.status) {
+        toast.success("Session completed successfully");
+        router.back();
+      }
+    } catch (error: any) {
+      toast.error(
+        "Failed to complete session." + error.response?.data?.message,
+      );
       console.error(error);
     }
   };
@@ -154,21 +171,39 @@ export default function AttendancePage() {
     <ContentWrapper
       heading="Session Attendance"
       subHeading="Mark learner attendance for this training session"
+      rightContent={
+        <Button
+          variant="outline"
+          onClick={() => router.back()}
+          className="font-bold"
+        >
+          <ArrowLeft />
+          Back
+        </Button>
+      }
     >
       <div className="space-y-6">
         {/* Session Info */}
         {session && (
-          <div className="flex flex-wrap gap-6 p-5 rounded-xl border bg-card">
+          <div className="flex flex-wrap items-center gap-6 p-5 rounded-xl border bg-card">
             <div>
               <p className="text-xs text-muted-foreground">Course</p>
               <p className="font-bold">{session.course_title}</p>
             </div>
-
-            <div className="flex items-center gap-2">
-              <Clock size={16} />
-              <span>
-                {session.date} | {session.start_time} - {session.end_time}
-              </span>
+            <div className="flex flex-col gap-0">
+              <div className="flex items-center gap-2">
+                <Clock size={16} />
+                <span>
+                  {session.date} |{" "}
+                  {formatInLocalTime(session.date, session.start_time)} -{" "}
+                  {formatInLocalTime(session.date, session.end_time)}
+                </span>
+              </div>
+              {userTimeZone && (
+                <p className="text-[9px] text-muted-foreground text-center italic">
+                  All times are shown in {userTimeZone}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
@@ -211,11 +246,16 @@ export default function AttendancePage() {
             <TableBody>
               {learners.map((learner) => (
                 <TableRow key={learner.id}>
-                  <TableCell className="font-semibold">
+                  <TableCell className="font-semibold flex gap-3 items-center">
+                    <Avatar>
+                      <AvatarImage src={learner.logo} />
+                      <AvatarFallback>{learner.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <Badge variant={"outline"}>{learner.id}</Badge>
                     {learner.name}
                   </TableCell>
 
-                  <TableCell>{learner.company}</TableCell>
+                  <TableCell>{learner?.company || "N/A"}</TableCell>
 
                   <TableCell>
                     <Select
@@ -243,22 +283,50 @@ export default function AttendancePage() {
 
         {/* Footer buttons */}
         <div className="flex justify-end gap-4">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={() => saveAttendance(false)}
             className="font-bold"
           >
             Save Draft
-          </Button>
-
-          <Button
-            variant="primary"
-            onClick={() => saveAttendance(true)}
-            className="gap-2 font-bold"
-          >
-            <UserCheck size={16} />
-            Finalize Attendance
-          </Button>
+          </Button> */}
+          {session?.status === "completed" ? (
+            <Button
+              variant="primary"
+              disabled={true}
+              className="gap-2 font-bold"
+            >
+              <UserCheck size={16} />
+              Attendance Finalized
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              onClick={() => saveAttendance()}
+              className="gap-2 font-bold"
+            >
+              <UserCheck size={16} />
+              Finalize Attendance
+            </Button>
+          )}
+          <Tooltip>
+            <Button
+              variant="outline"
+              onClick={() => completeSession()}
+              disabled={savedAttendance !== learners.length}
+              className="gap-2 font-bold"
+            >
+              <CheckCheck size={16} />
+              Complete Session
+            </Button>
+            <TooltipContent>
+              {savedAttendance !== learners.length && (
+                <p className="text-xs text-muted-foreground">
+                  Please finalize attendance first
+                </p>
+              )}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </ContentWrapper>

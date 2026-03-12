@@ -51,13 +51,25 @@ function AssignedTrainingsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const [selectedSchedule, setSelectedSchedule] =
-    useState<TrainerSchedule | null>(null);
+  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
+    null,
+  );
+  const selectedSchedule = useMemo(
+    () => schedules.find((s) => s.id === selectedScheduleId) || null,
+    [schedules, selectedScheduleId],
+  );
+
+  const [selectedSessionsScheduleId, setSelectedSessionsScheduleId] = useState<
+    number | null
+  >(null);
+  const selectedSessionsSchedule = useMemo(
+    () => schedules.find((s) => s.id === selectedSessionsScheduleId) || null,
+    [schedules, selectedSessionsScheduleId],
+  );
+
   const [learners, setLearners] = useState<ScheduleLearner[]>([]);
   const [loadingLearners, setLoadingLearners] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [selectedSessionsSchedule, setSelectedSessionsSchedule] =
-    useState<TrainerSchedule | null>(null);
   const [isSessionsSheetOpen, setIsSessionsSheetOpen] = useState(false);
 
   const fetchSchedules = useCallback(async () => {
@@ -95,14 +107,14 @@ function AssignedTrainingsPage() {
   };
 
   const handleViewLearners = (schedule: TrainerSchedule) => {
-    setSelectedSchedule(schedule);
+    setSelectedScheduleId(schedule.id);
     setLearners([]);
     setIsSheetOpen(true);
     fetchLearners(schedule.id);
   };
 
   const handleViewSessions = (schedule: TrainerSchedule) => {
-    setSelectedSessionsSchedule(schedule);
+    setSelectedSessionsScheduleId(schedule.id);
     setIsSessionsSheetOpen(true);
   };
 
@@ -364,7 +376,7 @@ function AssignedTrainingsPage() {
                               onClick={() => handleViewLearners(training)}
                             >
                               <UserCheck className="size-3.5" />
-                              VIEW LEARNERS
+                              LEARNERS
                             </Button>
                           </div>
                         </TableCell>
@@ -463,6 +475,7 @@ function AssignedTrainingsPage() {
         isOpen={isSessionsSheetOpen}
         onOpenChange={setIsSessionsSheetOpen}
         schedule={selectedSessionsSchedule}
+        setSchedules={setSchedules}
       />
     </ContentWrapper>
   );

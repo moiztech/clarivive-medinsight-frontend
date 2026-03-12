@@ -127,7 +127,7 @@ export default function ChatSidebar() {
       await protectedApi.post("/conversations", { user_id: idToContact });
       toast.success(
         targetUserId
-          ? "Conversation with company admin created"
+          ? `Conversation with ${user?.company?.name || "Company Admin"} created`
           : "Conversation with admin created",
       );
       fetchData(); // Reload sidebar
@@ -251,7 +251,7 @@ export default function ChatSidebar() {
                   <UserPlus className="size-4" />
                 )}
                 {user?.role.name === "employee"
-                  ? "Contact Company Admin"
+                  ? `Contact ${user.company?.name || "Company Admin"}`
                   : "Contact Admin"}
               </div>
               <div className="lg:hidden">
