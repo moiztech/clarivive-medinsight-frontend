@@ -151,6 +151,14 @@ export default function AttendancePage() {
   };
 
   const completeSession = async () => {
+    if (session?.status === "completed") {
+      toast.error("Session is already completed");
+      return;
+    }
+    if (savedAttendance !== learners.length) {
+      toast.error("Please finalize attendance for all learners");
+      return;
+    }
     try {
       const res = await protectedApi.post(
         `/trainer/session/${sessionId}/complete`,
@@ -258,22 +266,36 @@ export default function AttendancePage() {
                   <TableCell>{learner?.company || "N/A"}</TableCell>
 
                   <TableCell>
-                    <Select
-                      value={learner.attendance_status || ""}
-                      onValueChange={(value) => updateStatus(learner.id, value)}
-                    >
-                      <SelectTrigger className="w-[160px]">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
+                    {session?.status !== "completed" ? (
+                      <Select
+                        value={learner.attendance_status || ""}
+                        onValueChange={(value) =>
+                          updateStatus(learner.id, value)
+                        }
+                      >
+                        <SelectTrigger className="w-[160px]">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
 
-                      <SelectContent>
-                        {statuses.map((status) => (
-                          <SelectItem key={status} value={status}>
-                            {status.replace("_", " ")}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                        <SelectContent>
+                          {statuses.map((status) => (
+                            <SelectItem key={status} value={status}>
+                              {status.replace("_", " ")}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Badge
+                        variant={
+                          learner.attendance_status === "present"
+                            ? "success"
+                            : "destructive"
+                        }
+                      >
+                        {learner.attendance_status}
+                      </Badge>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -291,14 +313,7 @@ export default function AttendancePage() {
             Save Draft
           </Button> */}
           {session?.status === "completed" ? (
-            <Button
-              variant="primary"
-              disabled={true}
-              className="gap-2 font-bold"
-            >
-              <UserCheck size={16} />
-              Attendance Finalized
-            </Button>
+            ""
           ) : (
             <Button
               variant="primary"
@@ -313,11 +328,16 @@ export default function AttendancePage() {
             <Button
               variant="outline"
               onClick={() => completeSession()}
-              disabled={savedAttendance !== learners.length}
+              disabled={
+                savedAttendance !== learners.length ||
+                session?.status === "completed"
+              }
               className="gap-2 font-bold"
             >
               <CheckCheck size={16} />
-              Complete Session
+              {session?.status === "completed"
+                ? "Session Completed"
+                : "Complete Session"}
             </Button>
             <TooltipContent>
               {savedAttendance !== learners.length && (

@@ -14,6 +14,10 @@ import {
   BookOpen,
   Info,
   User,
+  UserCheck,
+  Download,
+  ExternalLink,
+  Award,
 } from "lucide-react";
 import {
   Table,
@@ -46,6 +50,20 @@ import { formatInLocalTime } from "@/components/courses/CourseSchedule";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ContactLearner from "../../../(trainer)/_components/ContactLearner";
+import { Progress } from "@/components/ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface BookedSchedule {
   id: number;
@@ -56,12 +74,20 @@ interface BookedSchedule {
   status: string;
   created_at: string;
   updated_at: string;
+  progress: number;
+  company: string | null;
   course: {
     id: number;
     title: string;
     slug: string;
     course_type_id: number;
     icon: string;
+    certificate: {
+      certificate_number: string | null;
+      issue_date: string | null;
+      view_url: string | null;
+      download_url: string | null;
+    };
     course_type: {
       id: number;
       name: string;
@@ -85,8 +111,18 @@ interface BookedSchedule {
       id: number;
       schedule_id: number;
       date: string;
+      status?: string;
       start_time: string;
       end_time: string;
+      attendance_status: string | null;
+      attendances:
+        | {
+            id: number;
+            session_id: number;
+            student_id: number;
+            status: string;
+          }[]
+        | [];
     }[];
     trainer?: {
       id: number;
@@ -142,6 +178,9 @@ function BookedSessionsPage() {
     null,
   );
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isCertificateOpen, setIsCertificateOpen] = useState(false);
+  const [selectedCourseForCertificate, setSelectedCourseForCertificate] =
+    useState<BookedSchedule["course"] | null>(null);
   const [userTimeZone, setUserTimeZone] = useState("");
 
   useEffect(() => {
@@ -172,6 +211,52 @@ function BookedSessionsPage() {
     setSelectedBooking(booking);
     setIsSheetOpen(true);
   };
+
+  const handleCertificateDialog = (course: BookedSchedule["course"]) => {
+    setSelectedCourseForCertificate(course);
+    setIsCertificateOpen(true);
+  };
+
+  const getCombinedStatus = useCallback((sessions: { status?: string }[]) => {
+    if (!sessions || sessions.length === 0) return null;
+
+    const statuses = sessions.map((s) => s.status);
+    const allCompleted = statuses.every((s) => s === "completed");
+    const allScheduled = statuses.every((s) => s === "scheduled");
+    const anyInProgress = statuses.some(
+      (s) => s === "in_progress" || s === "inprogress",
+    );
+    const anyCompleted = statuses.some((s) => s === "completed");
+
+    if (allCompleted) {
+      return {
+        label: "COMPLETED",
+        className:
+          "bg-green-500/10 text-green-600 border-green-500/20 font-bold",
+      };
+    }
+
+    if (anyInProgress || (anyCompleted && !allCompleted)) {
+      return {
+        label: "ON GOING",
+        className: "bg-blue-500/10 text-blue-600 border-blue-500/20 font-bold",
+      };
+    }
+
+    if (allScheduled) {
+      return {
+        label: "SCHEDULED",
+        className:
+          "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold",
+      };
+    }
+
+    return {
+      label: "SCHEDULED",
+      className:
+        "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold",
+    };
+  }, []);
 
   const handleSort = (key: "course_title" | "schedule_title" | "status") => {
     let direction: "asc" | "desc" = "asc";
@@ -305,7 +390,9 @@ function BookedSessionsPage() {
               <Table>
                 <TableHeader className="bg-muted/30">
                   <TableRow className="hover:bg-transparent border-border/50">
-                    <TableHead className="text-nowrap">Booking ID</TableHead>
+                    <TableHead className="text-nowrap pe-0!">
+                      Booking ID
+                    </TableHead>
                     <TableHead className="w-[350px]">
                       <button
                         onClick={() => handleSort("course_title")}
@@ -374,7 +461,7 @@ function BookedSessionsPage() {
                                 className="object-cover"
                               />
                             </div>
-                            <div className="flex flex-col min-w-0">
+                            <div className="flex flex-col min-w-0 w-full">
                               <Link
                                 href={`/course/face-to-face/${booking.course.slug}`}
                                 target="_blank"
@@ -395,6 +482,21 @@ function BookedSessionsPage() {
                                     {booking.schedule.sessions.length} SESSIONS
                                   </span>
                                 )}
+                              </div>
+
+                              <div className="mt-2 space-y-1.5">
+                                <div className="flex justify-between items-center text-[10px] font-bold">
+                                  <span className="text-muted-foreground uppercase">
+                                    Progress
+                                  </span>
+                                  <span className="text-primary-blue">
+                                    {booking.progress || 0}%
+                                  </span>
+                                </div>
+                                <Progress
+                                  value={booking.progress || 0}
+                                  className="h-1.5"
+                                />
                               </div>
                             </div>
                           </div>
@@ -424,34 +526,97 @@ function BookedSessionsPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge
-                            className={
-                              booking.status === "paid"
-                                ? "bg-green-500/10 text-green-600 border-green-500/20 font-bold"
-                                : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
-                            }
-                            variant="outline"
-                          >
-                            {booking.status.toUpperCase()}
-                          </Badge>
+                          <div className="flex flex-wrap gap-2">
+                            <Badge
+                              className={
+                                booking.status === "paid"
+                                  ? "bg-green-500/10 text-green-600 border-green-500/20 font-bold"
+                                  : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
+                              }
+                              variant="outline"
+                            >
+                              {booking.status.toUpperCase()}
+                            </Badge>
+                            {(() => {
+                              const status = getCombinedStatus(
+                                booking.schedule.sessions,
+                              );
+                              if (!status) return null;
+                              return (
+                                <Badge
+                                  className={status.className}
+                                  variant="outline"
+                                >
+                                  {status.label}
+                                </Badge>
+                              );
+                            })()}
+                          </div>
                         </TableCell>
                         <TableCell className="text-right pr-6">
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            className="gap-2 text-[11px] font-bold h-9 px-4"
-                            onClick={() => handleViewDetails(booking)}
-                          >
-                            <Info className="size-3.5" />
-                            VIEW DETAILS
-                          </Button>
+                          <div className="flex flex-col gap-2 items-center justify-center">
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              className="gap-2 text-[11px] font-bold h-9 px-4"
+                              onClick={() => handleViewDetails(booking)}
+                            >
+                              <Info className="size-3.5" />
+                              VIEW DETAILS
+                            </Button>
+                            {(() => {
+                              const status = getCombinedStatus(
+                                booking.schedule.sessions,
+                              );
+                              if (!status) return null;
+                              if (
+                                status.label === "COMPLETED" &&
+                                booking.course.certificate
+                                  .certificate_number !== null
+                              ) {
+                                return (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-2 text-[11px] font-bold h-9 px-4"
+                                    onClick={() =>
+                                      handleCertificateDialog(booking.course)
+                                    }
+                                  >
+                                    <Info className="size-3.5" />
+                                    VIEW CERTIFICATE
+                                  </Button>
+                                );
+                              } else {
+                                return (
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Badge
+                                          className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
+                                          variant="outline"
+                                        >
+                                          NOT ISSUED/ELIGIBLE
+                                        </Badge>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p className="text-xs">
+                                          Not eligible for certificate
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                );
+                              }
+                            })()}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
                       <TableCell
-                        colSpan={4}
+                        colSpan={5}
                         className="h-64 text-center text-muted-foreground"
                       >
                         <div className="flex flex-col items-center gap-4">
@@ -546,13 +711,22 @@ function BookedSessionsPage() {
             </span>
           </SheetDescription>
 
-          <ScrollArea className="h-[calc(100vh-200px)] px-4">
+          <ScrollArea className="h-[calc(100vh-220px)] px-4">
             <div className="space-y-6">
               {/* Schedule Info */}
               <div className="bg-primary-blue/5 border border-primary-blue/10 rounded-xl p-4">
-                <h4 className="text-xs font-bold text-primary-blue uppercase tracking-widest mb-3">
-                  Schedule Overview
-                </h4>
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="text-xs font-bold text-primary-blue uppercase tracking-widest">
+                    Schedule Overview
+                  </h4>
+                  <span className="text-xs font-bold text-primary-blue">
+                    {selectedBooking?.progress || 0}% Complete
+                  </span>
+                </div>
+                <Progress
+                  value={selectedBooking?.progress || 0}
+                  className="h-2 mb-4 bg-primary-blue/10"
+                />
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="p-2 bg-white rounded-lg shadow-sm">
@@ -609,6 +783,37 @@ function BookedSessionsPage() {
                           )}{" "}
                           - {formatInLocalTime(session.date, session.end_time)}
                         </div>
+                        <Badge
+                          variant="outline"
+                          className={
+                            session.status === "completed"
+                              ? "bg-green-500/10 text-green-600 border-green-500/20 font-extrabold text-[10px] h-5 px-2"
+                              : session.status === "in_progress" ||
+                                  session.status === "inprogress"
+                                ? "bg-blue-500/10 text-blue-600 border-blue-500/20 font-extrabold text-[10px] h-5 px-2"
+                                : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-extrabold text-[10px] h-5 px-2"
+                          }
+                        >
+                          {session.status === "in_progress" ||
+                          session.status === "inprogress"
+                            ? "ON GOING"
+                            : (session.status || "scheduled").toUpperCase()}
+                        </Badge>
+                        {session.attendance_status && (
+                          <Badge
+                            variant="outline"
+                            className={
+                              session.attendance_status === "present"
+                                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-extrabold text-[10px] h-5 px-2 flex items-center gap-1"
+                                : session.attendance_status === "absent"
+                                  ? "bg-rose-500/10 text-rose-600 border-rose-500/20 font-extrabold text-[10px] h-5 px-2 flex items-center gap-1"
+                                  : "bg-slate-500/10 text-slate-600 border-slate-500/20 font-extrabold text-[10px] h-5 px-2 flex items-center gap-1"
+                            }
+                          >
+                            <UserCheck className="size-2.5" />
+                            {session.attendance_status.toUpperCase()}
+                          </Badge>
+                        )}
                       </div>
                       {userTimeZone && (
                         <span className="text-[9px] text-gray-400 px-1 font-medium bg-gray-100/30 rounded-sm pointer-events-none">
@@ -664,6 +869,84 @@ function BookedSessionsPage() {
           </ScrollArea>
         </SheetContent>
       </Sheet>
+
+      <Dialog open={isCertificateOpen} onOpenChange={setIsCertificateOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Award className="text-primary-blue size-5" />
+              Course Certificate
+            </DialogTitle>
+            <DialogDescription>
+              Details for your completed course:{" "}
+              <span className="font-bold text-foreground">
+                {selectedCourseForCertificate?.title}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                  Certificate Number
+                </p>
+                <p className="text-sm font-bold font-mono bg-muted/50 p-2 rounded border border-border/50 text-primary-blue">
+                  {selectedCourseForCertificate?.certificate
+                    .certificate_number || "N/A"}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                  Issue Date
+                </p>
+                <p className="text-sm font-bold bg-muted/50 p-2 rounded border border-border/50">
+                  {selectedCourseForCertificate?.certificate.issue_date
+                    ? format(
+                        parseISO(
+                          selectedCourseForCertificate.certificate.issue_date,
+                        ),
+                        "dd MMM yyyy",
+                      )
+                    : "N/A"}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {selectedCourseForCertificate?.certificate.view_url && (
+                <Button
+                  className="w-full gap-2 font-bold"
+                  variant="primary"
+                  asChild
+                >
+                  <a
+                    href={selectedCourseForCertificate.certificate.view_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="size-4" />
+                    VIEW ONLINE
+                  </a>
+                </Button>
+              )}
+              {selectedCourseForCertificate?.certificate.download_url && (
+                <Button className="w-full gap-2 font-bold" variant="outline" asChild>
+                  <a
+                    href={selectedCourseForCertificate.certificate.download_url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download className="size-4" />
+                    DOWNLOAD PDF
+                  </a>
+                </Button>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </ContentWrapper>
   );
 }
