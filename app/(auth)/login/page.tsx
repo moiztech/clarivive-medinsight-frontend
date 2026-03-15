@@ -28,13 +28,32 @@ export default function LoginPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await login(form.email, form.password);
+      const role = await login(form.email, form.password);
       toast.success("Login successful");
 
       // Get callbackUrl from query params
       const searchParams = new URLSearchParams(window.location.search);
-      const callbackUrl = searchParams.get("callbackUrl") || "/";
-      router.push(callbackUrl);
+      const callbackUrl = searchParams.get("callbackUrl") || null;
+      if (callbackUrl) {
+        router.push(callbackUrl);
+      } else {
+        switch (role) {
+          case "employee":
+            router.push("/dashboard/lms");
+            break;
+          case "learner":
+            router.push("/dashboard/lms");
+            break;
+          case "trainer":
+            router.push("/dashboard/trainer");
+            break;
+          case "company_admin":
+            router.push("/company");
+            break;
+          default:
+            router.push("/");
+        }
+      }
     } catch (error) {
       const err = error as {
         response?: { data?: { message?: string } };
