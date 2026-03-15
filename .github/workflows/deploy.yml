@@ -67,5 +67,5 @@ jobs:
           NEXT_TELEMETRY_DISABLED=1 npm run build
 
           # Restart
-          pm2 reload all || pm2 restart all
+          pm2 reload ecosystem.config.js
           EOF
