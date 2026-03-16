@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Bell, LogOut, Settings, User, Moon, Sun, Menu } from "lucide-react";
+import { Bell, LogOut, User, Moon, Sun, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { useSidebarToggle } from "@/components/dashboard/dashboard-layout-content";

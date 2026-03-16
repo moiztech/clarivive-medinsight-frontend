@@ -13,8 +13,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Youtube,
+} from "lucide-react";
+import { FaWhatsapp, FaPinterestP } from "react-icons/fa";
 import BreadCrumb from "@/components/BreadCrumb";
 import { serverApi } from "@/lib/axios";
 
@@ -94,9 +103,9 @@ export default function ContactPage() {
                 Learning Support & Assistance
               </h2>
               <p className="text-slate-600 mb-6">
-                If you need help with your medical courses or platform access,
-                please contact our support team. Our team is available to guide
-                you with course enrollment, technical issues, and learning
+                If you need help with your courses or platform access, please
+                contact our support team. Our team is available to guide you
+                with course enrollment, technical issues, and learning
                 assistance.
               </p>
 
@@ -137,7 +146,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800 mb-1">
-                      Student Support & Enrollment
+                      Course Enrollment Support
                     </h3>
                     <a
                       href="tel:+4407345052986"
@@ -152,25 +161,25 @@ export default function ContactPage() {
               {/* Opening Hours */}
               <div className="border-t pt-6">
                 <h3 className="text-xl font-bold text-slate-800 mb-4">
-                  Opening Hours
+                  Learner Assistance Hours
                 </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Mon - Fri</span>
+                    <span className="text-slate-600">Mon – Sun</span>
                     <span className="font-semibold text-slate-800">
-                      9:00 - 18:00
+                      24 / 7 Access
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Sat - Sun</span>
+                    <span className="text-slate-600">Student Support</span>
                     <span className="font-semibold text-slate-800">
-                      8:00 - 16:00
+                      9:00 – 18:00
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Emergency</span>
+                    <span className="text-slate-600">Technical Assistance</span>
                     <span className="font-semibold text-primary-blue">
-                      24/7 Hours
+                      24 / 7 Available
                     </span>
                   </div>
                 </div>
@@ -190,6 +199,15 @@ export default function ContactPage() {
                   </button>
                   <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
                     <FaWhatsapp className="w-4 h-4" />
+                  </button>
+                  <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
+                    <Instagram className="w-4 h-4" />
+                  </button>
+                  <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
+                    <Youtube className="w-4 h-4" />
+                  </button>
+                  <button className="w-10 h-10 rounded text-primary-blue bg-blue-50 cursor-pointer hover:border-primary-blue/80 hover:text-white hover:bg-primary-blue flex items-center justify-center transition-colors">
+                    <FaPinterestP className="w-4 h-4" />
                   </button>
                 </div>
               </div>

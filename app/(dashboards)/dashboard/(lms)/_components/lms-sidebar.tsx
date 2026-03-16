@@ -37,8 +37,8 @@ export function LmsSidebar({ navItems }: LmsSidebarProps) {
               className="object-contain h-13 w-auto"
             />
           ) : (
-            <div className="flex items-center gap-2 p-1 rounded-lg hover:bg-primary-blue/10 cursor-pointer">
-              <Avatar className="h-9 w-9">
+            <div className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-primary-blue/10 cursor-pointer">
+              <Avatar className="h-10 w-10">
                 <AvatarImage src={user?.company?.logo} />
                 <AvatarFallback>
                   {user?.company?.name?.slice(0, 2).toUpperCase()}
@@ -46,9 +46,9 @@ export function LmsSidebar({ navItems }: LmsSidebarProps) {
               </Avatar>
               <p className="text-sm max-w-36 font-semibold text-sidebar-foreground truncate">
                 {user?.company?.name ?? "Company"} <br />
-                <span className="text-xs font-semibold text-muted-foreground">
+                {/* <span className="text-xs font-semibold text-muted-foreground">
                   {user?.company?.email}
-                </span>
+                </span> */}
               </p>
             </div>
           )}

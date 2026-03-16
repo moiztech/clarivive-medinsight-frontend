@@ -5,14 +5,7 @@ import { Conversation } from "./ChatSidebar";
 import Link from "next/link";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { Badge } from "../ui/badge";
-import {
-  CheckCircle,
-  CheckCircle2Icon,
-  CheckIcon,
-  Circle,
-  CircleAlertIcon,
-  CircleDot,
-} from "lucide-react";
+import { CheckIcon, Circle } from "lucide-react";
 
 interface Props {
   conversation: Conversation;
@@ -85,6 +78,16 @@ export function ConversationItem({ conversation, isActive }: Props) {
         {conversation.user?.role === "super_admin" && (
           <Badge variant={"destructive"} className="text-[10px]">
             admin
+          </Badge>
+        )}
+        {conversation.user?.role === "trainer" && (
+          <Badge variant={"primary"} className="text-[10px]">
+            trainer
+          </Badge>
+        )}
+        {conversation.user?.role === "company_admin" && (
+          <Badge variant={"primary"} className="text-[10px]">
+            company admin
           </Badge>
         )}
       </Button>

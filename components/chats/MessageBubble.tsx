@@ -28,7 +28,7 @@ function MessageBubble({ message }: MessageBubbleProps) {
 
       {/* Bubble + Meta */}
       <div
-        className={cn("flex flex-col gap-1 max-w-[70%]", is_me && "items-end")}
+        className={cn("flex flex-col gap-1 max-w-[60%]", is_me && "items-end")}
       >
         {/* Sender name + time */}
         <div

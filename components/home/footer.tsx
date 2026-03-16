@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
+import { FaPinterestP } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -78,7 +79,7 @@ export function Footer() {
                 size="icon"
                 className="bg-blue-600 hover:bg-blue-700 w-9 h-9"
               >
-                <span className="text-sm font-bold">G+</span>
+                <FaPinterestP className="w-4 h-4" />
               </Button>
               <Button
                 size="icon"
@@ -91,6 +92,12 @@ export function Footer() {
                 className="bg-blue-600 hover:bg-blue-700 w-9 h-9"
               >
                 <Linkedin className="w-4 h-4" />
+              </Button>
+              <Button
+                size="icon"
+                className="bg-blue-600 hover:bg-blue-700 w-9 h-9"
+              >
+                <Youtube className="w-4 h-4" />
               </Button>
             </div>
           </div>

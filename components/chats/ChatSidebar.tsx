@@ -242,7 +242,8 @@ export default function ChatSidebar() {
                 )
               }
               disabled={creatingChat}
-              className="w-full gap-2 rounded-full bg-primary-blue hover:bg-primary-blue/90"
+              variant={"primary"}
+              className="rounded-full w-full"
             >
               <div className="hidden lg:flex items-center gap-2">
                 {creatingChat ? (
@@ -252,7 +253,7 @@ export default function ChatSidebar() {
                 )}
                 {user?.role.name === "employee"
                   ? `Contact ${user.company?.name || "Company Admin"}`
-                  : "Contact Admin"}
+                  : "Contact Clarivive Support"}
               </div>
               <div className="lg:hidden">
                 {creatingChat ? (

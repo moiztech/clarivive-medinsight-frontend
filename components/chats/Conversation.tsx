@@ -10,7 +10,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Send, Loader2, Trash2, X } from "lucide-react";
+import { Send, Loader2, X } from "lucide-react";
 import protectedApi from "@/lib/axios/protected";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -32,7 +32,7 @@ function Conversation({
 }: ConversationProps) {
   const [messageInput, setMessageInput] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  // const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
   let linkPrefix;
@@ -43,22 +43,22 @@ function Conversation({
   } else {
     linkPrefix = "dashboard/lms";
   }
-  const handleConversationDelete = async () => {
-    if (!confirm("Are you sure you want to delete this conversation?")) return;
+  // const handleConversationDelete = async () => {
+  //   if (!confirm("Are you sure you want to delete this conversation?")) return;
 
-    setIsDeleting(true);
-    try {
-      await protectedApi.delete(`/delete/conversation/${conversationId}`);
-      toast.success("Conversation deleted successfully");
-      window.dispatchEvent(new CustomEvent("sidebar-refresh"));
-      router.push(`/${linkPrefix}/chats`);
-    } catch (error) {
-      console.error("Failed to delete conversation:", error);
-      toast.error("Failed to delete conversation");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+  //   setIsDeleting(true);
+  //   try {
+  //     await protectedApi.delete(`/delete/conversation/${conversationId}`);
+  //     toast.success("Conversation deleted successfully");
+  //     window.dispatchEvent(new CustomEvent("sidebar-refresh"));
+  //     router.push(`/${linkPrefix}/chats`);
+  //   } catch (error) {
+  //     console.error("Failed to delete conversation:", error);
+  //     toast.error("Failed to delete conversation");
+  //   } finally {
+  //     setIsDeleting(false);
+  //   }
+  // };
 
   const handleSendMessage = async () => {
     if (!messageInput.trim() || isSending) return;
@@ -110,9 +110,13 @@ function Conversation({
       {/* Header */}
       <div className="p-4 border-b border-border flex items-center bg-card/25 justify-between shadow-sm backdrop-blur-lg sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <p className="font-semibold text-sm">Conversation</p>
+          <p className="font-semibold text-sm">
+            {/* where is_me false, get that first record and display sender's name */}
+            {messages.find((message) => !message.is_me)?.sender?.name ||
+              "Conversation"}
+          </p>
         </div>
-        <Button
+        {/* <Button
           variant="ghost"
           size="icon"
           className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
@@ -124,7 +128,7 @@ function Conversation({
           ) : (
             <Trash2 className="size-4" />
           )}
-        </Button>
+        </Button> */}
       </div>
 
       <ContextMenu>
@@ -151,12 +155,12 @@ function Conversation({
           <ContextMenuItem onClick={handleCloseChat}>
             <X className="size-4" /> Close Chat
           </ContextMenuItem>
-          <ContextMenuItem
+          {/* <ContextMenuItem
             variant="destructive"
             onClick={handleConversationDelete}
           >
             <Trash2 className="size-4" /> Delete Conversation
-          </ContextMenuItem>
+          </ContextMenuItem> */}
         </ContextMenuContent>
       </ContextMenu>
 

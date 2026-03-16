@@ -3,24 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const BranchesGridCard = ({
-  branch,
-  index,
-}: {
-  branch: Branch;
-  index: number;
-}) => {
+const BranchesGridCard = ({ branch }: { branch: Branch }) => {
   return (
-    <div
-      key={index}
-      className="bg-white relative cursor-pointer px-2 lg:px-4 py-4 lg:py-6 flex flex-col items-center text-center space-y-6 transition-all duration-300 hover:z-10 hover:shadow-2xl hover:bg-slate-50 group"
-    >
+    <div className="bg-white relative cursor-pointer flex flex-col items-center text-center space-y-6 border border-slate-100 rounded-2xl shadow-sm transition-all duration-300 hover:z-10 hover:shadow-2xl hover:bg-slate-50 group w-full md:w-[calc(50%-1rem)] lg:w-[calc(50%-2rem)]">
       <Link href={`/branches/${branch.slug}`}>
-        <div className="w-full h-48 lg:w-full lg:h-85 overflow-hidden rounded-2xl flex items-center justify-center shadow-inner">
+        <div className="w-full h-48 lg:w-full lg:h-70 overflow-hidden rounded-t-2xl flex items-center justify-center shadow-inner">
           <Image
             src={branch.icon ? branch.icon : "/placeholder.jpg"}
             alt={branch.title}
-            width={100}
+            width={300}
             height={100}
             className="w-full h-full object-cover hover:scale-110 duration-300"
           />
@@ -36,7 +27,7 @@ const BranchesGridCard = ({
       </div>
       <Link
         href={`/branches/${branch.slug}`}
-        className="text-secondary py-2 font-bold text-sm tracking-widest uppercase flex items-center gap-2 group/btn"
+        className="text-secondary pt-2 pb-6 font-bold text-sm tracking-widest uppercase flex items-center gap-2 group/btn"
       >
         READ MORE{" "}
         <span className="transition-transform group-hover/btn:translate-x-1">
