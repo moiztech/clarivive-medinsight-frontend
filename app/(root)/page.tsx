@@ -45,6 +45,10 @@ export default function HomePage() {
         <LaboratoryAdvantages imageSrc="/book-icon-svg-01.svg" />
       </AnimateOnScroll>
 
+      <AnimateOnScroll>
+        <BusinessOutcomesSection />
+      </AnimateOnScroll>
+
       <DoctorsSection />
 
       <LogoBar />
