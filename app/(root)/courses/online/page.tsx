@@ -73,6 +73,7 @@ async function page() {
     <div className="min-h-screen bg-white">
       <BreadCrumb
         paths={[{ label: "Online Courses", href: "/courses/online" }]}
+        coverImg="/course/online-course-banner.jpg"
         title="Online Courses"
       />
       <AboutHero {...courseHeroContent} />

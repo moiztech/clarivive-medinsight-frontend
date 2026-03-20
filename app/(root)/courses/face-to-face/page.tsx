@@ -77,6 +77,7 @@ async function page() {
         paths={[
           { label: "Face to Face Courses", href: "/courses/face-to-face" },
         ]}
+        coverImg="/course/face-to-face-banner.png"
         title="Face to Face Courses"
       />
       <AboutHero {...courseHeroContent} />
