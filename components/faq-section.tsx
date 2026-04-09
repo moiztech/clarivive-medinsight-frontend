@@ -9,7 +9,7 @@ import { FaCertificate } from "react-icons/fa";
 
 const faqs = [
   {
-    question: "Who ?",
+    question: "Who can access training with Clarivive MedInsight?",
     answer:
       "Our training is available to individual learners and organizations operating within health and social care, including care homes, domiciliary care services, healthcare agencies, independent providers, and related services. Training is designed to support learning and role awareness within employer governance structures.",
   },
