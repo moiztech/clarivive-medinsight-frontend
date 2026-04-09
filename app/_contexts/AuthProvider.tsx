@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { clientApi, serverApi } from "@/lib/axios";
+import { clientApi } from "@/lib/axios";
 import { tokenStore } from "@/lib/auth/tokenStore";
 
 import { UserType } from "@/lib/types";
@@ -26,25 +26,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   async function login(email: string, password: string) {
-    const res = await serverApi.post("/auth/login", {
+    const res = await clientApi.post("/auth/login", {
       email,
       password,
     });
 
-    if (!res.data?.token) {
+    if (!res.data?.access_token) {
       throw new Error(res.data?.message || "Login failed");
     }
 
-    tokenStore.set(res.data.token);
-    setUser(res.data.data ?? null);
-    return res.data.data.role.name;
+    tokenStore.set(res.data.access_token);
+    setUser(res.data.user ?? null);
+    return res.data.user?.role?.name;
     // userStore.set(res.data.data ?? null);
   }
 
   async function signup(name: string, email: string, password: string) {
     const res = await clientApi.post("/auth/signup", { name, email, password });
 
-    if (res.data?.token) tokenStore.set(res.data.token);
+    if (res.data?.access_token) tokenStore.set(res.data.access_token);
     // setUser(res.data.user ?? null);
     // userStore.set(res.data.user ?? null);
   }
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         const res = await protectedApi.get("/verify-token");
         if (res.status != 401) {
-          setUser(res.data.data ?? null);
+          setUser(res.data?.user ?? res.data?.data ?? null);
           // userStore.set(res.data.data ?? null);
         }
         return;

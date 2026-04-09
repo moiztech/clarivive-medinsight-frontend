@@ -101,29 +101,12 @@ export function FaqSection() {
                 className="object-cover"
               />
             </div>
-            <div className="bg-primary-blue rounded-2xl py-6 px-10 flex items-center gap-6 border border-primary-blue/10">
-              <div className="p-1 rounded-full text-white shadow-lg">
-                <Image
-                  src={"/tabs/CERTIFICATE-ICON-LOGO.png"}
-                  alt="Certificate Icon Logo"
-                  width={60}
-                  height={60}
-                />
-              </div>
-              <div>
-                <p className="text-white font-medium">
-                  Our trainer certified by :
-                </p>
-                <Image
-                  src="/tabs/council-uk.png"
-                  alt="Resuscitation Council UK"
-                  objectFit="cover"
-                  objectPosition="center"
-                  width={170}
-                  height={32}
-                  className="pt-1 "
-                />
-              </div>
+            <div className="bg-[#E7E8FD] rounded-2xl py-10 px-8 border border-[#d7dafd] min-h-46 flex items-center justify-center text-center">
+              <p className="text-[#1b1c44] text-2xl md:text-3xl font-semibold leading-snug max-w-2xl">
+                &ldquo; Building confident professionals
+                <br />
+                in healthcare &rdquo;
+              </p>
             </div>
           </div>
 

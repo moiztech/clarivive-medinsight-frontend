@@ -131,7 +131,10 @@ export default function MedicalServices() {
   }, [itemsPerSlide, isPaused, services.length]);
   const shouldCenter = services.length < itemsPerSlide;
   return (
-    <section className="py-20 bg-blue-600 relative overflow-hidden px-8 lg:px-20 2xl:px-25">
+    <section
+      id="our-courses"
+      className="py-20 bg-blue-600 relative overflow-hidden px-8 lg:px-20 2xl:px-25"
+    >
       <div
         ref={containerRef}
         onPointerDown={handlePointerDown}

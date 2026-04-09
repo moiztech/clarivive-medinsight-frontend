@@ -7,8 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { clientApi } from "@/lib/axios";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export function RefundRequestForm() {
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     requestType: "",
     fullName: "",
@@ -27,16 +31,69 @@ export function RefundRequestForm() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.acceptedPolicy) {
-      alert("You must accept the policy before submitting.");
+    if (
+      !form.requestType ||
+      !form.fullName.trim() ||
+      !form.email.trim() ||
+      !form.courseName.trim() ||
+      !form.trainingType ||
+      !form.reason.trim()
+    ) {
+      toast.error("Please fill all required fields.");
       return;
     }
 
-    // API submission goes here
-    console.log("Refund request submitted:", form);
+    if (!form.acceptedPolicy) {
+      toast.error("You must accept the policy before submitting.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const payload = {
+        requestType: form.requestType,
+        fullName: form.fullName.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        organisation: form.organisation.trim(),
+        courseName: form.courseName.trim(),
+        trainingType: form.trainingType,
+        trainingDate: form.trainingDate || null,
+        bookingRef: form.bookingRef.trim(),
+        reason: form.reason.trim(),
+      };
+
+      const res = await clientApi.post("/refund-request", payload);
+
+      if (res?.data?.status) {
+        toast.success(res?.data?.message || "Request submitted successfully.");
+        setForm({
+          requestType: "",
+          fullName: "",
+          email: "",
+          phone: "",
+          organisation: "",
+          courseName: "",
+          trainingType: "",
+          trainingDate: "",
+          bookingRef: "",
+          reason: "",
+          acceptedPolicy: false,
+        });
+      } else {
+        toast.error(res?.data?.message || "Unable to submit request.");
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        "Unable to submit request. Please try again.";
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -53,7 +110,11 @@ export function RefundRequestForm() {
       {/* Request Type */}
       <div className="space-y-3">
         <Label>Request Type</Label>
-        <RadioGroup className="ps-4" onValueChange={(v) => updateField("requestType", v)}>
+        <RadioGroup
+          className="ps-4"
+          value={form.requestType}
+          onValueChange={(v) => updateField("requestType", v)}
+        >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="cancellation" id="cancel" />
             <Label htmlFor="cancel">Cancellation</Label>
@@ -73,22 +134,39 @@ export function RefundRequestForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           {/* <Label>Full Name</Label> */}
-          <Input placeholder="Full Name" onChange={(e) => updateField("fullName", e.target.value)} />
+          <Input
+            placeholder="Full Name"
+            value={form.fullName}
+            onChange={(e) => updateField("fullName", e.target.value)}
+          />
         </div>
 
         <div>
           {/* <Label>Email Address</Label> */}
-          <Input type="email" placeholder="Email Address" onChange={(e) => updateField("email", e.target.value)} />
+          <Input
+            type="email"
+            placeholder="Email Address"
+            value={form.email}
+            onChange={(e) => updateField("email", e.target.value)}
+          />
         </div>
 
         <div>
           {/* <Label>Contact Number</Label> */}
-          <Input placeholder="Contact Number" onChange={(e) => updateField("phone", e.target.value)} />
+          <Input
+            placeholder="Contact Number"
+            value={form.phone}
+            onChange={(e) => updateField("phone", e.target.value)}
+          />
         </div>
 
         <div>
           {/* <Label>Organisation Name (optional)</Label> */}
-          <Input placeholder="Organisation Name (optional)" onChange={(e) => updateField("organisation", e.target.value)} />
+          <Input
+            placeholder="Organisation Name (optional)"
+            value={form.organisation}
+            onChange={(e) => updateField("organisation", e.target.value)}
+          />
         </div>
       </div>
 
@@ -96,12 +174,20 @@ export function RefundRequestForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           {/* <Label>Course Name</Label> */}
-          <Input placeholder="Course Name" onChange={(e) => updateField("courseName", e.target.value)} />
+          <Input
+            placeholder="Course Name"
+            value={form.courseName}
+            onChange={(e) => updateField("courseName", e.target.value)}
+          />
         </div>
 
         <div className="space-x-3 flex">
           <Label>Training Type</Label>
-          <RadioGroup className="ps-4 flex" onValueChange={(v) => updateField("trainingType", v)}>
+          <RadioGroup
+            className="ps-4 flex"
+            value={form.trainingType}
+            onValueChange={(v) => updateField("trainingType", v)}
+          >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="face-to-face" id="ftf" />
               <Label htmlFor="ftf">Face-to-Face</Label>
@@ -115,31 +201,60 @@ export function RefundRequestForm() {
 
         <div>
           {/* <Label>Scheduled Training Date</Label> */}
-          <Input placeholder="Scheduled Training Date" type="date" onChange={(e) => updateField("trainingDate", e.target.value)} />
+          <Input
+            placeholder="Scheduled Training Date"
+            type="date"
+            value={form.trainingDate}
+            onChange={(e) => updateField("trainingDate", e.target.value)}
+          />
         </div>
 
         <div>
           {/* <Label>Booking Reference / Invoice Number</Label> */}
-          <Input placeholder="Booking Reference / Invoice Number" onChange={(e) => updateField("bookingRef", e.target.value)} />
+          <Input
+            placeholder="Booking Reference / Invoice Number"
+            value={form.bookingRef}
+            onChange={(e) => updateField("bookingRef", e.target.value)}
+          />
         </div>
       </div>
 
       {/* Reason */}
       <div>
         {/* <Label>Reason for Request</Label> */}
-        <Textarea placeholder="Reason for Request" rows={4} onChange={(e) => updateField("reason", e.target.value)} />
+        <Textarea
+          placeholder="Reason for Request"
+          rows={4}
+          value={form.reason}
+          onChange={(e) => updateField("reason", e.target.value)}
+        />
       </div>
 
       {/* Declaration */}
       <div className="flex items-start space-x-3">
-        <Checkbox onCheckedChange={(v) => updateField("acceptedPolicy", v)} />
+        <Checkbox
+          checked={form.acceptedPolicy}
+          onCheckedChange={(v) => updateField("acceptedPolicy", Boolean(v))}
+        />
         <p className="text-sm">
           I confirm that I have read and understood the Cancellation, Rescheduling & Refund Policy and acknowledge that approval is subject to the terms outlined within it.
         </p>
       </div>
 
-      <Button type="submit" variant={'primary'} className="w-full md:w-auto">
-        Submit Request
+      <Button
+        type="submit"
+        variant={"primary"}
+        className="w-full md:w-auto"
+        disabled={submitting}
+      >
+        {submitting ? (
+          <span className="inline-flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Submitting...
+          </span>
+        ) : (
+          "Submit Request"
+        )}
       </Button>
     </form>
   );

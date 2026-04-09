@@ -4,12 +4,51 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/app/_contexts/AuthProvider";
+import { clientApi } from "@/lib/axios";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export default function SignupCTASection() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const { user } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!firstName.trim() || !lastName.trim() || !email.trim()) {
+      toast.error("Please fill in first name, surname, and email.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await clientApi.post("/cta-signup", {
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        email: email.trim(),
+      });
+
+      if (res?.data?.status) {
+        toast.success("Thanks! We received your details.");
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+      } else {
+        toast.error(res?.data?.message || "Something went wrong.");
+      }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        "Unable to submit right now. Please try again.";
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   if (user) return null;
   return (
     <section className="py-20 px-8 bg-gradient-to-br from-blue-50 to-purple-50 relative overflow-hidden">
@@ -31,7 +70,7 @@ export default function SignupCTASection() {
 
         {/* Signup Form */}
         <div className="bg-white rounded-3xl border-4 border-blue-600 p-6 md:p-8 lg:p-12 shadow-xl">
-          <form method="POST">
+          <form method="POST" onSubmit={handleSubmit}>
             <div className="flex flex-col lg:flex-row gap-4 items-center">
               {/* Name Input */}
               <div className="flex-1">
@@ -81,8 +120,16 @@ export default function SignupCTASection() {
                   variant={"primary"}
                   className="text-white font-bold text-lg h-14 px-12 rounded-lg whitespace-nowrap"
                   type="submit"
+                  disabled={submitting}
                 >
-                  Get started
+                  {submitting ? (
+                    <span className="inline-flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Submitting...
+                    </span>
+                  ) : (
+                    "Get started"
+                  )}
                 </Button>
                 <p className="text-sm text-gray-500 italic">
                   *No credit card required

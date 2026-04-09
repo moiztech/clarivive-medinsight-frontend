@@ -13,7 +13,7 @@ const protectedApi = axios.create({
 
 protectedApi.interceptors.request.use(
   (config) => {
-    const token = getCookie("access_token");
+    const token = getCookie("access_token") || tokenStore.get();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,7 +28,14 @@ protectedApi.interceptors.response.use(
     if (error.response?.status === 401) {
       tokenStore.clear();
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        const requestUrl = String(error.config?.url || "");
+        const isBootstrapCheck = requestUrl.includes("/verify-token");
+        const isAuthPage = window.location.pathname.startsWith("/login");
+        if (!isAuthPage && !isBootstrapCheck) {
+          const callbackUrl =
+            window.location.pathname + window.location.search;
+          window.location.href = `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+        }
       }
     }
     return Promise.reject(error);

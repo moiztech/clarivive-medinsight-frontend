@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog"; // assuming shadcn/ui installed
 import { Play } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import mainBanner from "@/public/images/main-hero-banner.png";
 import { useState } from "react";
 
@@ -42,12 +43,14 @@ export default function HeroSection() {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-2">
-              <Button
-                size="xl"
-                className="bg-[#1321F1] hover:bg-[#1321F1]/90 text-secondary-foreground px-10"
-              >
-                Get Started
-              </Button>
+              <Link href="#our-courses">
+                <Button
+                  size="xl"
+                  className="bg-[#1321F1] hover:bg-[#1321F1]/90 text-secondary-foreground px-10"
+                >
+                  Get Started
+                </Button>
+              </Link>
               <VideoButton />
             </div>
           </div>

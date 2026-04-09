@@ -3,7 +3,23 @@ import { cookies } from "next/headers";
 import { serverApi } from "@/lib/axios";
 
 export async function POST(req: Request) {
-  const body = await req.json(); // { email, password, remember? }
+  let body: { email?: string; password?: string; remember?: boolean } = {};
+  try {
+    const raw = await req.text();
+    body = raw ? JSON.parse(raw) : {};
+  } catch {
+    return NextResponse.json(
+      { status: false, message: "Invalid JSON body" },
+      { status: 400 },
+    );
+  }
+
+  if (!body.email || !body.password) {
+    return NextResponse.json(
+      { status: false, message: "Email and password are required" },
+      { status: 400 },
+    );
+  }
 
   const form = new URLSearchParams();
   form.set("email", body.email);
@@ -16,6 +32,18 @@ export async function POST(req: Request) {
   // Backend shape: { status, message, data: { access_token, refresh_token, id, name, email, role, ... } }
   const payload = backendRes.data;
   const data = payload?.data;
+
+  const accessToken = data?.access_token;
+  if (accessToken) {
+    (await cookies()).set("access_token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      // Keep parity with refresh token persistence behavior.
+      // maxAge: body.remember ? 60 * 60 * 24 * 30 : undefined,
+    });
+  }
 
   const refreshToken = data?.refresh_token;
   if (refreshToken) {
@@ -41,7 +69,7 @@ export async function POST(req: Request) {
   return NextResponse.json({
     status: payload?.status ?? true,
     message: payload?.message ?? "Login successful",
-    access_token: data?.access_token ?? null,
+    access_token: accessToken ?? null,
     token_type: data?.token_type ?? "Bearer",
     user,
   });

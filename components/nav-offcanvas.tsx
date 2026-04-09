@@ -24,14 +24,16 @@ export default function NavOffcanvas() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <span className="ml-1 cursor-pointer bg-white p-1.5 hover:shadow-2xl group-hover:rotate-180 before:absolute relative group-hover:text-white before:inset-0 overflow-hidden before:duration-200 before:z-1 before:-translate-x-full before:bg-[#131db3] group-hover:before:translate-x-0 rounded-sm text-secondary">
-          <Diamond className="size-5 relative z-2" />
+        <span className="inline-flex h-11 cursor-pointer items-center justify-center rounded-md bg-[#1321F1] px-3 text-white transition-colors hover:bg-[#1321F1]/80">
+          <span className="rounded-sm bg-white p-1.5 text-[#0B6B75]">
+            <Diamond className="size-5" />
+          </span>
         </span>
       </SheetTrigger>
 
       <SheetContent
         side="right"
-        className="bg-gradient-to-b from-[#08152f] to-[#050d23] px-10 py-15 text-white border-none w-[360px]"
+        className="bg-gradient-to-b from-[#08152f] to-[#050d23] px-10 py-8 text-white border-none w-[360px]"
       >
         <SheetHeader>
           <VisuallyHidden>
@@ -41,14 +43,15 @@ export default function NavOffcanvas() {
         {/* Close button is auto handled by Sheet */}
 
         {/* Brand */}
-        <div className="mt-4">
-          <Image
-            src={"/Clarivive medinsight logo-01.png"}
-            alt="Clarivive Medinsight Logo"
-            className="object-cover object-center"
-            width={210}
-            height={50}
-          />
+        <div>
+          <div className="relative h-20 w-[300px] overflow-hidden">
+            <Image
+              src={"/logo/brand-logo-white.png"}
+              alt="Clarivive Medinsight Logo"
+              fill
+              className="object-contain object-[left_54%] scale-[3.15] origin-left"
+            />
+          </div>
           {/* <div className="w-12 h-12 rounded-xl bg-cyan-500 flex items-center justify-center font-bold text-xl">
             M
           </div>
@@ -57,9 +60,11 @@ export default function NavOffcanvas() {
 
         {/* Description */}
         <p className="text-gray-300 mt-3 leading-relaxed text-sm">
-          Clarivive Medinsight is a clean, modern, and fully responsive website
-          solution designed specifically for medical, healthcare, and clinical
-          services.
+          &ldquo;Our vision is to provide organizations of all sizes with
+          accessible,
+          practical, and easy-to-understand health, safety, and care training,
+          helping your team stay skilled, confident, and compliant in everyday
+          practice.&rdquo;
         </p>
 
         {/* Contact Info */}

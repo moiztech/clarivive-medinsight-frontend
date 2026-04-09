@@ -10,15 +10,14 @@ const protectedRoutes = [
   "/orders/:path*",
 ];
 
-// List of routes that should NOT be accessible if already logged in
-const authRoutes = ["/login", "/signup"];
-
 /**
  * Next.js 16 Proxy
  * Replaces middleware.ts for lightweight routing and protection
  */
 export function proxy(request: NextRequest) {
-  const token = request.cookies.get("access_token")?.value;
+  const token =
+    request.cookies.get("access_token")?.value ||
+    request.cookies.get("refresh_token")?.value;
   // const companyToken = request.cookies.get("company_token")?.value;
   const { pathname, search } = request.nextUrl;
 
@@ -36,13 +35,6 @@ export function proxy(request: NextRequest) {
         loginUrl.searchParams.set("callbackUrl", pathname + search);
         return NextResponse.redirect(loginUrl);
       }
-    }
-  }
-
-  // 2. If user is already logged in and tries to access login/signup
-  if (authRoutes.some((route) => pathname.startsWith(route))) {
-    if (token) {
-      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 

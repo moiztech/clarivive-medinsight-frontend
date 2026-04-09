@@ -22,6 +22,7 @@ import { LogoBar } from "@/components/logo-bar";
 import { TestimonialSection } from "@/components/testimonial-section";
 import { StatsBar } from "@/components/stats-bar";
 import { FaqSection } from "@/components/faq-section";
+import AwardsRecognitionSlider from "@/components/home/awards-recognition-slider";
 
 export default function HomePage() {
   return (
@@ -30,10 +31,10 @@ export default function HomePage() {
         <HeroSection />
       </AnimateOnScroll>
       <section className="max-w-full px-8 lg:px-10 mx-auto font-bold text-2xl xl:text-4xl text-center py-20 xl:py-25 lg:max-w-6xl">
-        Our vision is to provide organizations of all sizes with accessible,
+        "Our vision is to provide organizations of all sizes with accessible,
         practical, and easy-to-understand health, safety, and care training,
         helping your team stay skilled, confident, and compliant in everyday
-        practice.
+        practice."
       </section>
       <AnimateOnScroll>
         {/* <AboutSection /> */}
@@ -61,6 +62,10 @@ export default function HomePage() {
 
       <AnimateOnScroll>
         <FaqSection />
+      </AnimateOnScroll>
+
+      <AnimateOnScroll>
+        <AwardsRecognitionSlider />
       </AnimateOnScroll>
 
       <AnimateOnScroll>

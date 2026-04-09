@@ -105,7 +105,7 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/organization",
+          href: "/organizations",
         },
       ],
       image: "/tabs/FOR-ORGANIZATION.png",
@@ -125,7 +125,7 @@ export default function BusinessOutcomesSection() {
       ctas: [
         {
           label: "Learn more",
-          href: "/organization",
+          href: "/organizations",
         },
       ],
       image: "/tabs/health-care-providers.png",
