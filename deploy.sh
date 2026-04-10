@@ -7,7 +7,7 @@ echo "Pulling latest code..."
 git pull origin main
 
 echo "Installing dependencies..."
-npm install --legacy-peer-deps
+npm_config_legacy_peer_deps=true npm install --legacy-peer-deps
 
 echo "Building frontend..."
 npm run build
