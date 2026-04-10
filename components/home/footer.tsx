@@ -114,7 +114,8 @@ export function Footer() {
                 { label: "Contact Us", link: "/contact-us" },
                 { label: "Training Resources", link: "/training-resources" },
                 { label: "Accreditations", link: "/accreditations" },
-                { label: "Complaint Procedure", link: "complaints" },
+                { label: "Blogs", link: "/blogs" },
+                { label: "Complaint Procedure", link: "/complaints" },
               ].map((item, index) => (
                 <li key={index}>
                   <Link

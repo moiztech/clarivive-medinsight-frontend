@@ -56,6 +56,7 @@ const navigationItems: NavItem[] = [
   },
 
   { label: "ABOUT US", href: "/about-us" },
+  { label: "BLOGS", href: "/blogs" },
   { label: "CONTACT US", href: "/contact-us" },
   {
     label: "ORGANIZATIONS",
