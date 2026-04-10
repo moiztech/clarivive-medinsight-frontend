@@ -279,14 +279,23 @@ export default function ContactPage() {
                       required
                     >
                       <SelectTrigger className="h-12! w-full!">
-                        <SelectValue placeholder="Select Department" />
+                        <SelectValue placeholder="Select Organization" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="cardiology">Cardiology</SelectItem>
-                        <SelectItem value="dentist">Dentist</SelectItem>
-                        <SelectItem value="eye-care">Eye Care</SelectItem>
-                        <SelectItem value="pregnancy">Pregnancy</SelectItem>
-                        <SelectItem value="orthopedics">Orthopedics</SelectItem>
+                        <SelectItem value="care-home">Care Home</SelectItem>
+                        <SelectItem value="domiciliary-care-agency">
+                          Domiciliary Care Agency
+                        </SelectItem>
+                        <SelectItem value="healthcare-provider">
+                          Healthcare Provider
+                        </SelectItem>
+                        <SelectItem value="supported-living">
+                          Supported Living
+                        </SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="no-organization">
+                          No Organization
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -302,7 +311,7 @@ export default function ContactPage() {
                       required
                     >
                       <SelectTrigger className="h-12! w-full!">
-                        <SelectValue placeholder="Select Doctor" />
+                        <SelectValue placeholder="Job Title / Role" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="dr-smith">Dr. John Smith</SelectItem>
