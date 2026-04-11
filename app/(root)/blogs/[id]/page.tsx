@@ -1,31 +1,39 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { mockBlogs } from "@/data/blogData";
 import DOMPurify from "dompurify";
 
 export default function BlogDetailPage() {
   const params = useParams();
   const blogId = params.id as string;
+  const [currentPage, setCurrentPage] = useState(0);
 
   const blog = mockBlogs.find((b) => b.id === blogId);
 
-  const relatedBlogs = useMemo(() => {
+  // Get all other published blogs (not just related by category)
+  const otherBlogs = useMemo(() => {
     if (!blog) return [];
-    return mockBlogs
-      .filter(
-        (b) =>
-          b.id !== blog.id &&
-          b.status === "published" &&
-          (b.category === blog.category ||
-            b.tags.some((tag) => blog.tags.includes(tag)))
-      )
-      .slice(0, 2);
+    return mockBlogs.filter(
+      (b) => b.id !== blog.id && b.status === "published"
+    );
   }, [blog]);
+
+  // Paginate: show 2 cards per page
+  const CARDS_PER_PAGE = 2;
+  const totalPages = Math.ceil(otherBlogs.length / CARDS_PER_PAGE);
+  const visibleOtherBlogs = otherBlogs.slice(
+    currentPage * CARDS_PER_PAGE,
+    currentPage * CARDS_PER_PAGE + CARDS_PER_PAGE
+  );
+
+  const handleDotClick = useCallback((pageIndex: number) => {
+    setCurrentPage(pageIndex);
+  }, []);
 
   if (!blog) {
     return (
@@ -55,6 +63,10 @@ export default function BlogDetailPage() {
     year: "numeric",
   });
 
+  // Estimate reading time (~200 words per minute)
+  const wordCount = blog.content.replace(/<[^>]*>/g, "").split(/\s+/).length;
+  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
   return (
     <div className="min-h-screen bg-white">
       {/* Title Section — Centered */}
@@ -62,9 +74,7 @@ export default function BlogDetailPage() {
         <h1 className="text-2xl sm:text-3xl md:text-[40px] md:leading-[1.2] font-bold text-gray-900">
           {blog.title}
         </h1>
-        <p className="mt-4 text-gray-400 text-sm">
-          {formattedDate}
-        </p>
+        <p className="mt-4 text-gray-400 text-sm">{formattedDate}</p>
       </section>
 
       {/* Hero Image — Full width within container */}
@@ -91,22 +101,49 @@ export default function BlogDetailPage() {
         />
       </article>
 
-      {/* Other News Section */}
-      {relatedBlogs.length > 0 && (
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
-          <div className="border-t border-gray-200 pt-10">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-8">
+      {/* ═══════════════════════════════════════════════════════ */}
+      {/* Other News Section — Matching Figma design exactly    */}
+      {/* ═══════════════════════════════════════════════════════ */}
+      {otherBlogs.length > 0 && (
+        <section
+          style={{ background: "#FAF6F1" }}
+          className="relative"
+        >
+          {/* Blue top border */}
+
+
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-12 pb-14">
+            {/* Heading */}
+            <h2
+              className="text-2xl md:text-[32px] font-bold mb-10"
+              style={{
+                color: "#1A1A2E",
+                fontFamily:
+                  "Georgia, 'Times New Roman', 'Noto Serif', serif",
+              }}
+            >
               Other News
             </h2>
+
+            {/* Card Grid — 2 columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {relatedBlogs.map((related) => {
+              {visibleOtherBlogs.map((related) => {
                 const relatedDate = new Date(
                   related.createdAt
                 ).toLocaleDateString("en-US", {
                   day: "numeric",
-                  month: "short",
+                  month: "long",
                   year: "numeric",
                 });
+
+                // Estimate reading time for related blog
+                const relWordCount = related.content
+                  .replace(/<[^>]*>/g, "")
+                  .split(/\s+/).length;
+                const relReadTime = Math.max(
+                  1,
+                  Math.ceil(relWordCount / 200)
+                );
 
                 return (
                   <Link
@@ -114,9 +151,9 @@ export default function BlogDetailPage() {
                     href={`/blogs/${related.id}`}
                     className="group block"
                   >
-                    <article className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <article>
                       {/* Card Image */}
-                      <div className="relative aspect-[16/10] overflow-hidden">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-xl">
                         <Image
                           src={related.featuredImage}
                           alt={related.title}
@@ -126,38 +163,50 @@ export default function BlogDetailPage() {
                       </div>
 
                       {/* Card Content */}
-                      <div className="p-5">
-                        {/* Title with arrow */}
-                        <div className="flex items-start justify-between gap-3">
-                          <h3 className="text-base font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:text-indigo-600 transition-colors">
-                            {related.title}
-                          </h3>
-                          <div className="shrink-0 mt-0.5">
-                            <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
-                          </div>
-                        </div>
+                      <div className="pt-5">
+                        {/* Title */}
+                        <h3
+                          className="text-base md:text-lg font-semibold leading-snug line-clamp-2 group-hover:opacity-70 transition-opacity"
+                          style={{ color: "#1A1A2E" }}
+                        >
+                          {related.title}
+                        </h3>
 
-                        {/* Meta: Author + Date */}
-                        <div className="mt-3 flex items-center gap-2 text-xs text-gray-400">
-                          <Image
-                            src={related.authorAvatar}
-                            alt={related.author}
-                            width={20}
-                            height={20}
-                            className="rounded-full"
-                          />
-                          <span className="text-gray-600 font-medium">
-                            {related.author}
-                          </span>
-                          <span>·</span>
-                          <span>{relatedDate}</span>
-                        </div>
+                        {/* Meta: Reading time + Date */}
+                        <p
+                          className="mt-2 text-sm"
+                          style={{ color: "#98A2B3" }}
+                        >
+                          {relReadTime} Min &bull; {relatedDate}
+                        </p>
                       </div>
                     </article>
                   </Link>
                 );
               })}
             </div>
+
+            {/* Pagination Dots */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2.5 mt-10">
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleDotClick(i)}
+                    aria-label={`Go to page ${i + 1}`}
+                    className="rounded-full transition-all duration-300"
+                    style={{
+                      width: currentPage === i ? "12px" : "10px",
+                      height: currentPage === i ? "12px" : "10px",
+                      background:
+                        currentPage === i
+                          ? "#8B7355"
+                          : "#D5CCBF",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}

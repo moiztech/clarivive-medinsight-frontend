@@ -12,11 +12,11 @@ interface BlogCardProps {
 }
 
 const categoryColors: Record<string, string> = {
-  Health: "text-emerald-600",
-  Training: "text-indigo-600",
-  Nutrition: "text-orange-600",
-  Medical: "text-blue-600",
-  General: "text-purple-600",
+  Design: "#6941C6",
+  Product: "#3538CD",
+  "Software Engineering": "#027A48",
+  Management: "#C11574",
+  "Customer Success": "#026AA2",
 };
 
 export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
@@ -39,7 +39,10 @@ export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
             />
           </div>
           <div className="p-4">
-            <span className={`text-sm font-semibold ${categoryColors[blog.category] || "text-indigo-600"}`}>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: categoryColors[blog.category] || "#6941C6" }}
+            >
               {blog.category}
             </span>
             <h3 className="mt-2 text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-indigo-600 transition-colors">
@@ -67,8 +70,8 @@ export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
   }
 
   return (
-    <Link href={`/blogs/${blog.id}`} className="group block">
-      <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <Link href={`/blogs/${blog.id}`} className="group block h-full">
+      <article className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
         {/* Image */}
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
@@ -80,42 +83,58 @@ export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-5 md:p-6">
+        <div className="p-5 md:p-6 flex flex-col flex-1">
           {/* Category */}
           <span
-            className={`text-sm font-semibold ${categoryColors[blog.category] || "text-indigo-600"}`}
+            className="text-sm font-semibold"
+            style={{ color: categoryColors[blog.category] || "#6941C6" }}
           >
             {blog.category}
           </span>
 
           {/* Title with arrow */}
           <div className="mt-2 flex items-start justify-between gap-3">
-            <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">
+            <h3
+              className="text-lg font-semibold leading-snug group-hover:opacity-80 transition-opacity line-clamp-2"
+              style={{ color: "#101828" }}
+            >
               {blog.title}
             </h3>
             <div className="shrink-0 mt-0.5">
-              <ArrowUpRight className="w-5 h-5 text-gray-900 group-hover:text-indigo-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
+              <ArrowUpRight
+                className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
+                style={{ color: "#101828" }}
+              />
             </div>
           </div>
 
           {/* Description */}
-          <p className="mt-2 text-gray-500 text-sm leading-relaxed line-clamp-2">
+          <p
+            className="mt-2 text-sm leading-relaxed line-clamp-2 flex-1"
+            style={{ color: "#667085" }}
+          >
             {blog.shortDescription}
           </p>
 
           {/* Author */}
-          <div className="mt-4 flex items-center gap-3">
+          <div className="mt-6 flex items-center gap-3">
             <Image
               src={blog.authorAvatar}
               alt={blog.author}
-              width={32}
-              height={32}
-              className="rounded-full ring-2 ring-white"
+              width={36}
+              height={36}
+              className="rounded-full"
             />
-            <div className="flex items-center gap-1.5 text-sm">
-              <span className="font-medium text-gray-900">{blog.author}</span>
-              <span className="text-gray-400">·</span>
-              <span className="text-gray-500">{formattedDate}</span>
+            <div className="flex flex-col">
+              <span
+                className="text-sm font-semibold"
+                style={{ color: "#101828" }}
+              >
+                {blog.author}
+              </span>
+              <span className="text-sm" style={{ color: "#667085" }}>
+                {formattedDate}
+              </span>
             </div>
           </div>
         </div>
