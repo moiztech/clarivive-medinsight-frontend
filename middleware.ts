@@ -7,14 +7,13 @@ const protectedRoutes = [
   "/dashboard",
   "/company",
   "/orders",
-  "/orders/:path*",
 ];
 
 /**
- * Next.js 16 Proxy
- * Replaces middleware.ts for lightweight routing and protection
+ * Next.js Middleware
+ * Handles route protection and authentication redirects
  */
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const token =
     request.cookies.get("access_token")?.value ||
     request.cookies.get("refresh_token")?.value;

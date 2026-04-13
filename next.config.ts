@@ -7,8 +7,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { hostname: "images.unsplash.com" },
       { hostname: "www.kallidus.com" },
-      { hostname: process.env.NEXT_PUBLIC_API_BASE_URL as string },
       { hostname: "randomuser.me" },
+      { hostname: "api.clarivive.co.uk" },
+      { hostname: "127.0.0.1" },
+      { hostname: "localhost" },
     ],
     unoptimized: true,
   },

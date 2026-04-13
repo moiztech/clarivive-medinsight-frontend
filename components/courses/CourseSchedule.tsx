@@ -138,7 +138,8 @@ const CourseSchedule = ({
       return;
     }
 
-    if (user?.role.name != "learner") {
+    const userRole = typeof user?.role === "string" ? user.role : user?.role?.name;
+    if (userRole !== "learner" && userRole !== "employee") {
       toast.error("You are not authorized to book a schedule");
       return;
     }
@@ -427,14 +428,9 @@ const CourseSchedule = ({
                             <p className="font-medium text-gray-800 mb-1">
                               {selectedSchedule?.branch?.title}
                             </p>
-                            <a
-                              href={`${selectedSchedule?.branch?.location}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-primary-blue hover:underline break-all"
-                            >
+                            <p className="text-primary-blue break-all">
                               {selectedSchedule?.branch?.location}
-                            </a>
+                            </p>
                           </div>
                         </div>
                       )}

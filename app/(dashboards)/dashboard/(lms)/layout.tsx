@@ -49,10 +49,10 @@ export default function LMSLayout({ children }: { children: React.ReactNode }) {
       if (!user) {
         toast.error("You are not logged in");
         router.push("/login?callbackUrl=/dashboard/lms");
-      } else if (
-        user.role.name !== "learner" &&
-        user.role.name !== "employee"
-      ) {
+        return;
+      }
+      const roleName = (typeof user.role === "string" ? user.role : user.role?.name)?.toLowerCase() || "";
+      if (roleName !== "learner" && roleName !== "employee") {
         toast.error("You need to login as a learner to access this page");
         router.push("/");
       }
@@ -63,15 +63,14 @@ export default function LMSLayout({ children }: { children: React.ReactNode }) {
     return <div>Loading...</div>;
   }
 
-  if (
-    !user ||
-    (user.role.name !== "learner" && user.role.name !== "employee")
-  ) {
+  const currentRoleName = (typeof user?.role === "string" ? user.role : user?.role?.name)?.toLowerCase() || "";
+  if (!user || (currentRoleName !== "learner" && currentRoleName !== "employee")) {
     return null; // Will redirect via useEffect
   }
 
   const filteredNavItems = lmsNavItems.filter((item) => {
-    if (user?.role.name === "employee" && item.label === "Orders") return false;
+    const currentRoleName = typeof user?.role === "string" ? user.role : user?.role?.name;
+    if (currentRoleName === "employee" && item.label === "Orders") return false;
     return true;
   });
 

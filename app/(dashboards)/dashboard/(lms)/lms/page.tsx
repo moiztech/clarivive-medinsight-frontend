@@ -43,15 +43,22 @@ const totalEarningsData = [
 
 export default function LMSDashboardPage() {
   const { user } = useAuth();
+
+  const roleName = typeof user?.role === "string" ? user.role : user?.role?.name;
+  const roleLabel =
+    roleName === "employee"
+      ? "Employee Dashboard"
+      : "Learning Dashboard";
+
   return (
     <div className="p-6 space-y-6">
       <div className="space-y-1">
         <h2 className="text-2xl font-bold tracking-tight">
-          Welcome {user?.name}, to your LMS
+          Welcome {user?.name}, to your {roleLabel}
         </h2>
         <p className="text-muted-foreground">
-          LMS → Manage courses, sessions, assignments and performance metrics in
-          one centralized LMS Dashboard.
+          Manage courses, sessions, assignments and performance metrics in
+          one centralized dashboard.
         </p>
       </div>
 

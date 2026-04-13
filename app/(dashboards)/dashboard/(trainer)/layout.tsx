@@ -47,7 +47,10 @@ export default function TrainerLayout({
       if (!user) {
         toast.error("You are not logged in");
         router.push("/login?callbackUrl=/dashboard/trainer");
-      } else if (user.role.name !== "trainer") {
+        return;
+      }
+      const roleName = (typeof user.role === "string" ? user.role : user.role?.name)?.toLowerCase() || "";
+      if (roleName !== "trainer") {
         toast.error("You need to login as a trainer to access this page");
         router.push("/");
       }
@@ -62,7 +65,8 @@ export default function TrainerLayout({
     );
   }
 
-  if (!user || user.role.name !== "trainer") {
+  const currentRoleName = (typeof user?.role === "string" ? user.role : user?.role?.name)?.toLowerCase() || "";
+  if (!user || currentRoleName !== "trainer") {
     return null; // Will redirect via useEffect
   }
 

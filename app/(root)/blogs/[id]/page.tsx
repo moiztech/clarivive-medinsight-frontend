@@ -1,41 +1,102 @@
 "use client";
 
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-import { mockBlogs } from "@/data/blogData";
+import { ArrowLeft, Eye, Heart, Calendar, Loader2 } from "lucide-react";
+import { getPublicBlogById, getPublicBlogs } from "@/lib/axios/blogs";
+import type { Blog } from "@/lib/types/blog";
 import DOMPurify from "dompurify";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const STORAGE_BASE = API_BASE.replace(/\/api$/, "") + "/storage/";
 
 export default function BlogDetailPage() {
   const params = useParams();
   const blogId = params.id as string;
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [relatedBlogs, setRelatedBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const blog = mockBlogs.find((b) => b.id === blogId);
+  useEffect(() => {
+    async function fetchBlog() {
+      try {
+        setLoading(true);
+        setNotFound(false);
+        setError(null);
+        const blogData = await getPublicBlogById(blogId);
+        if (!blogData) {
+          setNotFound(true);
+          return;
+        }
+        setBlog(blogData);
 
-  // Get all other published blogs (not just related by category)
-  const otherBlogs = useMemo(() => {
-    if (!blog) return [];
-    return mockBlogs.filter(
-      (b) => b.id !== blog.id && b.status === "published"
-    );
-  }, [blog]);
+        // Fetch related blogs (same category)
+        if (blogData.category) {
+          try {
+            const relatedRes = await getPublicBlogs({ category: blogData.category, per_page: 4 });
+            const related = (relatedRes.data || []).filter((b: Blog) => b.id !== blogData.id).slice(0, 3);
+            setRelatedBlogs(related);
+          } catch {
+            // Silently fail - related blogs are nice-to-have
+          }
+        }
+      } catch {
+        setNotFound(true);
+        setError("Blog not found or failed to load.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchBlog();
+  }, [blogId]);
 
-  // Paginate: show 2 cards per page
-  const CARDS_PER_PAGE = 2;
-  const totalPages = Math.ceil(otherBlogs.length / CARDS_PER_PAGE);
-  const visibleOtherBlogs = otherBlogs.slice(
+  // Auto-slide for related blogs
+  const CARDS_PER_PAGE = 3;
+  const totalPages = Math.ceil(relatedBlogs.length / CARDS_PER_PAGE);
+  const visibleRelated = relatedBlogs.slice(
     currentPage * CARDS_PER_PAGE,
-    currentPage * CARDS_PER_PAGE + CARDS_PER_PAGE
+    currentPage * CARDS_PER_PAGE + CARDS_PER_PAGE,
   );
+
+  useEffect(() => {
+    if (totalPages <= 1) return;
+    intervalRef.current = setInterval(() => {
+      setCurrentPage((prev) => (prev + 1) % totalPages);
+    }, 4000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [totalPages]);
 
   const handleDotClick = useCallback((pageIndex: number) => {
     setCurrentPage(pageIndex);
-  }, []);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrentPage((prev) => (prev + 1) % totalPages);
+    }, 4000);
+  }, [totalPages]);
 
-  if (!blog) {
+  const getImageUrl = (b: Blog) => {
+    if (!b.featured_image) return "/placeholder.jpg";
+    if (b.featured_image.startsWith("http")) return b.featured_image;
+    return STORAGE_BASE + b.featured_image;
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      </div>
+    );
+  }
+
+  if (notFound || !blog) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
@@ -57,31 +118,82 @@ export default function BlogDetailPage() {
     );
   }
 
-  const formattedDate = new Date(blog.createdAt).toLocaleDateString("en-US", {
+  const formattedDate = new Date(blog.created_at).toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
-  // Estimate reading time (~200 words per minute)
   const wordCount = blog.content.replace(/<[^>]*>/g, "").split(/\s+/).length;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Title Section — Centered */}
+      {/* Title Section */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-12 md:pt-16 pb-6 text-center">
         <h1 className="text-2xl sm:text-3xl md:text-[40px] md:leading-[1.2] font-bold text-gray-900">
           {blog.title}
         </h1>
-        <p className="mt-4 text-gray-400 text-sm">{formattedDate}</p>
+
+        {/* Meta */}
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
+          <span className="flex items-center gap-1.5">
+            <Calendar className="w-4 h-4" />
+            {formattedDate}
+          </span>
+          <span>{readingTime} min read</span>
+          {blog.views > 0 && (
+            <span className="flex items-center gap-1">
+              <Eye className="w-4 h-4" />
+              {blog.views.toLocaleString()} views
+            </span>
+          )}
+          {blog.likes > 0 && (
+            <span className="flex items-center gap-1">
+              <Heart className="w-4 h-4" />
+              {blog.likes}
+            </span>
+          )}
+        </div>
+
+        {/* Author */}
+        {blog.author && (
+          <div className="mt-4 flex items-center justify-center gap-3">
+            {blog.author.avatar ? (
+              <Image
+                src={blog.author.avatar}
+                alt={blog.author.name}
+                width={36}
+                height={36}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-bold text-indigo-600">
+                {blog.author.name.charAt(0)}
+              </div>
+            )}
+            <span className="text-sm font-medium text-gray-700">{blog.author.name}</span>
+          </div>
+        )}
+
+        {/* Category & Tags */}
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-medium">
+            {blog.category}
+          </span>
+          {blog.tags.map((tag) => (
+            <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+              {tag}
+            </span>
+          ))}
+        </div>
       </section>
 
-      {/* Hero Image — Full width within container */}
+      {/* Hero Image */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="relative w-full aspect-[16/9] md:aspect-[16/8] rounded-xl overflow-hidden">
           <Image
-            src={blog.featuredImage}
+            src={getImageUrl(blog)}
             alt={blog.title}
             fill
             className="object-cover"
@@ -92,7 +204,6 @@ export default function BlogDetailPage() {
 
       {/* Article Body */}
       <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-        {/* Content */}
         <div
           className="prose prose-base md:prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-500 prose-p:leading-[1.8] prose-a:text-indigo-600 prose-strong:text-gray-800 prose-ul:text-gray-500 prose-li:text-gray-500 prose-li:leading-[1.8]"
           dangerouslySetInnerHTML={{
@@ -101,82 +212,53 @@ export default function BlogDetailPage() {
         />
       </article>
 
-      {/* ═══════════════════════════════════════════════════════ */}
-      {/* Other News Section — Matching Figma design exactly    */}
-      {/* ═══════════════════════════════════════════════════════ */}
-      {otherBlogs.length > 0 && (
-        <section
-          style={{ background: "#FAF6F1" }}
-          className="relative"
-        >
-          {/* Blue top border */}
-
-
+      {/* Related Blogs Section */}
+      {relatedBlogs.length > 0 && (
+        <section style={{ background: "#EFF6FF" }} className="relative">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-12 pb-14">
-            {/* Heading */}
             <h2
               className="text-2xl md:text-[32px] font-bold mb-10"
               style={{
                 color: "#1A1A2E",
-                fontFamily:
-                  "Georgia, 'Times New Roman', 'Noto Serif', serif",
+                fontFamily: "Georgia, 'Times New Roman', 'Noto Serif', serif",
               }}
             >
-              Other News
+              Related News
             </h2>
 
-            {/* Card Grid — 2 columns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {visibleOtherBlogs.map((related) => {
-                const relatedDate = new Date(
-                  related.createdAt
-                ).toLocaleDateString("en-US", {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {visibleRelated.map((related) => {
+                const relatedDate = new Date(related.created_at).toLocaleDateString("en-US", {
                   day: "numeric",
                   month: "long",
                   year: "numeric",
                 });
-
-                // Estimate reading time for related blog
-                const relWordCount = related.content
-                  .replace(/<[^>]*>/g, "")
-                  .split(/\s+/).length;
-                const relReadTime = Math.max(
-                  1,
-                  Math.ceil(relWordCount / 200)
-                );
+                const relWordCount = related.content.replace(/<[^>]*>/g, "").split(/\s+/).length;
+                const relReadTime = Math.max(1, Math.ceil(relWordCount / 200));
 
                 return (
                   <Link
                     key={related.id}
-                    href={`/blogs/${related.id}`}
+                    href={`/blogs/${related.slug || related.id}`}
                     className="group block"
                   >
                     <article>
-                      {/* Card Image */}
                       <div className="relative aspect-[16/10] overflow-hidden rounded-xl">
                         <Image
-                          src={related.featuredImage}
+                          src={getImageUrl(related)}
                           alt={related.title}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
-
-                      {/* Card Content */}
                       <div className="pt-5">
-                        {/* Title */}
                         <h3
                           className="text-base md:text-lg font-semibold leading-snug line-clamp-2 group-hover:opacity-70 transition-opacity"
                           style={{ color: "#1A1A2E" }}
                         >
                           {related.title}
                         </h3>
-
-                        {/* Meta: Reading time + Date */}
-                        <p
-                          className="mt-2 text-sm"
-                          style={{ color: "#98A2B3" }}
-                        >
+                        <p className="mt-2 text-sm" style={{ color: "#98A2B3" }}>
                           {relReadTime} Min &bull; {relatedDate}
                         </p>
                       </div>
@@ -186,7 +268,6 @@ export default function BlogDetailPage() {
               })}
             </div>
 
-            {/* Pagination Dots */}
             {totalPages > 1 && (
               <div className="flex items-center justify-center gap-2.5 mt-10">
                 {Array.from({ length: totalPages }).map((_, i) => (
@@ -198,10 +279,7 @@ export default function BlogDetailPage() {
                     style={{
                       width: currentPage === i ? "12px" : "10px",
                       height: currentPage === i ? "12px" : "10px",
-                      background:
-                        currentPage === i
-                          ? "#8B7355"
-                          : "#D5CCBF",
+                      background: currentPage === i ? "#8B7355" : "#D5CCBF",
                     }}
                   />
                 ))}

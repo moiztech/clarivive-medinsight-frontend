@@ -29,13 +29,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const parsed = JSON.parse(savedCart);
         if (parsed.length > 0) {
-          setTimeout(() => setItems(parsed), 0);
+          setItems(parsed);
         }
       } catch (e) {
         console.error("Failed to parse cart from localStorage", e);
       }
     }
-    setTimeout(() => setIsInitialized(true), 0);
+    setIsInitialized(true);
   }, []);
 
   // Save to localStorage whenever items change

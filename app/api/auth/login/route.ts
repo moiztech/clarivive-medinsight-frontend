@@ -21,56 +21,65 @@ export async function POST(req: Request) {
     );
   }
 
-  const form = new URLSearchParams();
-  form.set("email", body.email);
-  form.set("password", body.password);
+  let backendRes;
+  try {
+    // Use the general /auth/login endpoint (works for all roles: super_admin, company_admin, trainer, learner)
+    backendRes = await serverApi.post("/auth/login", {
+      email: body.email,
+      password: body.password,
+    });
+  } catch (err: any) {
+    // Backend returned non-2xx (e.g. 401 invalid credentials)
+    const message = err?.response?.data?.message || "Invalid credentials";
+    return NextResponse.json(
+      { status: false, message },
+      { status: err?.response?.status || 401 },
+    );
+  }
 
-  const backendRes = await serverApi.post("/learner/login", form, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  });
-
-  // Backend shape: { status, message, data: { access_token, refresh_token, id, name, email, role, ... } }
+  // Backend /auth/login shape: { status: 200, message, token, data: user_object }
   const payload = backendRes.data;
-  const data = payload?.data;
 
-  const accessToken = data?.access_token;
+  // The token is at top level from AuthController, user data is in payload.data
+  const accessToken = payload?.token || payload?.data?.access_token;
+  const userData = payload?.data;
+
   if (accessToken) {
     (await cookies()).set("access_token", accessToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      // Keep parity with refresh token persistence behavior.
-      // maxAge: body.remember ? 60 * 60 * 24 * 30 : undefined,
     });
   }
 
-  const refreshToken = data?.refresh_token;
+  // /auth/login returns refresh_token via Set-Cookie header from backend if present
+  // Also check response body for refresh_token (learner login path)
+  const refreshToken = payload?.data?.refresh_token;
   if (refreshToken) {
     (await cookies()).set("refresh_token", refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      // If you want "remember me" to persist, uncomment:
-      // maxAge: body.remember ? 60 * 60 * 24 * 30 : undefined,
     });
   }
 
-  const user = data
+  // /auth/login returns user with role as object { id, name }, normalize to consistent shape
+  const user = userData
     ? {
-        id: data.user?.id,
-        name: data.user?.name,
-        email: data.user?.email,
-        role: data.user?.role,
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role, // can be object { id, name } or string
       }
     : null;
 
   return NextResponse.json({
     status: payload?.status ?? true,
     message: payload?.message ?? "Login successful",
-    access_token: accessToken ?? null,
-    token_type: data?.token_type ?? "Bearer",
+    token_type: "Bearer",
     user,
+    access_token: accessToken,
   });
 }

@@ -10,7 +10,7 @@ interface BlogFiltersProps {
   onStatusChange: (status: string) => void;
 }
 
-const categories = ["All", "Design", "Product", "Software Engineering", "Management", "Customer Success"];
+const categories = ["All", "Health", "Training", "Nutrition", "Medical", "General"];
 const statuses = ["All", "Published", "Draft", "Archived"];
 
 export default function BlogFilters({

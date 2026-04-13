@@ -429,7 +429,7 @@ function BookedSessionsPage() {
                   {loading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
-                        <TableCell colSpan={4}>
+                        <TableCell colSpan={5}>
                           <div className="flex items-center gap-4 py-2">
                             <Skeleton className="h-12 w-20" />
                             <div className="space-y-2 flex-1">
