@@ -181,9 +181,9 @@ export default function AdminBlogDetailPage() {
             </div>
 
             {/* Tags */}
-            {blog.tags.length > 0 && (
+            {(blog.tags || []).length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
-                {blog.tags.map((tag) => (
+                {(blog.tags || []).map((tag) => (
                   <span
                     key={tag}
                     className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium"

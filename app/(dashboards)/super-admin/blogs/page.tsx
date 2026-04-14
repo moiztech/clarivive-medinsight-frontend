@@ -225,14 +225,14 @@ export default function AdminBlogsPage() {
                         {/* Tags */}
                         <td className="px-6 py-4 hidden lg:table-cell">
                           <div className="flex flex-wrap gap-1 max-w-[200px]">
-                            {blog.tags.slice(0, 2).map((tag) => (
+                            {(blog.tags || []).slice(0, 2).map((tag) => (
                               <span key={tag} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">
                                 {tag}
                               </span>
                             ))}
-                            {blog.tags.length > 2 && (
+                            {(blog.tags || []).length > 2 && (
                               <span className="px-2 py-0.5 bg-gray-100 text-gray-400 rounded text-xs">
-                                +{blog.tags.length - 2}
+                                +{(blog.tags || []).length - 2}
                               </span>
                             )}
                           </div>
