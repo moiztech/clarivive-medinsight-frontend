@@ -18,6 +18,10 @@ type UserType = {
   company_id?: number;
   name: string;
   email: string;
+  must_accept_declaration?: boolean;
+  declaration_accepted_at?: string | null;
+  declaration_version?: string | null;
+  last_login_at?: string | null;
   primary_contact_name?: string;
   no_of_employees?: string;
   logo?: string;
@@ -122,6 +126,7 @@ export type Session = {
   month: string;
   start_time: string;
   end_time: string;
+  status?: string;
 };
 
 export type Schedule = {
@@ -140,6 +145,7 @@ export type Schedule = {
     location: string;
   };
   sessions?: Session[];
+  alternative_schedules?: Schedule[];
 };
 
 export type DetailCourse = {

@@ -39,16 +39,23 @@ import { useAuth } from "@/app/_contexts/AuthProvider";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useUnreadMessageCount } from "@/hooks/useUnreadMessageCount";
+import { AnnouncementBar } from "@/components/dashboard/announcement-bar";
 
 export default function LMSLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const unreadCount = useUnreadMessageCount(
+    !!user && (user.role.name === "learner" || user.role.name === "employee"),
+  );
 
   useEffect(() => {
     if (!loading) {
       if (!user) {
         toast.error("You are not logged in");
         router.push("/login?callbackUrl=/dashboard/lms");
+      } else if (user.must_accept_declaration) {
+        router.push("/declaration?callbackUrl=%2Fdashboard%2Flms");
       } else if (
         user.role.name !== "learner" &&
         user.role.name !== "employee"
@@ -65,21 +72,29 @@ export default function LMSLayout({ children }: { children: React.ReactNode }) {
 
   if (
     !user ||
+    user.must_accept_declaration ||
     (user.role.name !== "learner" && user.role.name !== "employee")
   ) {
     return null; // Will redirect via useEffect
   }
 
-  const filteredNavItems = lmsNavItems.filter((item) => {
+  const filteredNavItems = lmsNavItems
+    .map((item) =>
+      item.label === "Chats" && unreadCount > 0
+        ? { ...item, badge: unreadCount }
+        : item,
+    )
+    .filter((item) => {
     if (user?.role.name === "employee" && item.label === "Orders") return false;
     return true;
-  });
+    });
 
   return (
     <DashboardLayoutContent
       sidebar={<LmsSidebar navItems={filteredNavItems} />}
       header={<LmsHeader />}
     >
+      <AnnouncementBar />
       {children}
     </DashboardLayoutContent>
   );

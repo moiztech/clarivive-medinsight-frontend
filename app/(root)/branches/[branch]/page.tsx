@@ -5,37 +5,57 @@ import React from "react";
 import BranchCourse from "../_components/branches-course";
 
 export async function generateStaticParams() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`);
-  const branches = await res.json();
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`);
+    const branches = await res.json();
 
-  return branches.data.map((b: Branch) => ({
-    branch: b.slug,
-  }));
+    return (branches.data || []).map((b: Branch) => ({
+      branch: b.slug,
+    }));
+  } catch (error) {
+    console.error("Failed to prebuild branch params", error);
+    return [];
+  }
 }
 
 const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
   const { branch } = await params;
 
-  const [courseRes, branchRes, categoryRes] = await Promise.all([
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/branch/${branch}?page=1`,
-      {
-        next: { revalidate: 60 },
-      },
-    ),
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches/${branch}`, {
-      next: { revalidate: 90 },
-    }),
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
-      next: { revalidate: 300 },
-    }),
-  ]);
+  let courseJson: { data?: unknown[]; meta?: unknown } = {};
+  let courses: unknown[] = [];
+  let branchData: Branch = {
+    id: 0,
+    title: branch,
+    slug: branch,
+    description: null,
+    location: "",
+    icon: null,
+  };
+  let categoryJson: CategoryResponse[] = [];
 
-  const courseJson = await courseRes.json();
-  const courses = courseJson.data;
-  const branchData: Branch = await branchRes.json().then((res) => res.data);
-  const { data: categoryJson }: { data: CategoryResponse[] } =
-    await categoryRes.json();
+  try {
+    const [courseRes, branchRes, categoryRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/branch/${branch}?page=1`,
+        {
+          next: { revalidate: 60 },
+        },
+      ),
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches/${branch}`, {
+        next: { revalidate: 90 },
+      }),
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+        next: { revalidate: 300 },
+      }),
+    ]);
+
+    courseJson = await courseRes.json();
+    courses = courseJson.data || [];
+    branchData = await branchRes.json().then((res) => res.data || branchData);
+    categoryJson = await categoryRes.json().then((res) => res.data || []);
+  } catch (error) {
+    console.error(`Failed to load branch page data for ${branch}`, error);
+  }
   // console.log(data);
   return (
     <>

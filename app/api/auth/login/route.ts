@@ -29,7 +29,6 @@ export async function POST(req: Request) {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
   });
 
-  // Backend shape: { status, message, data: { access_token, refresh_token, id, name, email, role, ... } }
   const payload = backendRes.data;
   const data = payload?.data;
 
@@ -57,14 +56,7 @@ export async function POST(req: Request) {
     });
   }
 
-  const user = data
-    ? {
-        id: data.user?.id,
-        name: data.user?.name,
-        email: data.user?.email,
-        role: data.user?.role,
-      }
-    : null;
+  const user = data?.user ? { ...data.user } : null;
 
   return NextResponse.json({
     status: payload?.status ?? true,

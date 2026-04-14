@@ -1,16 +1,8 @@
 "use client";
 
-import { act, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import {
-  User,
-  Building2,
-  Stethoscope,
-  HeartHandshake,
-  Users,
-  ShieldCheck,
-  ChevronDown,
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 export default function BusinessOutcomesSection() {
@@ -19,7 +11,6 @@ export default function BusinessOutcomesSection() {
   const categories = [
     {
       id: "compliance",
-      icon: <User className="w-full h-full" />,
       title: "Individual Learners",
       color: "text-primary-blue",
       bgColor: "bg-blue-50",
@@ -27,7 +18,6 @@ export default function BusinessOutcomesSection() {
     },
     {
       id: "employee",
-      icon: <Building2 className="w-full h-full" />,
       title: "Organizations",
       color: "text-primary-blue",
       bgColor: "bg-blue-50",
@@ -35,7 +25,6 @@ export default function BusinessOutcomesSection() {
     },
     {
       id: "onboarding",
-      icon: <Stethoscope className="w-full h-full" />,
       title: "Health Care Providers",
       color: "text-primary-blue",
       bgColor: "bg-blue-50",
@@ -43,7 +32,6 @@ export default function BusinessOutcomesSection() {
     },
     {
       id: "revenue",
-      icon: <HeartHandshake className="w-full h-full" />,
       title: "Social Care Organizations",
       color: "text-primary-blue",
       bgColor: "bg-blue-50",
@@ -51,7 +39,6 @@ export default function BusinessOutcomesSection() {
     },
     {
       id: "customer",
-      icon: <Users className="w-full h-full" />,
       title: "Healthcare Agencies & Workforce Providers",
       color: "text-primary-blue",
       bgColor: "bg-blue-50",
@@ -59,7 +46,6 @@ export default function BusinessOutcomesSection() {
     },
     {
       id: "member",
-      icon: <ShieldCheck className="w-full h-full" />,
       title: "Independent & Specialist Care Services",
       color: "text-primary-blue",
       bgColor: "bg-blue-50",
@@ -223,13 +209,6 @@ export default function BusinessOutcomesSection() {
                     ${activeTab === category.id ? "shadow-none! bg-gray-100! rounded-b-none z-10 -mb-6 scale-105" : ""}
                   `}
               >
-                <div
-                  className={`${category.color} flex justify-center mb-3 w-14 h-14 items-center mx-auto transition-transform duration-200 py-2 ${
-                    activeTab === category.id ? "scale-120" : ""
-                  }`}
-                >
-                  {category.icon}
-                </div>
                 <h3 className="font-medium text-gray-900 text-md leading-tight">
                   {category.title}
                 </h3>

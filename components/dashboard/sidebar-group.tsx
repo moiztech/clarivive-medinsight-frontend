@@ -17,6 +17,7 @@ export interface NavItem {
   icon: LucideIcon;
   label: string;
   href?: string;
+  badge?: number | string;
   children?: {
     label: string;
     href?: string;
@@ -56,6 +57,11 @@ function SidebarGroup({
           <div className="flex items-center gap-2">
             <Icon className="size-5" />
             {isExpanded && <span>{item.label}</span>}
+            {isExpanded && item.badge ? (
+              <span className="rounded-full bg-primary-blue px-2 py-0.5 text-[10px] font-semibold text-white">
+                {item.badge}
+              </span>
+            ) : null}
           </div>
 
           {isExpanded && (

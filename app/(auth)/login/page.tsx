@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useAuth } from "@/app/_contexts/AuthProvider";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import { UserType } from "@/lib/types";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -28,16 +29,25 @@ export default function LoginPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const role = await login(form.email, form.password);
+      const user = (await login(form.email, form.password)) as UserType;
       toast.success("Login successful");
 
-      // Get callbackUrl from query params
       const searchParams = new URLSearchParams(window.location.search);
       const callbackUrl = searchParams.get("callbackUrl") || null;
+
+      if (user?.must_accept_declaration) {
+        router.push(
+          callbackUrl
+            ? `/declaration?callbackUrl=${encodeURIComponent(callbackUrl)}`
+            : "/declaration",
+        );
+        return;
+      }
+
       if (callbackUrl) {
         router.push(callbackUrl);
       } else {
-        switch (role) {
+        switch (user?.role?.name) {
           case "employee":
             router.push("/dashboard/lms");
             break;
