@@ -17,6 +17,16 @@ export async function POST(req: Request) {
   const payload = backendRes.data;
   const data = payload?.data;
 
+  const accessToken = data?.access_token;
+  if (accessToken) {
+    (await cookies()).set("access_token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    });
+  }
+
   const refreshToken = data?.refresh_token;
   if (refreshToken) {
     (await cookies()).set("refresh_token", refreshToken, {
@@ -27,19 +37,12 @@ export async function POST(req: Request) {
     });
   }
 
-  const user = data
-    ? {
-        id: data.user?.id,
-        name: data.user?.name,
-        email: data.user?.email,
-        role: data.user?.role,
-      }
-    : null;
+  const user = data?.user ? { ...data.user } : null;
 
   return NextResponse.json({
     status: payload?.status ?? true,
     message: payload?.message ?? "User registered successfully",
-    access_token: data?.access_token ?? null,
+    access_token: accessToken ?? null,
     token_type: data?.token_type ?? "Bearer",
     user,
   });

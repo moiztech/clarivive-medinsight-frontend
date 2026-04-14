@@ -7,6 +7,7 @@ const protectedRoutes = [
   "/dashboard",
   "/company",
   "/orders",
+  "/declaration",
   "/orders/:path*",
 ];
 
@@ -48,6 +49,7 @@ export const config = {
     "/dashboard/:path*",
     "/orders/:path*",
     "/orders",
+    "/declaration",
     "/login",
     "/signup",
     "/company/:path*",

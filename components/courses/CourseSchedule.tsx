@@ -26,11 +26,8 @@ import { formatSessionDates } from "@/app/(dashboards)/dashboard/(lms)/lms/booke
 export const formatInLocalTime = (dateStr: string, timeStr: string) => {
   if (!timeStr) return "";
   try {
-    // Treat the input string as a UTC representation base for London
-    const baseDate = new Date(`${dateStr}T${timeStr}Z`);
-
-    // Calculate London's offset at that specific time using Intl
-    const dtf = new Intl.DateTimeFormat("en-US", {
+    const naiveUtc = new Date(`${dateStr}T${timeStr}Z`);
+    const londonTime = new Intl.DateTimeFormat("en-GB", {
       timeZone: "Europe/London",
       year: "numeric",
       month: "2-digit",
@@ -39,21 +36,23 @@ export const formatInLocalTime = (dateStr: string, timeStr: string) => {
       minute: "2-digit",
       second: "2-digit",
       hourCycle: "h23",
-    });
+    }).formatToParts(naiveUtc);
 
-    const parts = dtf.formatToParts(baseDate);
-    const getP = (type: string) => parts.find((p) => p.type === type)?.value;
+    const part = (type: string) =>
+      londonTime.find((value) => value.type === type)?.value ?? "00";
 
-    const londonEquivalentInUTC = new Date(
-      `${getP("year")}-${getP("month")}-${getP("day")}T${getP("hour")}:${getP("minute")}:${getP("second")}Z`,
+    const londonAsUtc = new Date(
+      `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:${part("minute")}:${part("second")}Z`,
+    );
+    const adjustedUtc = new Date(
+      naiveUtc.getTime() + (naiveUtc.getTime() - londonAsUtc.getTime()),
     );
 
-    // The offset is the difference between our UTC assumption and London's actual time
-    const offset = baseDate.getTime() - londonEquivalentInUTC.getTime();
-    const trueUTC = new Date(baseDate.getTime() + offset);
-
-    // Format to local viewer's HH:mm
-    return format(trueUTC, "HH:mm");
+    return new Intl.DateTimeFormat(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(adjustedUtc);
   } catch {
     return timeStr.substring(0, 5);
   }
@@ -240,7 +239,7 @@ const CourseSchedule = ({
           <div className="w-full">
             <div>
               {selectedSchedule?.image ? (
-                <div className="relative h-64 md:h-80 max-w-3xl min-w-2xl border-b border-gray-100">
+                <div className="relative h-64 md:h-80 w-full border-b border-gray-100">
                   <Image
                     src={selectedSchedule?.image}
                     alt="Course context"
@@ -249,7 +248,7 @@ const CourseSchedule = ({
                   />
                 </div>
               ) : (
-                <div className="relative h-64 md:h-80 max-w-3xl min-w-2xl border-b border-gray-100">
+                <div className="relative h-64 md:h-80 w-full border-b border-gray-100">
                   <Image
                     src={courseThumbnail ? courseThumbnail : "/placeholder.jpg"}
                     alt="Course context"

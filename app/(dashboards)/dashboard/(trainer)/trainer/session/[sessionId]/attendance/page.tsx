@@ -29,7 +29,12 @@ import { useParams, useRouter } from "next/navigation";
 import { formatInLocalTime } from "@/components/courses/CourseSchedule";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Learner {
   id: number;
@@ -89,7 +94,7 @@ export default function AttendancePage() {
     } finally {
       setLoading(false);
     }
-  }, [sessionId]);
+  }, [router, sessionId]);
 
   useEffect(() => {
     fetchSessionAttendance();
@@ -142,20 +147,26 @@ export default function AttendancePage() {
       );
 
       if (res?.status) {
+        setSavedAttendance(payload.length);
         toast.success("Attendance saved successfully");
+        fetchSessionAttendance();
       }
-    } catch (error: any) {
+    } catch (error: { response?: { data?: { message?: string } } } | any) {
       toast.error("Failed to save attendance." + error.response?.data?.message);
       console.error(error);
     }
   };
+
+  const allAttendanceMarked =
+    learners.length > 0 &&
+    learners.every((learner) => Boolean(learner.attendance_status));
 
   const completeSession = async () => {
     if (session?.status === "completed") {
       toast.error("Session is already completed");
       return;
     }
-    if (savedAttendance !== learners.length) {
+    if (!allAttendanceMarked || savedAttendance !== learners.length) {
       toast.error("Please finalize attendance for all learners");
       return;
     }
@@ -324,29 +335,40 @@ export default function AttendancePage() {
               Finalize Attendance
             </Button>
           )}
-          <Tooltip>
-            <Button
-              variant="outline"
-              onClick={() => completeSession()}
-              disabled={
-                savedAttendance !== learners.length ||
-                session?.status === "completed"
-              }
-              className="gap-2 font-bold"
-            >
-              <CheckCheck size={16} />
-              {session?.status === "completed"
-                ? "Session Completed"
-                : "Complete Session"}
-            </Button>
-            <TooltipContent>
-              {savedAttendance !== learners.length && (
-                <p className="text-xs text-muted-foreground">
-                  Please finalize attendance first
-                </p>
-              )}
-            </TooltipContent>
-          </Tooltip>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Button
+                    variant="outline"
+                    onClick={() => completeSession()}
+                    disabled={
+                      !allAttendanceMarked ||
+                      savedAttendance !== learners.length ||
+                      session?.status === "completed"
+                    }
+                    className="gap-2 font-bold"
+                  >
+                    <CheckCheck size={16} />
+                    {session?.status === "completed"
+                      ? "Session Completed"
+                      : "Complete Session"}
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                {!allAttendanceMarked ? (
+                  <p className="text-xs text-muted-foreground">
+                    Mark attendance for every learner first.
+                  </p>
+                ) : savedAttendance !== learners.length ? (
+                  <p className="text-xs text-muted-foreground">
+                    Finalize attendance before completing the session.
+                  </p>
+                ) : null}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </ContentWrapper>

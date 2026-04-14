@@ -9,6 +9,8 @@ import { useAuth } from "@/app/_contexts/AuthProvider";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { useUnreadMessageCount } from "@/hooks/useUnreadMessageCount";
+import { AnnouncementBar } from "@/components/dashboard/announcement-bar";
 
 const companyNavItems = [
   {
@@ -67,12 +69,17 @@ export default function CompanyLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const unreadCount = useUnreadMessageCount(
+    !!user && user.role.name === "company_admin",
+  );
 
   useEffect(() => {
     if (!loading) {
       if (!user) {
         toast.error("You are not logged in");
         router.push("/login?callbackUrl=/company");
+      } else if (user.must_accept_declaration) {
+        router.push("/declaration?callbackUrl=%2Fcompany");
       } else if (user.role.name !== "company_admin") {
         toast.error("You are not authorized to access this page");
         router.push("/");
@@ -84,15 +91,22 @@ export default function CompanyLayout({
     return <div>Loading...</div>;
   }
 
-  if (!user || user.role.name !== "company_admin") {
+  if (!user || user.must_accept_declaration || user.role.name !== "company_admin") {
     return null; // Will redirect via useEffect
   }
 
+  const navItems = companyNavItems.map((item) =>
+    item.label === "Chats" && unreadCount > 0
+      ? { ...item, badge: unreadCount }
+      : item,
+  );
+
   return (
     <DashboardLayoutContent
-      sidebar={<CompanySidebar navItems={companyNavItems} />}
+      sidebar={<CompanySidebar navItems={navItems} />}
       header={<CompanyHeader />}
     >
+      <AnnouncementBar />
       {children}
     </DashboardLayoutContent>
   );
