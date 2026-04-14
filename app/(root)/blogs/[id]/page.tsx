@@ -181,7 +181,7 @@ export default function BlogDetailPage() {
           <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-medium">
             {blog.category}
           </span>
-          {blog.tags.map((tag) => (
+          {(blog.tags || []).map((tag) => (
             <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
               {tag}
             </span>

@@ -26,7 +26,7 @@ function LoadingSkeleton({
 
   if (visible) {
     return (
-      <div className="h-screen w-full bg-white flex justify-center items-center">
+      <div className="h-screen w-full bg-white flex justify-center items-center" suppressHydrationWarning>
         <Image
           src={"/Clarivive medinsight logo-01.png"}
           alt="logo"
