@@ -9,6 +9,8 @@ import { useAuth } from "@/app/_contexts/AuthProvider";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { useUnreadMessageCount } from "@/hooks/useUnreadMessageCount";
+import { AnnouncementBar } from "@/components/dashboard/announcement-bar";
 
 const companyNavItems = [
   {
@@ -67,6 +69,9 @@ export default function CompanyLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const unreadCount = useUnreadMessageCount(
+    !!user && user.role.name === "company_admin",
+  );
 
   useEffect(() => {
     if (!loading) {
@@ -76,7 +81,9 @@ export default function CompanyLayout({
         return;
       }
       const roleName = (typeof user.role === "string" ? user.role : user.role?.name)?.toLowerCase() || "";
-      if (roleName !== "company_admin" && roleName !== "companyadmin") {
+      if (user.must_accept_declaration) {
+        router.push("/declaration?callbackUrl=%2Fcompany");
+      } else if (roleName !== "company_admin" && roleName !== "companyadmin") {
         toast.error("You are not authorized to access this page");
         router.push("/");
       }
@@ -88,15 +95,22 @@ export default function CompanyLayout({
   }
 
   const currentRoleName = (typeof user?.role === "string" ? user.role : user?.role?.name)?.toLowerCase() || "";
-  if (!user || (currentRoleName !== "company_admin" && currentRoleName !== "companyadmin")) {
+  if (!user || user.must_accept_declaration || (currentRoleName !== "company_admin" && currentRoleName !== "companyadmin")) {
     return null; // Will redirect via useEffect
   }
 
+  const navItems = companyNavItems.map((item) =>
+    item.label === "Chats" && unreadCount > 0
+      ? { ...item, badge: unreadCount }
+      : item,
+  );
+
   return (
     <DashboardLayoutContent
-      sidebar={<CompanySidebar navItems={companyNavItems} />}
+      sidebar={<CompanySidebar navItems={navItems} />}
       header={<CompanyHeader />}
     >
+      <AnnouncementBar />
       {children}
     </DashboardLayoutContent>
   );

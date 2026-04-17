@@ -13,11 +13,18 @@ export type Branch = {
 };
 
 async function page() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`, {
-    next: { revalidate: 60 },
-  });
+  let branches: Branch[] = [];
 
-  const branches: Branch[] = await res.json().then((res) => res.data);
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`, {
+      next: { revalidate: 60 },
+    });
+
+    branches = await res.json().then((json) => json.data || []);
+  } catch (error) {
+    console.error("Failed to load branches page data", error);
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <BreadCrumb

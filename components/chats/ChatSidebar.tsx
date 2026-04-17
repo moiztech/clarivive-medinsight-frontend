@@ -59,6 +59,7 @@ export default function ChatSidebar() {
           data = response.data.conversations || response.data.messages || data;
         }
         setConversations(Array.isArray(data) ? data : []);
+        window.dispatchEvent(new CustomEvent("sidebar-refresh"));
 
         // If it's a manual refresh or we are currently viewing a chat,
         // sync the current conversation details

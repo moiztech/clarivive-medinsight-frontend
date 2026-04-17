@@ -68,9 +68,7 @@ export async function POST(req: Request) {
   // /auth/login returns user with role as object { id, name }, normalize to consistent shape
   const user = userData
     ? {
-        id: userData.id,
-        name: userData.name,
-        email: userData.email,
+        ...userData,
         role: userData.role, // can be object { id, name } or string
       }
     : null;

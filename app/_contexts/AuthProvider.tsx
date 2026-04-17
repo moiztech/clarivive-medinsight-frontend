@@ -13,8 +13,8 @@ type AuthCtx = {
   user: UserType | null;
   loading: boolean;
   setUser: (user: UserType | null) => void;
-  login: (email: string, password: string) => Promise<string>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<UserType>;
+  signup: (name: string, email: string, password: string) => Promise<UserType>;
   logout: () => Promise<void>;
 };
 
@@ -48,8 +48,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const res = await clientApi.post("/auth/signup", { name, email, password });
 
     if (res.data?.access_token) tokenStore.set(res.data.access_token);
-    // setUser(res.data.user ?? null);
-    // userStore.set(res.data.user ?? null);
+    const nextUser = res.data.user ?? null;
+    setUser(nextUser);
+    return nextUser;
   }
 
   async function logout() {
@@ -78,8 +79,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         const res = await protectedApi.get("/verify-token");
         if (res.status != 401) {
-          setUser(res.data?.user ?? res.data?.data ?? null);
-          // userStore.set(res.data.data ?? null);
+          const nextUser =
+            res.data?.user ?? res.data?.data?.user ?? res.data?.data ?? null;
+          setUser(nextUser);
         }
         return;
       } catch (err) {

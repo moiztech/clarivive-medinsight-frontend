@@ -72,9 +72,16 @@ export function Sidebar({ navItems, header, footer }: SidebarProps) {
               >
                 <item.icon className="h-5 w-5 shrink-0" />
                 {isExpanded && (
-                  <span className="text-sm font-medium truncate">
-                    {item.label}
-                  </span>
+                  <>
+                    <span className="text-sm font-medium truncate">
+                      {item.label}
+                    </span>
+                    {item.badge ? (
+                      <span className="ml-auto rounded-full bg-primary-blue px-2 py-0.5 text-[10px] font-semibold text-white">
+                        {item.badge}
+                      </span>
+                    ) : null}
+                  </>
                 )}
               </Button>
             </Link>

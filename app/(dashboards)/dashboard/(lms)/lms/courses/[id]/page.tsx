@@ -8,7 +8,6 @@ import {
   BookOpen,
   Clock,
   ChevronRight,
-  CheckCircle2,
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -33,7 +32,6 @@ function CourseDetailPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [course, setCourse] = useState<CourseDetail | null>(null);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const fetchCourseDetail = async () => {
@@ -41,7 +39,6 @@ function CourseDetailPage() {
         setLoading(true);
         const res = await protectedApi.get(`/course-detail/${id}`);
         setCourse(res.data.data);
-        setProgress(res.data.progress || 0);
       } catch (error) {
         console.error("Error fetching course detail:", error);
       } finally {
@@ -145,13 +142,13 @@ function CourseDetailPage() {
             <CardHeader className="border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/20">
               <CardTitle className="text-xl">About this Course</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="prose prose-blue dark:prose-invert max-w-none">
+            <CardContent className="p-6 md:p-8">
+              <div className="prose prose-blue dark:prose-invert max-w-none overflow-hidden break-words">
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                   {course.description}
                 </p>
                 <div
-                  className="mt-3 rich-text-content"
+                  className="mt-3 rich-text-content overflow-hidden break-words"
                   dangerouslySetInnerHTML={{ __html: course.content }}
                 />
               </div>

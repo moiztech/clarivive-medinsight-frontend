@@ -54,21 +54,28 @@ const processSectionContent: ProcessSectionProps = {
   ],
 };
 async function page() {
-  const [courseRes, categoryRes] = await Promise.all([
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/online?page=1`,
-      {
-        next: { revalidate: 60 },
-      },
-    ),
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
-      next: { revalidate: 300 },
-    }),
-  ]);
+  let courseJson: { data?: unknown[]; meta?: unknown } = {};
+  let categoryJson: CategoryResponse[] = [];
 
-  const courseJson = await courseRes.json();
-  const { data: categoryJson }: { data: CategoryResponse[] } =
-    await categoryRes.json();
+  try {
+    const [courseRes, categoryRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/online?page=1`,
+        {
+          next: { revalidate: 60 },
+        },
+      ),
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+        next: { revalidate: 300 },
+      }),
+    ]);
+
+    courseJson = await courseRes.json();
+    categoryJson = await categoryRes.json().then((res) => res.data || []);
+  } catch (error) {
+    console.error("Failed to load online courses page data", error);
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <BreadCrumb
@@ -78,7 +85,7 @@ async function page() {
       />
       <AboutHero {...courseHeroContent} />
       <ClientCoursesGrid
-        initialData={courseJson.data}
+        initialData={courseJson.data || []}
         initialMeta={courseJson.meta}
         categories={categoryJson}
         type="online"

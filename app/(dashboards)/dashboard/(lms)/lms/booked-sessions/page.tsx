@@ -18,6 +18,8 @@ import {
   Download,
   ExternalLink,
   Award,
+  CalendarPlus,
+  RotateCw,
 } from "lucide-react";
 import {
   Table,
@@ -64,6 +66,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { createGoogleCalendarUrl, downloadAppleCalendarFile } from "@/lib/calendar";
 
 interface BookedSchedule {
   id: number;
@@ -87,6 +90,8 @@ interface BookedSchedule {
       issue_date: string | null;
       view_url: string | null;
       download_url: string | null;
+      eligible?: boolean;
+      eligibility_reason?: string | null;
     };
     course_type: {
       id: number;
@@ -131,6 +136,18 @@ interface BookedSchedule {
       logo?: string;
     };
   };
+  alternatives?: {
+    id: number;
+    title: string;
+    location?: string;
+    branch?: {
+      title: string;
+    };
+    sessions?: {
+      id: number;
+      date: string;
+    }[];
+  }[];
 }
 export const formatSessionDates = (
   sessions?: { date: string }[],
@@ -182,6 +199,11 @@ function BookedSessionsPage() {
   const [selectedCourseForCertificate, setSelectedCourseForCertificate] =
     useState<BookedSchedule["course"] | null>(null);
   const [userTimeZone, setUserTimeZone] = useState("");
+  const [alternativeSchedules, setAlternativeSchedules] = useState<
+    BookedSchedule["alternatives"]
+  >([]);
+  const [loadingAlternatives, setLoadingAlternatives] = useState(false);
+  const [rescheduleLoading, setRescheduleLoading] = useState<number | null>(null);
 
   useEffect(() => {
     // Only get timezone on client to avoid hydration mismatch
@@ -209,6 +231,7 @@ function BookedSessionsPage() {
 
   const handleViewDetails = (booking: BookedSchedule) => {
     setSelectedBooking(booking);
+    setAlternativeSchedules([]);
     setIsSheetOpen(true);
   };
 
@@ -216,6 +239,49 @@ function BookedSessionsPage() {
     setSelectedCourseForCertificate(course);
     setIsCertificateOpen(true);
   };
+
+  const handleFetchAlternatives = useCallback(async (bookingId: number) => {
+    try {
+      setLoadingAlternatives(true);
+      const res = await protectedApi.get(`/learner-bookings/${bookingId}/alternatives`);
+      setAlternativeSchedules(res.data?.data?.alternatives ?? []);
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to load alternative sessions right now.");
+    } finally {
+      setLoadingAlternatives(false);
+    }
+  }, []);
+
+  const handleRescheduleRequest = async (
+    bookingId: number,
+    scheduleId: number,
+  ) => {
+    try {
+      setRescheduleLoading(scheduleId);
+      const res = await protectedApi.post(
+        `/learner-bookings/${bookingId}/reschedule-request`,
+        {
+          new_schedule_id: scheduleId,
+          reason: "Learner requested an alternative available session.",
+        },
+      );
+
+      toast.success(
+        res.data?.message || "Reschedule request submitted successfully.",
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to submit the reschedule request.");
+    } finally {
+      setRescheduleLoading(null);
+    }
+  };
+
+  useEffect(() => {
+    if (!selectedBooking) return;
+    handleFetchAlternatives(selectedBooking.id);
+  }, [handleFetchAlternatives, selectedBooking]);
 
   const getCombinedStatus = useCallback((sessions: { status?: string }[]) => {
     if (!sessions || sessions.length === 0) return null;
@@ -601,7 +667,9 @@ function BookedSessionsPage() {
                                       </TooltipTrigger>
                                       <TooltipContent>
                                         <p className="text-xs">
-                                          Not eligible for certificate
+                                          {booking.course.certificate
+                                            ?.eligibility_reason ||
+                                            "Not eligible for certificate"}
                                         </p>
                                       </TooltipContent>
                                     </Tooltip>
@@ -757,6 +825,54 @@ function BookedSessionsPage() {
                 </div>
               </div>
 
+              {selectedBooking?.schedule.sessions?.[0] && (
+                <div className="rounded-xl border border-border/50 bg-card p-4 shadow-sm">
+                  <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    Add To Calendar
+                  </h4>
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    <Button
+                      variant="outline"
+                      className="gap-2 font-bold"
+                      asChild
+                    >
+                      <a
+                        href={createGoogleCalendarUrl({
+                          title: `${selectedBooking.course.title} - ${selectedBooking.schedule.title}`,
+                          description: selectedBooking.schedule.description,
+                          location: selectedBooking.schedule.location,
+                          date: selectedBooking.schedule.sessions[0].date,
+                          start_time: selectedBooking.schedule.sessions[0].start_time,
+                          end_time: selectedBooking.schedule.sessions[0].end_time,
+                        })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <CalendarPlus className="size-4" />
+                        Google Calendar
+                      </a>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="gap-2 font-bold"
+                      onClick={() =>
+                        downloadAppleCalendarFile({
+                          title: `${selectedBooking.course.title} - ${selectedBooking.schedule.title}`,
+                          description: selectedBooking.schedule.description,
+                          location: selectedBooking.schedule.location,
+                          date: selectedBooking.schedule.sessions[0].date,
+                          start_time: selectedBooking.schedule.sessions[0].start_time,
+                          end_time: selectedBooking.schedule.sessions[0].end_time,
+                        })
+                      }
+                    >
+                      <CalendarPlus className="size-4" />
+                      Apple Calendar
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {/* Sessions List */}
               <div className="space-y-4">
                 <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
@@ -823,6 +939,83 @@ function BookedSessionsPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <div className="rounded-xl border border-border/50 bg-card p-4 shadow-sm">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                      Alternative Sessions
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      Rescheduling may be subject to approval and refund policy checks.
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    onClick={() =>
+                      selectedBooking && handleFetchAlternatives(selectedBooking.id)
+                    }
+                    disabled={loadingAlternatives}
+                  >
+                    <RotateCw className="size-3.5" />
+                    Refresh
+                  </Button>
+                </div>
+
+                <div className="space-y-3">
+                  {loadingAlternatives ? (
+                    <p className="text-sm text-muted-foreground">
+                      Loading alternative sessions...
+                    </p>
+                  ) : alternativeSchedules && alternativeSchedules.length > 0 ? (
+                    alternativeSchedules.map((alternative) => (
+                      <div
+                        key={alternative.id}
+                        className="rounded-xl border border-border/50 bg-muted/20 p-4"
+                      >
+                        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                          <div className="space-y-1">
+                            <p className="font-semibold text-foreground">
+                              {alternative.title}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {alternative.branch?.title || "Branch TBC"} •{" "}
+                              {alternative.location || "Location TBC"}
+                            </p>
+                            <p className="text-xs text-primary-blue">
+                              {formatSessionDates(alternative.sessions)}
+                            </p>
+                          </div>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            className="gap-2"
+                            onClick={() =>
+                              selectedBooking &&
+                              handleRescheduleRequest(
+                                selectedBooking.id,
+                                alternative.id,
+                              )
+                            }
+                            disabled={rescheduleLoading === alternative.id}
+                          >
+                            <RotateCw className="size-3.5" />
+                            {rescheduleLoading === alternative.id
+                              ? "Submitting..."
+                              : "Request Reschedule"}
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No alternative sessions are currently available for this course.
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Special Instructions */}

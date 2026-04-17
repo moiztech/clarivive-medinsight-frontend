@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { useAuth } from "@/app/_contexts/AuthProvider"; // ✅
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { UserType } from "@/lib/types";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
@@ -24,6 +26,7 @@ export default function SignupPage() {
   });
 
   const { signup } = useAuth();
+  const router = useRouter();
 
   // Check if passwords match
   const passwordsMatch =
@@ -41,9 +44,18 @@ export default function SignupPage() {
 
     setLoading(true);
     try {
-      await signup(form.name, form.email, form.password);
+      const user = (await signup(
+        form.name,
+        form.email,
+        form.password,
+      )) as UserType;
       toast.success("User registered successfully");
-      window.location.href = "/";
+      if (user?.must_accept_declaration) {
+        router.push("/declaration?callbackUrl=%2F");
+        return;
+      }
+
+      router.push("/");
     } catch (error) {
       const err = error as {
         response?: { data?: { message?: string } };
