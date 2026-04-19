@@ -112,7 +112,7 @@ export default function ChatSidebar() {
       const exists = conversations.some((conv) => conv.user?.id === adminId);
       setIsAdminChatExists(exists);
     }
-    if (user?.role?.name === "employee" && user?.company_id) {
+    if ((typeof user?.role === "string" ? user.role : user?.role?.name) === "employee" && user?.company_id) {
       const exists = conversations.some(
         (conv) => conv.user?.id === user.company_id,
       );
@@ -181,7 +181,6 @@ export default function ChatSidebar() {
               className="shrink-0 size-5 rounded-full"
               onClick={() => fetchData()}
               disabled={loading}
-              asChild
             >
               <RefreshCcw
                 className={clsx("size-4", loading && "animate-spin")}
@@ -231,15 +230,15 @@ export default function ChatSidebar() {
 
       {/* Contact Admin Button */}
       {!loading &&
-        ((adminId && !isAdminChatExists && user?.role.name !== "employee") ||
-          (user?.role.name === "employee" &&
+        ((adminId && !isAdminChatExists && (typeof user?.role === "string" ? user.role : user?.role?.name) !== "employee") ||
+          ((typeof user?.role === "string" ? user.role : user?.role?.name) === "employee" &&
             user?.company_id &&
             !isCompanyAdminChatExists)) && (
           <div className="p-4 border-t bg-muted/30">
             <Button
               onClick={() =>
                 handleContactAdmin(
-                  user?.role.name === "employee" ? user.company_id : null,
+                  (typeof user?.role === "string" ? user.role : user?.role?.name) === "employee" ? user.company_id : null,
                 )
               }
               disabled={creatingChat}
@@ -252,7 +251,7 @@ export default function ChatSidebar() {
                 ) : (
                   <UserPlus className="size-4" />
                 )}
-                {user?.role.name === "employee"
+                {(typeof user?.role === "string" ? user.role : user?.role?.name) === "employee"
                   ? `Contact ${user.company?.name || "Company Admin"}`
                   : "Contact Clarivive Support"}
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -9,26 +9,63 @@ import {
   Calendar,
   Eye,
   Heart,
-  MessageCircle,
   Edit2,
+  Loader2,
 } from "lucide-react";
-import { mockBlogs } from "@/data/blogData";
+import { getAdminBlogById } from "@/lib/axios/blogs";
+import type { Blog } from "@/lib/types/blog";
 import BlogStatusBadge from "@/components/blogs/BlogStatusBadge";
 import DOMPurify from "dompurify";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const STORAGE_BASE = API_BASE.replace(/\/api$/, "") + "/storage/";
 
 export default function AdminBlogDetailPage() {
   const params = useParams();
   const blogId = params.id as string;
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  const blog = mockBlogs.find((b) => b.id === blogId);
+  useEffect(() => {
+    async function fetchBlog() {
+      try {
+        setLoading(true);
+        setNotFound(false);
+        const blogData = await getAdminBlogById(blogId);
+        if (!blogData) {
+          setNotFound(true);
+          return;
+        }
+        setBlog(blogData);
+      } catch {
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchBlog();
+  }, [blogId]);
 
-  if (!blog) {
+  const getImageUrl = (b: Blog) => {
+    if (!b.featured_image) return "/placeholder.jpg";
+    if (b.featured_image.startsWith("http")) return b.featured_image;
+    return STORAGE_BASE + b.featured_image;
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      </div>
+    );
+  }
+
+  if (notFound || !blog) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Blog not found
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Blog not found</h1>
           <p className="text-gray-500 mb-6">
             The blog post you&apos;re looking for doesn&apos;t exist.
           </p>
@@ -44,7 +81,7 @@ export default function AdminBlogDetailPage() {
     );
   }
 
-  const formattedDate = new Date(blog.createdAt).toLocaleDateString("en-US", {
+  const formattedDate = new Date(blog.created_at).toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -74,9 +111,9 @@ export default function AdminBlogDetailPage() {
         {/* Blog Content Card */}
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {/* Featured Image */}
-          <div className="relative aspect-[16/7] overflow-hidden">
+          <div className="relative aspect-[16/7] overflow-hidden bg-gray-100">
             <Image
-              src={blog.featuredImage}
+              src={getImageUrl(blog)}
               alt={blog.title}
               fill
               className="object-cover"
@@ -100,51 +137,53 @@ export default function AdminBlogDetailPage() {
 
             {/* Short Description */}
             <p className="mt-3 text-gray-500 leading-relaxed">
-              {blog.shortDescription}
+              {blog.short_description}
             </p>
 
             {/* Meta Info */}
             <div className="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-gray-100">
-              <div className="flex items-center gap-3">
-                <Image
-                  src={blog.authorAvatar}
-                  alt={blog.author}
-                  width={36}
-                  height={36}
-                  className="rounded-full"
-                />
-                <span className="text-sm font-medium text-gray-900">
-                  {blog.author}
-                </span>
-              </div>
+              {blog.author && (
+                <div className="flex items-center gap-3">
+                  {blog.author.avatar ? (
+                    <Image
+                      src={blog.author.avatar}
+                      alt={blog.author.name}
+                      width={36}
+                      height={36}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-bold text-indigo-600">
+                      {blog.author.name.charAt(0)}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-gray-900">
+                    {blog.author.name}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center gap-1.5 text-sm text-gray-500">
                 <Calendar className="w-4 h-4" />
                 {formattedDate}
               </div>
-              {blog.views !== undefined && (
+              {blog.views > 0 && (
                 <div className="flex items-center gap-1.5 text-sm text-gray-500">
                   <Eye className="w-4 h-4" />
                   {blog.views.toLocaleString()} views
                 </div>
               )}
-              {blog.likes !== undefined && (
+              {blog.likes > 0 && (
                 <div className="flex items-center gap-1.5 text-sm text-gray-500">
                   <Heart className="w-4 h-4" />
                   {blog.likes}
                 </div>
               )}
-              {blog.comments !== undefined && (
-                <div className="flex items-center gap-1.5 text-sm text-gray-500">
-                  <MessageCircle className="w-4 h-4" />
-                  {blog.comments}
-                </div>
-              )}
             </div>
 
             {/* Tags */}
-            {blog.tags.length > 0 && (
+            {(blog.tags || []).length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
-                {blog.tags.map((tag) => (
+                {(blog.tags || []).map((tag) => (
                   <span
                     key={tag}
                     className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium"

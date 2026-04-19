@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { Blog } from "@/data/blogData";
+import type { Blog } from "@/lib/types/blog";
 import BlogCard from "./BlogCard";
 
 interface BlogListProps {

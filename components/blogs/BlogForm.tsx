@@ -4,8 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { X, Upload, Plus, Loader2 } from "lucide-react";
-import type { Blog } from "@/data/blogData";
-import { BLOG_CATEGORIES } from "@/data/blogData";
+import type { Blog } from "@/lib/types/blog";
+import { BLOG_CATEGORIES } from "@/lib/types/blog";
 
 interface BlogFormProps {
   initialData?: Blog;
@@ -44,7 +44,7 @@ export default function BlogForm({
   const [QuillEditor, setQuillEditor] = useState<any>(null);
 
   useEffect(() => {
-    import("react-quill")
+    import("react-quill-new")
       .then((mod) => {
         setQuillEditor(() => mod.default);
       })

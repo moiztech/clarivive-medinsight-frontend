@@ -4,7 +4,10 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import type { Blog } from "@/data/blogData";
+import type { Blog } from "@/lib/types/blog";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const STORAGE_BASE = API_BASE.replace(/\/api$/, "") + "/storage/";
 
 interface BlogCardProps {
   blog: Blog;
@@ -12,15 +15,21 @@ interface BlogCardProps {
 }
 
 const categoryColors: Record<string, string> = {
-  Design: "#6941C6",
-  Product: "#3538CD",
-  "Software Engineering": "#027A48",
-  Management: "#C11574",
-  "Customer Success": "#026AA2",
+  Health: "#027A48",
+  Training: "#6941C6",
+  Nutrition: "#C11574",
+  Medical: "#3538CD",
+  General: "#026AA2",
 };
 
+function getImageUrl(blog: Blog) {
+  if (!blog.featured_image) return "/placeholder.jpg";
+  if (blog.featured_image.startsWith("http")) return blog.featured_image;
+  return STORAGE_BASE + blog.featured_image;
+}
+
 export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
-  const formattedDate = new Date(blog.createdAt).toLocaleDateString("en-US", {
+  const formattedDate = new Date(blog.created_at).toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -28,11 +37,11 @@ export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
 
   if (variant === "compact") {
     return (
-      <Link href={`/blogs/${blog.id}`} className="group block">
+      <Link href={`/blogs/${blog.slug || blog.id}`} className="group block">
         <div className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <div className="relative aspect-[16/10] overflow-hidden">
             <Image
-              src={blog.featuredImage}
+              src={getImageUrl(blog)}
               alt={blog.title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -49,18 +58,24 @@ export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
               {blog.title}
             </h3>
             <p className="mt-1 text-sm text-gray-500 line-clamp-2">
-              {blog.shortDescription}
+              {blog.short_description}
             </p>
             <div className="mt-3 flex items-center gap-2">
-              <Image
-                src={blog.authorAvatar}
-                alt={blog.author}
-                width={24}
-                height={24}
-                className="rounded-full"
-              />
+              {blog.author?.avatar ? (
+                <Image
+                  src={blog.author.avatar}
+                  alt={blog.author.name}
+                  width={24}
+                  height={24}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-600">
+                  {blog.author?.name?.charAt(0) || "?"}
+                </div>
+              )}
               <span className="text-xs text-gray-600">
-                {blog.author} · {formattedDate}
+                {blog.author?.name || "Unknown"} &middot; {formattedDate}
               </span>
             </div>
           </div>
@@ -70,12 +85,12 @@ export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
   }
 
   return (
-    <Link href={`/blogs/${blog.id}`} className="group block h-full">
+    <Link href={`/blogs/${blog.slug || blog.id}`} className="group block h-full">
       <article className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
         {/* Image */}
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
-            src={blog.featuredImage}
+            src={getImageUrl(blog)}
             alt={blog.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -113,24 +128,27 @@ export default function BlogCard({ blog, variant = "public" }: BlogCardProps) {
             className="mt-2 text-sm leading-relaxed line-clamp-2 flex-1"
             style={{ color: "#667085" }}
           >
-            {blog.shortDescription}
+            {blog.short_description}
           </p>
 
           {/* Author */}
           <div className="mt-6 flex items-center gap-3">
-            <Image
-              src={blog.authorAvatar}
-              alt={blog.author}
-              width={36}
-              height={36}
-              className="rounded-full"
-            />
+            {blog.author?.avatar ? (
+              <Image
+                src={blog.author.avatar}
+                alt={blog.author.name}
+                width={36}
+                height={36}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-sm font-bold text-indigo-600">
+                {blog.author?.name?.charAt(0) || "?"}
+              </div>
+            )}
             <div className="flex flex-col">
-              <span
-                className="text-sm font-semibold"
-                style={{ color: "#101828" }}
-              >
-                {blog.author}
+              <span className="text-sm font-semibold" style={{ color: "#101828" }}>
+                {blog.author?.name || "Unknown"}
               </span>
               <span className="text-sm" style={{ color: "#667085" }}>
                 {formattedDate}

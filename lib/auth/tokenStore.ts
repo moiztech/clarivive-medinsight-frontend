@@ -4,9 +4,6 @@ export const tokenStore = {
   get() {
     if (accessToken) return accessToken;
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("access_token");
-      if (stored) return stored;
-
       const match = document.cookie.match(
         new RegExp(`(^| )access_token=([^;]+)`),
       );

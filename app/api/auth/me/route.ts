@@ -13,13 +13,21 @@ export async function GET() {
       { status: 401 },
     );
   }
-  const res = await serverApi.get("/user", {
+
+  // Use /verify-token which works for all roles (not just learner)
+  const res = await serverApi.get("/verify-token", {
     headers: {
       Authorization: token,
     },
   });
-  if (res.data?.status == true && res.status != 401) {
-    return NextResponse.json(res.data, { status: 200 });
+
+  if (res.data?.status == 200 || res.data?.status == true) {
+    // /verify-token returns { status, message, data: user_with_role }
+    const user = res.data?.data ?? null;
+    return NextResponse.json(
+      { status: true, user },
+      { status: 200 },
+    );
   }
 
   return NextResponse.json(

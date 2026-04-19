@@ -1,16 +1,21 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import CheckoutPageContent from "@/components/checkout/CheckoutPageContent";
 import { useAuth } from "@/app/_contexts/AuthProvider";
-import { Link } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function CheckoutPage() {
   const { user } = useAuth();
-  const searchParams = new URLSearchParams(window.location.search);
-  const callbackUrl = searchParams.get("callBackUrl") || "/";
+  const [callbackUrl, setCallbackUrl] = useState("/");
 
-  if (user?.company_id && user?.role.name === "employee") {
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    setCallbackUrl(searchParams.get("callBackUrl") || "/");
+  }, []);
+
+  if (user?.company_id && (typeof user?.role === "string" ? user.role : user?.role?.name) === "employee") {
     return (
       <div className="flex items-center justify-center h-screen">
         <p>

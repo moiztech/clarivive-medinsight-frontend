@@ -36,9 +36,10 @@ function Conversation({
   const router = useRouter();
   const { user } = useAuth();
   let linkPrefix;
-  if (user?.role.name === "company_admin") {
+  const userRole = typeof user?.role === "string" ? user.role : user?.role?.name;
+  if (userRole === "company_admin") {
     linkPrefix = "company";
-  } else if (user?.role.name === "trainer") {
+  } else if (userRole === "trainer") {
     linkPrefix = "dashboard/trainer";
   } else {
     linkPrefix = "dashboard/lms";
@@ -84,7 +85,7 @@ function Conversation({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -183,7 +184,7 @@ function Conversation({
             <Input
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyDown}
               placeholder="Type your message..."
               className="pr-12 h-11 bg-background border-border/50 focus-visible:ring-primary-blue/20 focus-visible:border-primary-blue rounded-xl"
             />

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getCookie } from "../cookies";
 import { tokenStore } from "../auth/tokenStore";
 
 const protectedApi = axios.create({
@@ -13,7 +12,7 @@ const protectedApi = axios.create({
 
 protectedApi.interceptors.request.use(
   (config) => {
-    const token = getCookie("access_token") || tokenStore.get();
+    const token = tokenStore.get();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

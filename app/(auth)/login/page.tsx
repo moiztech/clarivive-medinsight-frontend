@@ -60,6 +60,10 @@ export default function LoginPage() {
           case "company_admin":
             router.push("/company");
             break;
+          case "super_admin":
+          case "superadmin":
+            router.push("/super-admin/blogs");
+            break;
           default:
             router.push("/");
         }

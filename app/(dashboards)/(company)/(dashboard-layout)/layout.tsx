@@ -78,9 +78,12 @@ export default function CompanyLayout({
       if (!user) {
         toast.error("You are not logged in");
         router.push("/login?callbackUrl=/company");
-      } else if (user.must_accept_declaration) {
+        return;
+      }
+      const roleName = (typeof user.role === "string" ? user.role : user.role?.name)?.toLowerCase() || "";
+      if (user.must_accept_declaration) {
         router.push("/declaration?callbackUrl=%2Fcompany");
-      } else if (user.role.name !== "company_admin") {
+      } else if (roleName !== "company_admin" && roleName !== "companyadmin") {
         toast.error("You are not authorized to access this page");
         router.push("/");
       }
@@ -91,7 +94,8 @@ export default function CompanyLayout({
     return <div>Loading...</div>;
   }
 
-  if (!user || user.must_accept_declaration || user.role.name !== "company_admin") {
+  const currentRoleName = (typeof user?.role === "string" ? user.role : user?.role?.name)?.toLowerCase() || "";
+  if (!user || user.must_accept_declaration || (currentRoleName !== "company_admin" && currentRoleName !== "companyadmin")) {
     return null; // Will redirect via useEffect
   }
 

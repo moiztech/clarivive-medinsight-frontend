@@ -36,9 +36,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     tokenStore.set(res.data.access_token);
-    const nextUser = res.data.user ?? null;
-    setUser(nextUser);
-    return nextUser;
+    setUser(res.data.user ?? null);
+
+    // Normalize role: can be object { id, name } or string
+    const role = res.data.user?.role;
+    const roleName = typeof role === "string" ? role : role?.name;
+    return roleName;
   }
 
   async function signup(name: string, email: string, password: string) {
@@ -52,7 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function logout() {
     try {
-      await protectedApi.post("/company/auth/logout");
+      // All roles use /auth/logout (AuthController@logout)
+      await protectedApi.post("/auth/logout");
       toast.success("Logout successful");
     } catch (error) {
       console.log(error);

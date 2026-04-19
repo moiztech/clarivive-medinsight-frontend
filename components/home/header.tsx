@@ -74,11 +74,23 @@ export default function Header() {
   let dashboardLink = "/dashboard/lms";
   let isLearner = true;
 
-  if (user?.role.name === "trainer") {
+  let roleName = "";
+  if (user?.role && typeof user.role === "string") {
+    roleName = user.role.toLowerCase();
+  } else if (user?.role?.name) {
+    roleName = typeof user.role.name === "string" ? user.role.name.toLowerCase() : "";
+  } else if (user?.role_name) {
+    roleName = String(user.role_name).toLowerCase();
+  }
+
+  if (roleName === "trainer") {
     dashboardLink = "/dashboard/trainer";
     isLearner = false;
-  } else if (user?.role.name === "company_admin") {
+  } else if (roleName === "company_admin" || roleName === "companyadmin") {
     dashboardLink = "/company";
+    isLearner = false;
+  } else if (roleName === "super_admin" || roleName === "superadmin" || roleName === "admin") {
+    dashboardLink = "/super-admin";
     isLearner = false;
   }
   return (
@@ -181,7 +193,7 @@ export default function Header() {
                       Go to Dashboard
                     </DropdownMenuItem>
                   </Link>
-                  {user.role.name === "learner" && (
+                  {(typeof user.role === "string" ? user.role : user.role?.name) === "learner" && (
                     <DropdownMenuItem className="cursor-pointer">
                       <Link href={"/orders"}>My Orders</Link>
                     </DropdownMenuItem>

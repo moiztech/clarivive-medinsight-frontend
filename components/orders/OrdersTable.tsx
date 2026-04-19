@@ -105,7 +105,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders }) => {
           ))}
           {orders.length === 0 && (
             <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center">
+              <TableCell colSpan={6} className="h-24 text-center">
                 No orders found.
               </TableCell>
             </TableRow>

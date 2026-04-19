@@ -51,9 +51,12 @@ export default function TrainerLayout({
       if (!user) {
         toast.error("You are not logged in");
         router.push("/login?callbackUrl=/dashboard/trainer");
-      } else if (user.must_accept_declaration) {
+        return;
+      }
+      const roleName = (typeof user.role === "string" ? user.role : user.role?.name)?.toLowerCase() || "";
+      if (user.must_accept_declaration) {
         router.push("/declaration?callbackUrl=%2Fdashboard%2Ftrainer");
-      } else if (user.role.name !== "trainer") {
+      } else if (roleName !== "trainer") {
         toast.error("You need to login as a trainer to access this page");
         router.push("/");
       }
@@ -89,7 +92,8 @@ export default function TrainerLayout({
     );
   }
 
-  if (!user || user.must_accept_declaration || user.role.name !== "trainer") {
+  const currentRoleName = (typeof user?.role === "string" ? user.role : user?.role?.name)?.toLowerCase() || "";
+  if (!user || user.must_accept_declaration || currentRoleName !== "trainer") {
     return null; // Will redirect via useEffect
   }
 
