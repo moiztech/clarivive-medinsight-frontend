@@ -36,20 +36,6 @@ export default function EditBlogPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // Dynamic import for React Quill (client only)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [QuillEditor, setQuillEditor] = useState<any>(null);
-
-  useEffect(() => {
-    import("react-quill-new")
-      .then((mod) => {
-        setQuillEditor(() => mod.default);
-      })
-      .catch(() => {
-        // react-quill not installed, fallback to textarea
-      });
-  }, []);
-
   // Fetch blog data
   useEffect(() => {
     async function fetchBlog() {
@@ -151,18 +137,6 @@ export default function EditBlogPage() {
     }
   };
 
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["blockquote", "code-block"],
-      ["link", "image"],
-      [{ align: [] }],
-      ["clean"],
-    ],
-  };
-
   if (loadingBlog) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
@@ -253,28 +227,14 @@ export default function EditBlogPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Full Content <span className="text-red-500">*</span>
               </label>
-              {QuillEditor ? (
-                <>
-                  <QuillEditor
-                    value={content}
-                    onChange={setContent}
-                    theme="snow"
-                    modules={quillModules}
-                    placeholder="Write your blog content here..."
-                    className="blog-quill-editor"
-                  />
-                  <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css" />
-                </>
-              ) : (
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  required
-                  rows={12}
-                  placeholder="Write your blog content here..."
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all duration-200 resize-y min-h-[300px]"
-                />
-              )}
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                required
+                rows={12}
+                placeholder="Write your blog content here..."
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all duration-200 resize-y min-h-[300px]"
+              />
             </div>
 
             {/* Category and Status Row */}

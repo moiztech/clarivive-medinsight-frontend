@@ -46,6 +46,7 @@ export default function ChatSidebar() {
   const { user } = useAuth();
   const currentRole =
     typeof user?.role === "string" ? user.role : user?.role?.name;
+  const companyAdminLabel = user?.company?.name ?? "Company Admin";
 
   const fetchData = useCallback(
     async (isAuto = false) => {
@@ -254,7 +255,7 @@ export default function ChatSidebar() {
                   <UserPlus className="size-4" />
                 )}
                 {currentRole === "employee"
-                  ? `Contact ${user.company?.name || "Company Admin"}`
+                  ? `Contact ${companyAdminLabel}`
                   : "Contact Clarivive Support"}
               </div>
               <div className="lg:hidden">
