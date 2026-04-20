@@ -44,6 +44,8 @@ export default function ChatSidebar() {
   const hasLoadedOnce = useRef(false);
 
   const { user } = useAuth();
+  const currentRole =
+    typeof user?.role === "string" ? user.role : user?.role?.name;
 
   const fetchData = useCallback(
     async (isAuto = false) => {
@@ -112,13 +114,13 @@ export default function ChatSidebar() {
       const exists = conversations.some((conv) => conv.user?.id === adminId);
       setIsAdminChatExists(exists);
     }
-    if ((typeof user?.role === "string" ? user.role : user?.role?.name) === "employee" && user?.company_id) {
+    if (currentRole === "employee" && user?.company_id) {
       const exists = conversations.some(
         (conv) => conv.user?.id === user.company_id,
       );
       setIsCompanyAdminChatExists(exists);
     }
-  }, [conversations, adminId, user]);
+  }, [conversations, adminId, user, currentRole]);
 
   const handleContactAdmin = async (targetUserId?: number | null) => {
     const idToContact = targetUserId || adminId;
@@ -230,15 +232,15 @@ export default function ChatSidebar() {
 
       {/* Contact Admin Button */}
       {!loading &&
-        ((adminId && !isAdminChatExists && (typeof user?.role === "string" ? user.role : user?.role?.name) !== "employee") ||
-          ((typeof user?.role === "string" ? user.role : user?.role?.name) === "employee" &&
+        ((adminId && !isAdminChatExists && currentRole !== "employee") ||
+          (currentRole === "employee" &&
             user?.company_id &&
             !isCompanyAdminChatExists)) && (
           <div className="p-4 border-t bg-muted/30">
             <Button
               onClick={() =>
                 handleContactAdmin(
-                  (typeof user?.role === "string" ? user.role : user?.role?.name) === "employee" ? user.company_id : null,
+                  currentRole === "employee" ? (user?.company_id ?? null) : null,
                 )
               }
               disabled={creatingChat}
@@ -251,7 +253,7 @@ export default function ChatSidebar() {
                 ) : (
                   <UserPlus className="size-4" />
                 )}
-                {(typeof user?.role === "string" ? user.role : user?.role?.name) === "employee"
+                {currentRole === "employee"
                   ? `Contact ${user.company?.name || "Company Admin"}`
                   : "Contact Clarivive Support"}
               </div>
