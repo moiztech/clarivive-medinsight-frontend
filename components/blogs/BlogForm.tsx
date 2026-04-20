@@ -23,7 +23,7 @@ export default function BlogForm({
 
   const [title, setTitle] = useState(initialData?.title || "");
   const [shortDescription, setShortDescription] = useState(
-    initialData?.shortDescription || ""
+    initialData?.short_description || ""
   );
   const [content, setContent] = useState(initialData?.content || "");
   const [category, setCategory] = useState(initialData?.category || "");
@@ -33,10 +33,10 @@ export default function BlogForm({
     initialData?.status || "draft"
   );
   const [featuredImage, setFeaturedImage] = useState(
-    initialData?.featuredImage || ""
+    initialData?.featured_image || ""
   );
   const [imagePreview, setImagePreview] = useState(
-    initialData?.featuredImage || ""
+    initialData?.featured_image || ""
   );
 
   // Dynamic import for React Quill (client only)
@@ -89,12 +89,12 @@ export default function BlogForm({
     e.preventDefault();
     onSubmit({
       title,
-      shortDescription,
+      short_description: shortDescription,
       content,
       category,
       tags,
       status,
-      featuredImage,
+      featured_image: featuredImage,
     });
   };
 
