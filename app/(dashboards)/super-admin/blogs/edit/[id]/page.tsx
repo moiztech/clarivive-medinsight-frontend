@@ -139,7 +139,7 @@ export default function EditBlogPage() {
 
   if (loadingBlog) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className="bg-gray-50/50 flex items-center justify-center py-20">
         <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
       </div>
     );
@@ -147,7 +147,7 @@ export default function EditBlogPage() {
 
   if (notFound || !blog) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className="bg-gray-50/50 flex items-center justify-center py-20">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Blog not found</h1>
           <p className="text-gray-500 mb-6">The blog post you&apos;re looking for doesn&apos;t exist.</p>
@@ -164,7 +164,7 @@ export default function EditBlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="bg-gray-50/50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">

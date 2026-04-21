@@ -89,7 +89,7 @@ export default function Header() {
   } else if (roleName === "company_admin" || roleName === "companyadmin") {
     dashboardLink = "/company";
     isLearner = false;
-  } else if (roleName === "super_admin" || roleName === "superadmin" || roleName === "admin") {
+  } else if (roleName === "super_admin" || roleName === "superadmin" || roleName === "super-admin" || roleName === "admin") {
     dashboardLink = "/super-admin";
     isLearner = false;
   }

@@ -33,7 +33,7 @@ export interface Bundle {
   banner_url?: string | null;
   price: string | number;
   is_free: boolean;
-  status: 'published' | 'draft' | 'archived';
+  status: 'published' | 'draft' | 'archived' | 'active';
   created_by: number;
   courses?: Course[];
   schedules?: BundleSchedule[];
@@ -73,16 +73,18 @@ export interface PaginatedEnrollments {
   total: number;
 }
 
-export const BUNDLE_STATUSES = ['published', 'draft', 'archived'] as const;
+export const BUNDLE_STATUSES = ['published', 'draft', 'archived', 'active'] as const;
 
 export const BUNDLE_STATUS_LABELS = {
   published: 'Published',
+  active: 'Active',
   draft: 'Draft',
   archived: 'Archived',
 } as const;
 
 export const BUNDLE_STATUS_COLORS = {
   published: 'green',
+  active: 'blue',
   draft: 'amber',
   archived: 'gray',
 } as const;
