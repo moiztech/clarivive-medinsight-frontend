@@ -76,11 +76,11 @@ export default function Header() {
 
   let roleName = "";
   if (user?.role && typeof user.role === "string") {
-    roleName = user.role.toLowerCase();
+    roleName = user?.role;
   } else if (user?.role?.name) {
-    roleName = typeof user.role.name === "string" ? user.role.name.toLowerCase() : "";
-  } else if (user?.role_name) {
-    roleName = String(user.role_name).toLowerCase();
+    roleName = typeof user?.role?.name === "string" ? user.role.name.toLowerCase() : "";
+  } else if (user?.role?.name) {
+    roleName = String(user?.role?.name).toLowerCase();
   }
 
   if (roleName === "trainer") {
