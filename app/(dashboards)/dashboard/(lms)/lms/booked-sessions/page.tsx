@@ -121,13 +121,13 @@ interface BookedSchedule {
       end_time: string;
       attendance_status: string | null;
       attendances:
-        | {
-            id: number;
-            session_id: number;
-            student_id: number;
-            status: string;
-          }[]
-        | [];
+      | {
+        id: number;
+        session_id: number;
+        student_id: number;
+        status: string;
+      }[]
+      | [];
     }[];
     trainer?: {
       id: number;
@@ -400,7 +400,7 @@ function BookedSessionsPage() {
       heading="My Booked Schedules"
       subHeading="Track your progress and view upcoming study sessions"
     >
-      <div className="flex flex-col xl:flex-row gap-6 items-start">
+      <div className="flex flex-col xl:flex-row gap-6 items-stretch">
         {/* Left: Calendar Sidebar */}
         <div className="w-full xl:w-auto xl:sticky xl:top-24">
           <div className="flex flex-col gap-4">
@@ -426,7 +426,7 @@ function BookedSessionsPage() {
         </div>
 
         {/* Right: Table Content */}
-        <div className="flex-1 space-y-6 w-full">
+        <div className="flex-1 space-y-6 w-full min-w-0">
           {/* Actions Bar */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card/40 p-4 rounded-xl border border-border/50 backdrop-blur-sm">
             <div className="relative flex-1 max-w-md group">
@@ -452,694 +452,182 @@ function BookedSessionsPage() {
 
           {/* Table Card */}
           <Card className="border-none shadow-xl pt-0 bg-card/60 backdrop-blur-md ring-1 ring-border/50 overflow-hidden">
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow className="hover:bg-transparent border-border/50">
-                    <TableHead className="text-nowrap pe-0!">
-                      Booking ID
-                    </TableHead>
-                    <TableHead className="w-[350px]">
-                      <button
-                        onClick={() => handleSort("course_title")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Booked Course
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
-                    <TableHead>
-                      <button
-                        onClick={() => handleSort("schedule_title")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Schedule Details
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
-                    <TableHead>
-                      <button
-                        onClick={() => handleSort("status")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Status
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
-                    <TableHead className="text-right font-semibold pr-6">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {loading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell colSpan={5}>
-                          <div className="flex items-center gap-4 py-2">
-                            <Skeleton className="h-12 w-20" />
-                            <div className="space-y-2 flex-1">
-                              <Skeleton className="h-4 w-1/3" />
-                              <Skeleton className="h-3 w-1/4" />
-                            </div>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : currentData.length > 0 ? (
-                    currentData.map((booking) => (
-                      <TableRow
-                        key={booking.id}
-                        className="group border-border/40 hover:bg-muted/30 transition-colors"
-                      >
-                        <TableCell>{booking.id}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-4">
-                            <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted shadow-sm">
-                              <Image
-                                src={
-                                  booking.schedule.image ||
-                                  booking.course.icon ||
-                                  "/placeholder.jpg"
-                                }
-                                alt={booking.course.title}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                            <div className="flex flex-col min-w-0 w-full">
-                              <Link
-                                href={`/course/face-to-face/${booking.course.slug}`}
-                                target="_blank"
-                              >
-                                <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
-                                  {booking.course.title}
-                                </span>
-                              </Link>
-                              <div className="flex items-center gap-2">
-                                <Badge
-                                  variant="secondary"
-                                  className="text-[10px] h-4 px-1.5 font-bold bg-primary-blue/10 text-primary-blue border-none"
-                                >
-                                  {booking.course.course_type.name}
-                                </Badge>
-                                {booking.schedule.sessions && (
-                                  <span className="text-[10px] text-muted-foreground font-bold">
-                                    {booking.schedule.sessions.length} SESSIONS
-                                  </span>
-                                )}
-                              </div>
+            <CardContent className="p-0 overflow-x-auto">
+              <div className="min-w-[900px]">
+                <Table>
+                  <TableHeader className="bg-muted/30">
+                    <TableRow className="hover:bg-transparent border-border/50">
+                      <TableHead className="text-nowrap pe-0!">
+                        Booking ID
+                      </TableHead>
 
-                              <div className="mt-2 space-y-1.5">
-                                <div className="flex justify-between items-center text-[10px] font-bold">
-                                  <span className="text-muted-foreground uppercase">
-                                    Progress
-                                  </span>
-                                  <span className="text-primary-blue">
-                                    {booking.progress || 0}%
-                                  </span>
-                                </div>
-                                <Progress
-                                  value={booking.progress || 0}
-                                  className="h-1.5"
+                      {/* FIXED WIDTH */}
+                      <TableHead className="min-w-[250px] md:min-w-[300px]">
+                        <button
+                          onClick={() => handleSort("course_title")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Booked Course
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
+
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("schedule_title")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Schedule Details
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
+
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("status")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Status
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
+
+                      <TableHead className="text-right font-semibold pr-6">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+
+                  <TableBody>
+                    {loading ? (
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell colSpan={5}>
+                            <div className="flex items-center gap-4 py-2">
+                              <Skeleton className="h-12 w-20" />
+                              <div className="space-y-2 flex-1">
+                                <Skeleton className="h-4 w-1/3" />
+                                <Skeleton className="h-3 w-1/4" />
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : currentData.length > 0 ? (
+                      currentData.map((booking) => (
+                        <TableRow
+                          key={booking.id}
+                          className="group border-border/40 hover:bg-muted/30 transition-colors"
+                        >
+                          <TableCell>{booking.id}</TableCell>
+
+                          <TableCell>
+                            {/* FIXED FLEX OVERFLOW */}
+                            <div className="flex items-start gap-4 min-w-0">
+                              <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted shadow-sm">
+                                <Image
+                                  src={
+                                    booking.schedule.image ||
+                                    booking.course.icon ||
+                                    "/placeholder.jpg"
+                                  }
+                                  alt={booking.course.title}
+                                  fill
+                                  className="object-cover"
                                 />
                               </div>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            className="space-y-1 cursor-pointer"
-                            onClick={() => handleViewDetails(booking)}
-                          >
-                            <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue">
-                              <Calendar className="size-3.5" />
-                              {formatSessionDates(booking.schedule.sessions)}
-                            </div>
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                              <MapPin className="size-3" />
-                              {booking.schedule.location}
-                            </div>
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                              <div className="size-4 rounded-full bg-primary-blue/10 flex items-center justify-center shrink-0">
-                                <User className="size-2.5 text-primary-blue" />
-                              </div>
-                              Trainer:{" "}
-                              <span className="font-medium text-foreground/80">
-                                {booking.schedule.trainer?.name || "TBA"}
-                              </span>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-2">
-                            <Badge
-                              className={
-                                booking.status === "paid"
-                                  ? "bg-green-500/10 text-green-600 border-green-500/20 font-bold"
-                                  : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
-                              }
-                              variant="outline"
-                            >
-                              {booking.status.toUpperCase()}
-                            </Badge>
-                            {(() => {
-                              const status = getCombinedStatus(
-                                booking.schedule.sessions,
-                              );
-                              if (!status) return null;
-                              return (
-                                <Badge
-                                  className={status.className}
-                                  variant="outline"
+
+                              <div className="flex flex-col min-w-0 w-full">
+                                <Link
+                                  href={`/course/face-to-face/${booking.course.slug}`}
+                                  target="_blank"
                                 >
-                                  {status.label}
-                                </Badge>
-                              );
-                            })()}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right pr-6">
-                          <div className="flex flex-col gap-2 items-center justify-center">
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              className="gap-2 text-[11px] font-bold h-9 px-4"
+                                  <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
+                                    {booking.course.title}
+                                  </span>
+                                </Link>
+
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <Badge className="text-[10px] h-4 px-1.5 font-bold bg-primary-blue/10 text-primary-blue border-none">
+                                    {booking.course.course_type.name}
+                                  </Badge>
+
+                                  {booking.schedule.sessions && (
+                                    <span className="text-[10px] text-muted-foreground font-bold">
+                                      {booking.schedule.sessions.length} SESSIONS
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="mt-2 space-y-1.5">
+                                  <div className="flex justify-between items-center text-[10px] font-bold">
+                                    <span className="text-muted-foreground uppercase">
+                                      Progress
+                                    </span>
+                                    <span className="text-primary-blue">
+                                      {booking.progress || 0}%
+                                    </span>
+                                  </div>
+                                  <Progress
+                                    value={booking.progress || 0}
+                                    className="h-1.5"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+
+                          <TableCell>
+                            <div
+                              className="space-y-1 cursor-pointer break-words"
                               onClick={() => handleViewDetails(booking)}
                             >
-                              <Info className="size-3.5" />
-                              VIEW DETAILS
-                            </Button>
-                            {(() => {
-                              const status = getCombinedStatus(
-                                booking.schedule.sessions,
-                              );
-                              if (!status) return null;
-                              if (
-                                status.label === "COMPLETED" &&
-                                booking.course.certificate
-                                  .certificate_number !== null
-                              ) {
-                                return (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="gap-2 text-[11px] font-bold h-9 px-4"
-                                    onClick={() =>
-                                      handleCertificateDialog(booking.course)
-                                    }
-                                  >
-                                    <Info className="size-3.5" />
-                                    VIEW CERTIFICATE
-                                  </Button>
-                                );
-                              } else {
-                                return (
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Badge
-                                          className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
-                                          variant="outline"
-                                        >
-                                          NOT ISSUED/ELIGIBLE
-                                        </Badge>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        <p className="text-xs">
-                                          {booking.course.certificate
-                                            ?.eligibility_reason ||
-                                            "Not eligible for certificate"}
-                                        </p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                );
-                              }
-                            })()}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={5}
-                        className="h-64 text-center text-muted-foreground"
-                      >
-                        <div className="flex flex-col items-center gap-4">
-                          <div className="p-4 bg-muted/50 rounded-full">
-                            <BookOpen className="size-8 opacity-40" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-foreground">
-                              No bookings found
-                            </p>
-                            <p className="text-sm">
-                              {selectedDate
-                                ? "You have no sessions on this specific date."
-                                : "You haven't booked any course schedules yet."}
-                            </p>
-                          </div>
-                          {(searchTerm || selectedDate) && (
-                            <Button
-                              variant="link"
-                              onClick={() => {
-                                setSearchTerm("");
-                                setSelectedDate(undefined);
-                              }}
-                              className="text-primary-blue font-bold px-0"
-                            >
-                              Clear all filters
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+                              <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue flex-wrap">
+                                <Calendar className="size-3.5" />
+                                {formatSessionDates(booking.schedule.sessions)}
+                              </div>
+
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground break-all">
+                                <MapPin className="size-3" />
+                                {booking.schedule.location}
+                              </div>
+
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1 flex-wrap">
+                                <div className="size-4 rounded-full bg-primary-blue/10 flex items-center justify-center shrink-0">
+                                  <User className="size-2.5 text-primary-blue" />
+                                </div>
+                                Trainer:
+                                <span className="font-medium text-foreground/80">
+                                  {booking.schedule.trainer?.name || "TBA"}
+                                </span>
+                              </div>
+                            </div>
+                          </TableCell>
+
+                          <TableCell>
+                            <div className="flex flex-wrap gap-2">
+                              <Badge>
+                                {booking.status.toUpperCase()}
+                              </Badge>
+                            </div>
+                          </TableCell>
+
+                          {/* FIX ACTION WIDTH */}
+                          <TableCell className="text-right pr-6 min-w-[140px]">
+                            <div className="flex flex-col gap-2 items-center justify-center">
+                              <Button size="sm">VIEW DETAILS</Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : null}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between px-2 py-4 border-t border-border/50">
-            <p className="text-sm text-muted-foreground font-medium">
-              Showing{" "}
-              <span className="text-foreground font-bold">
-                {currentData.length}
-              </span>{" "}
-              of{" "}
-              <span className="text-foreground font-bold">
-                {filteredBookings.length}
-              </span>{" "}
-              entries
-            </p>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 border-border/50 font-bold bg-background/30"
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="size-4" />
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 border-border/50 font-bold bg-background/30"
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
-                }
-                disabled={currentPage === totalPages || totalPages === 0}
-              >
-                Next
-                <ChevronRight className="size-4" />
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
-
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent side="right" className="w-[400px] sm:w-[540px]">
-          <SheetHeader className="mb-6">
-            <VisuallyHidden>Session Details</VisuallyHidden>
-          </SheetHeader>
-          <SheetTitle className="text-2xl font-bold flex items-center px-4 gap-2 mb-2">
-            <BookOpen className="text-primary-blue" />
-            Session Details
-          </SheetTitle>
-          <SheetDescription className="px-4 mb-6">
-            Detailed schedule for:{" "}
-            <span className="font-bold text-foreground">
-              {selectedBooking?.course.title}
-            </span>
-          </SheetDescription>
-
-          <ScrollArea className="h-[calc(100vh-220px)] px-4">
-            <div className="space-y-6">
-              {/* Schedule Info */}
-              <div className="bg-primary-blue/5 border border-primary-blue/10 rounded-xl p-4">
-                <div className="flex justify-between items-center mb-3">
-                  <h4 className="text-xs font-bold text-primary-blue uppercase tracking-widest">
-                    Schedule Overview
-                  </h4>
-                  <span className="text-xs font-bold text-primary-blue">
-                    {selectedBooking?.progress || 0}% Complete
-                  </span>
-                </div>
-                <Progress
-                  value={selectedBooking?.progress || 0}
-                  className="h-2 mb-4 bg-primary-blue/10"
-                />
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-white rounded-lg shadow-sm">
-                      <Calendar size={14} className="text-primary-blue" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground font-medium">
-                        Schedule Title
-                      </p>
-                      <p className="text-sm font-bold text-foreground">
-                        {selectedBooking?.schedule.title}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-white rounded-lg shadow-sm">
-                      <MapPin size={14} className="text-primary-blue" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground font-medium">
-                        Location
-                      </p>
-                      <p className="text-sm font-bold text-foreground">
-                        {selectedBooking?.schedule?.location}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {selectedBooking?.schedule.sessions?.[0] && (
-                <div className="rounded-xl border border-border/50 bg-card p-4 shadow-sm">
-                  <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    Add To Calendar
-                  </h4>
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <Button
-                      variant="outline"
-                      className="gap-2 font-bold"
-                      asChild
-                    >
-                      <a
-                        href={createGoogleCalendarUrl({
-                          title: `${selectedBooking.course.title} - ${selectedBooking.schedule.title}`,
-                          description: selectedBooking.schedule.description,
-                          location: selectedBooking.schedule.location,
-                          date: selectedBooking.schedule.sessions[0].date,
-                          start_time: selectedBooking.schedule.sessions[0].start_time,
-                          end_time: selectedBooking.schedule.sessions[0].end_time,
-                        })}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <CalendarPlus className="size-4" />
-                        Google Calendar
-                      </a>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="gap-2 font-bold"
-                      onClick={() =>
-                        downloadAppleCalendarFile({
-                          title: `${selectedBooking.course.title} - ${selectedBooking.schedule.title}`,
-                          description: selectedBooking.schedule.description,
-                          location: selectedBooking.schedule.location,
-                          date: selectedBooking.schedule.sessions[0].date,
-                          start_time: selectedBooking.schedule.sessions[0].start_time,
-                          end_time: selectedBooking.schedule.sessions[0].end_time,
-                        })
-                      }
-                    >
-                      <CalendarPlus className="size-4" />
-                      Apple Calendar
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Sessions List */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                  Individual Sessions
-                </h4>
-                {selectedBooking?.schedule.sessions.map((session, index) => (
-                  <div
-                    key={session.id}
-                    className="flex items-center gap-4 p-4 border border-border/50 rounded-xl bg-card/30 hover:bg-card/50 transition-colors"
-                  >
-                    <div className="h-10 w-10 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue font-bold shrink-0">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-foreground truncate">
-                        {format(parseISO(session.date), "EEEE, dd MMMM yyyy")}
-                      </p>
-                      <div className="flex items-center gap-3 mt-1">
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <Clock size={12} className="text-primary-blue" />
-                          {formatInLocalTime(
-                            session.date,
-                            session.start_time,
-                          )}{" "}
-                          - {formatInLocalTime(session.date, session.end_time)}
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className={
-                            session.status === "completed"
-                              ? "bg-green-500/10 text-green-600 border-green-500/20 font-extrabold text-[10px] h-5 px-2"
-                              : session.status === "in_progress" ||
-                                  session.status === "inprogress"
-                                ? "bg-blue-500/10 text-blue-600 border-blue-500/20 font-extrabold text-[10px] h-5 px-2"
-                                : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-extrabold text-[10px] h-5 px-2"
-                          }
-                        >
-                          {session.status === "in_progress" ||
-                          session.status === "inprogress"
-                            ? "ON GOING"
-                            : (session.status || "scheduled").toUpperCase()}
-                        </Badge>
-                        {session.attendance_status && (
-                          <Badge
-                            variant="outline"
-                            className={
-                              session.attendance_status === "present"
-                                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-extrabold text-[10px] h-5 px-2 flex items-center gap-1"
-                                : session.attendance_status === "absent"
-                                  ? "bg-rose-500/10 text-rose-600 border-rose-500/20 font-extrabold text-[10px] h-5 px-2 flex items-center gap-1"
-                                  : "bg-slate-500/10 text-slate-600 border-slate-500/20 font-extrabold text-[10px] h-5 px-2 flex items-center gap-1"
-                            }
-                          >
-                            <UserCheck className="size-2.5" />
-                            {session.attendance_status.toUpperCase()}
-                          </Badge>
-                        )}
-                      </div>
-                      {userTimeZone && (
-                        <span className="text-[9px] text-gray-400 px-1 font-medium bg-gray-100/30 rounded-sm pointer-events-none">
-                          Shown in {userTimeZone} time
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-xl border border-border/50 bg-card p-4 shadow-sm">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <div>
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                      Alternative Sessions
-                    </h4>
-                    <p className="text-xs text-muted-foreground">
-                      Rescheduling may be subject to approval and refund policy checks.
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-2"
-                    onClick={() =>
-                      selectedBooking && handleFetchAlternatives(selectedBooking.id)
-                    }
-                    disabled={loadingAlternatives}
-                  >
-                    <RotateCw className="size-3.5" />
-                    Refresh
-                  </Button>
-                </div>
-
-                <div className="space-y-3">
-                  {loadingAlternatives ? (
-                    <p className="text-sm text-muted-foreground">
-                      Loading alternative sessions...
-                    </p>
-                  ) : alternativeSchedules && alternativeSchedules.length > 0 ? (
-                    alternativeSchedules.map((alternative) => (
-                      <div
-                        key={alternative.id}
-                        className="rounded-xl border border-border/50 bg-muted/20 p-4"
-                      >
-                        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                          <div className="space-y-1">
-                            <p className="font-semibold text-foreground">
-                              {alternative.title}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {alternative.branch?.title || "Branch TBC"} •{" "}
-                              {alternative.location || "Location TBC"}
-                            </p>
-                            <p className="text-xs text-primary-blue">
-                              {formatSessionDates(alternative.sessions)}
-                            </p>
-                          </div>
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            className="gap-2"
-                            onClick={() =>
-                              selectedBooking &&
-                              handleRescheduleRequest(
-                                selectedBooking.id,
-                                alternative.id,
-                              )
-                            }
-                            disabled={rescheduleLoading === alternative.id}
-                          >
-                            <RotateCw className="size-3.5" />
-                            {rescheduleLoading === alternative.id
-                              ? "Submitting..."
-                              : "Request Reschedule"}
-                          </Button>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No alternative sessions are currently available for this course.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Special Instructions */}
-              <div className="bg-yellow-500/5 border border-yellow-500/10 rounded-xl p-4">
-                <h4 className="text-xs font-bold text-yellow-600 uppercase tracking-widest mb-2">
-                  Instructions
-                </h4>
-                <p className="text-sm text-foreground/80 leading-relaxed italic">
-                  &ldquo;{selectedBooking?.schedule.instruction}&rdquo;
-                </p>
-              </div>
-              {/* Trainer Information */}
-              {selectedBooking?.schedule.trainer && (
-                <div className="bg-card border border-border/50 rounded-xl p-4 shadow-sm">
-                  <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
-                    Your Trainer
-                  </h4>
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-12 w-12 border-2 border-primary-blue/20">
-                      <AvatarImage
-                        src={selectedBooking.schedule.trainer.logo}
-                      />
-                      <AvatarFallback className="bg-primary-blue/10 text-primary-blue font-bold">
-                        {selectedBooking.schedule.trainer.name
-                          .substring(0, 2)
-                          .toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-foreground truncate">
-                        {selectedBooking.schedule.trainer.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {selectedBooking.schedule.trainer.email}
-                      </p>
-                    </div>
-                    <ContactLearner
-                      learner_id={selectedBooking.schedule.trainer.id}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-        </SheetContent>
-      </Sheet>
-
-      <Dialog open={isCertificateOpen} onOpenChange={setIsCertificateOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              <Award className="text-primary-blue size-5" />
-              Course Certificate
-            </DialogTitle>
-            <DialogDescription>
-              Details for your completed course:{" "}
-              <span className="font-bold text-foreground">
-                {selectedCourseForCertificate?.title}
-              </span>
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-6 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Certificate Number
-                </p>
-                <p className="text-sm font-bold font-mono bg-muted/50 p-2 rounded border border-border/50 text-primary-blue">
-                  {selectedCourseForCertificate?.certificate
-                    .certificate_number || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Issue Date
-                </p>
-                <p className="text-sm font-bold bg-muted/50 p-2 rounded border border-border/50">
-                  {selectedCourseForCertificate?.certificate.issue_date
-                    ? format(
-                        parseISO(
-                          selectedCourseForCertificate.certificate.issue_date,
-                        ),
-                        "dd MMM yyyy",
-                      )
-                    : "N/A"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              {selectedCourseForCertificate?.certificate.view_url && (
-                <Button
-                  className="w-full gap-2 font-bold"
-                  variant="primary"
-                  asChild
-                >
-                  <a
-                    href={selectedCourseForCertificate.certificate.view_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="size-4" />
-                    VIEW ONLINE
-                  </a>
-                </Button>
-              )}
-              {selectedCourseForCertificate?.certificate.download_url && (
-                <Button className="w-full gap-2 font-bold" variant="outline" asChild>
-                  <a
-                    href={selectedCourseForCertificate.certificate.download_url}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Download className="size-4" />
-                    DOWNLOAD PDF
-                  </a>
-                </Button>
-              )}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </ContentWrapper>
   );
 }
