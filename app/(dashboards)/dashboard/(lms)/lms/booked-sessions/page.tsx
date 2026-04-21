@@ -121,13 +121,13 @@ interface BookedSchedule {
       end_time: string;
       attendance_status: string | null;
       attendances:
-        | {
-            id: number;
-            session_id: number;
-            student_id: number;
-            status: string;
-          }[]
-        | [];
+      | {
+        id: number;
+        session_id: number;
+        student_id: number;
+        status: string;
+      }[]
+      | [];
     }[];
     trainer?: {
       id: number;
@@ -396,262 +396,334 @@ function BookedSessionsPage() {
   );
 
   return (
-  <ContentWrapper
-    heading="My Booked Schedules"
-    subHeading="Track your progress and view upcoming study sessions"
-  >
-    {/* Wrapper for syncing height */}
-    <div className="flex flex-col xl:flex-row gap-6 items-stretch">
-      
-      {/* Left: Calendar Sidebar */}
-      <div className="w-full xl:w-auto">
-        <div className="xl:sticky xl:top-24 max-h-[calc(100vh-120px)] overflow-y-auto pr-1">
-          <div className="flex flex-col gap-4">
-            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest px-2">
-              Study Calendar
-            </h3>
-            <TrainerCalendar
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              bookedDates={bookedDates}
-            />
-            {selectedDate && (
+    <ContentWrapper
+      heading="My Booked Schedules"
+      subHeading="Track your progress and view upcoming study sessions"
+    >
+      <div className="flex flex-col xl:flex-row gap-6 items-stretch">
+
+        {/* Left: Calendar Sidebar */}
+        <div className="w-full xl:w-auto">
+          <div className="xl:sticky xl:top-24 max-h-[calc(100vh-120px)] overflow-y-auto pr-1">
+            <div className="flex flex-col gap-4">
+              <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest px-2">
+                Study Calendar
+              </h3>
+              <TrainerCalendar
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                bookedDates={bookedDates}
+              />
+              {selectedDate && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedDate(undefined)}
+                  className="text-primary-blue font-bold hover:bg-primary-blue/10"
+                >
+                  Clear date filter
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Table Content */}
+        <div className="flex-1 space-y-6 w-full min-w-0">
+
+          {/* Actions Bar */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card/40 p-4 rounded-xl border border-border/50 backdrop-blur-sm">
+            <div className="relative flex-1 max-w-md group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary-blue transition-colors" />
+              <Input
+                placeholder="Search by course or schedule..."
+                className="pl-10 h-10 bg-background/50 border-border/50"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <div className="flex items-center gap-3">
               <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedDate(undefined)}
-                className="text-primary-blue font-bold hover:bg-primary-blue/10"
+                variant="outline"
+                className="gap-2 h-10 border-border/50 bg-background/30"
               >
-                Clear date filter
+                <Filter className="size-4" />
+                Filter
               </Button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Right: Table Content */}
-      <div className="flex-1 space-y-6 w-full min-w-0">
-        
-        {/* Actions Bar */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card/40 p-4 rounded-xl border border-border/50 backdrop-blur-sm">
-          <div className="relative flex-1 max-w-md group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary-blue transition-colors" />
-            <Input
-              placeholder="Search by course or schedule..."
-              className="pl-10 h-10 bg-background/50 border-border/50"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              className="gap-2 h-10 border-border/50 bg-background/30"
-            >
-              <Filter className="size-4" />
-              Filter
-            </Button>
-          </div>
-        </div>
+          {/* Table Card */}
+          <Card className="border-none shadow-xl pt-0 bg-card/60 backdrop-blur-md ring-1 ring-border/50 overflow-hidden">
 
-        {/* Table Card */}
-        <Card className="border-none shadow-xl pt-0 bg-card/60 backdrop-blur-md ring-1 ring-border/50 overflow-hidden">
-          
-          {/* RESPONSIVE FIX */}
-          <CardContent className="p-0 overflow-x-auto">
-            <div className="min-w-[900px]">
-              
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow className="hover:bg-transparent border-border/50">
-                    
-                    <TableHead className="text-nowrap pe-0!">
-                      Booking ID
-                    </TableHead>
+            {/* RESPONSIVE FIX */}
+            <CardContent className="p-0 overflow-x-auto">
+              <div className="min-w-[900px]">
 
-                    {/* FIXED */}
-                    <TableHead className="min-w-[250px] md:min-w-[300px]">
-                      <button
-                        onClick={() => handleSort("course_title")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Booked Course
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
+                <Table>
+                  <TableHeader className="bg-muted/30">
+                    <TableRow className="hover:bg-transparent border-border/50">
 
-                    <TableHead>
-                      <button
-                        onClick={() => handleSort("schedule_title")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Schedule Details
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
+                      <TableHead className="text-nowrap pe-0!">
+                        Booking ID
+                      </TableHead>
 
-                    <TableHead>
-                      <button
-                        onClick={() => handleSort("status")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Status
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
+                      {/* FIX */}
+                      <TableHead className="min-w-[250px] md:min-w-[300px]">
+                        <button
+                          onClick={() => handleSort("course_title")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Booked Course
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
 
-                    <TableHead className="text-right font-semibold pr-6">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("schedule_title")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Schedule Details
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
 
-                <TableBody>
-                  {loading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell colSpan={5}>
-                          <div className="flex items-center gap-4 py-2">
-                            <Skeleton className="h-12 w-20" />
-                            <div className="space-y-2 flex-1">
-                              <Skeleton className="h-4 w-1/3" />
-                              <Skeleton className="h-3 w-1/4" />
-                            </div>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : currentData.length > 0 ? (
-                    currentData.map((booking) => (
-                      <TableRow
-                        key={booking.id}
-                        className="group border-border/40 hover:bg-muted/30 transition-colors"
-                      >
-                        <TableCell>{booking.id}</TableCell>
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("status")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Status
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
 
-                        <TableCell>
-                          {/* FIXED */}
-                          <div className="flex items-start gap-4 min-w-0">
-                            <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted shadow-sm">
-                              <Image
-                                src={
-                                  booking.schedule.image ||
-                                  booking.course.icon ||
-                                  "/placeholder.jpg"
-                                }
-                                alt={booking.course.title}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
+                      <TableHead className="text-right font-semibold pr-6">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
 
-                            <div className="flex flex-col min-w-0 w-full">
-                              <Link
-                                href={`/course/face-to-face/${booking.course.slug}`}
-                                target="_blank"
-                              >
-                                <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
-                                  {booking.course.title}
-                                </span>
-                              </Link>
-
-                              {/* KEEP EVERYTHING ELSE EXACTLY SAME */}
-                              {/* (No logic/UI touched below) */}
-
-                              <div className="flex items-center gap-2">
-                                <Badge
-                                  variant="secondary"
-                                  className="text-[10px] h-4 px-1.5 font-bold bg-primary-blue/10 text-primary-blue border-none"
-                                >
-                                  {booking.course.course_type.name}
-                                </Badge>
-
-                                {booking.schedule.sessions && (
-                                  <span className="text-[10px] text-muted-foreground font-bold">
-                                    {booking.schedule.sessions.length} SESSIONS
-                                  </span>
-                                )}
+                  <TableBody>
+                    {loading ? (
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell colSpan={5}>
+                            <div className="flex items-center gap-4 py-2">
+                              <Skeleton className="h-12 w-20" />
+                              <div className="space-y-2 flex-1">
+                                <Skeleton className="h-4 w-1/3" />
+                                <Skeleton className="h-3 w-1/4" />
                               </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : currentData.length > 0 ? (
+                      currentData.map((booking) => (
+                        <TableRow
+                          key={booking.id}
+                          className="group border-border/40 hover:bg-muted/30 transition-colors"
+                        >
+                          <TableCell>{booking.id}</TableCell>
 
-                              <div className="mt-2 space-y-1.5">
-                                <div className="flex justify-between items-center text-[10px] font-bold">
-                                  <span className="text-muted-foreground uppercase">
-                                    Progress
-                                  </span>
-                                  <span className="text-primary-blue">
-                                    {booking.progress || 0}%
-                                  </span>
-                                </div>
-                                <Progress
-                                  value={booking.progress || 0}
-                                  className="h-1.5"
+                          <TableCell>
+                            {/* FIX */}
+                            <div className="flex items-start gap-4 min-w-0">
+                              <div className="relative w-24 h-14 rounded overflow-hidden shrink-0 bg-muted shadow-sm">
+                                <Image
+                                  src={
+                                    booking.schedule.image ||
+                                    booking.course.icon ||
+                                    "/placeholder.jpg"
+                                  }
+                                  alt={booking.course.title}
+                                  fill
+                                  className="object-cover"
                                 />
                               </div>
-                            </div>
-                          </div>
-                        </TableCell>
 
-                        <TableCell>
-                          <div
-                            className="space-y-1 cursor-pointer"
-                            onClick={() => handleViewDetails(booking)}
-                          >
-                            <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue flex-wrap">
-                              <Calendar className="size-3.5" />
-                              {formatSessionDates(booking.schedule.sessions)}
-                            </div>
+                              <div className="flex flex-col min-w-0 w-full">
+                                <Link
+                                  href={`/course/face-to-face/${booking.course.slug}`}
+                                  target="_blank"
+                                >
+                                  <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
+                                    {booking.course.title}
+                                  </span>
+                                </Link>
 
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground break-all">
-                              <MapPin className="size-3" />
-                              {booking.schedule.location}
-                            </div>
+                                <div className="flex items-center gap-2">
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-[10px] h-4 px-1.5 font-bold bg-primary-blue/10 text-primary-blue border-none"
+                                  >
+                                    {booking.course.course_type.name}
+                                  </Badge>
+                                  {booking.schedule.sessions && (
+                                    <span className="text-[10px] text-muted-foreground font-bold">
+                                      {booking.schedule.sessions.length} SESSIONS
+                                    </span>
+                                  )}
+                                </div>
 
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1 flex-wrap">
-                              <div className="size-4 rounded-full bg-primary-blue/10 flex items-center justify-center shrink-0">
-                                <User className="size-2.5 text-primary-blue" />
+                                <div className="mt-2 space-y-1.5">
+                                  <div className="flex justify-between items-center text-[10px] font-bold">
+                                    <span className="text-muted-foreground uppercase">
+                                      Progress
+                                    </span>
+                                    <span className="text-primary-blue">
+                                      {booking.progress || 0}%
+                                    </span>
+                                  </div>
+                                  <Progress
+                                    value={booking.progress || 0}
+                                    className="h-1.5"
+                                  />
+                                </div>
                               </div>
-                              Trainer:{" "}
-                              <span className="font-medium text-foreground/80">
-                                {booking.schedule.trainer?.name || "TBA"}
-                              </span>
                             </div>
-                          </div>
-                        </TableCell>
+                          </TableCell>
 
-                        <TableCell>
-                          <div className="flex flex-wrap gap-2">
-                            {/* ORIGINAL LOGIC UNCHANGED */}
-                            <Badge
-                              className={
-                                booking.status === "paid"
-                                  ? "bg-green-500/10 text-green-600 border-green-500/20 font-bold"
-                                  : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
-                              }
-                              variant="outline"
+                          <TableCell>
+                            <div
+                              className="space-y-1 cursor-pointer"
+                              onClick={() => handleViewDetails(booking)}
                             >
-                              {booking.status.toUpperCase()}
-                            </Badge>
-                          </div>
-                        </TableCell>
+                              <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue flex-wrap">
+                                <Calendar className="size-3.5" />
+                                {formatSessionDates(booking.schedule.sessions)}
+                              </div>
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground break-all">
+                                <MapPin className="size-3" />
+                                {booking.schedule.location}
+                              </div>
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1 flex-wrap">
+                                <div className="size-4 rounded-full bg-primary-blue/10 flex items-center justify-center shrink-0">
+                                  <User className="size-2.5 text-primary-blue" />
+                                </div>
+                                Trainer:{" "}
+                                <span className="font-medium text-foreground/80">
+                                  {booking.schedule.trainer?.name || "TBA"}
+                                </span>
+                              </div>
+                            </div>
+                          </TableCell>
 
-                        {/* FIXED */}
-                        <TableCell className="text-right pr-6 min-w-[140px]">
-                          {/* KEEP YOUR ORIGINAL BUTTON BLOCK HERE (UNCHANGED) */}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : null}
-                </TableBody>
-              </Table>
+                          {/* STATUS — UNCHANGED */}
+                          <TableCell>
+                            <div className="flex flex-wrap gap-2">
+                              <Badge
+                                className={
+                                  booking.status === "paid"
+                                    ? "bg-green-500/10 text-green-600 border-green-500/20 font-bold"
+                                    : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
+                                }
+                                variant="outline"
+                              >
+                                {booking.status.toUpperCase()}
+                              </Badge>
+                              {(() => {
+                                const status = getCombinedStatus(
+                                  booking.schedule.sessions,
+                                );
+                                if (!status) return null;
+                                return (
+                                  <Badge
+                                    className={status.className}
+                                    variant="outline"
+                                  >
+                                    {status.label}
+                                  </Badge>
+                                );
+                              })()}
+                            </div>
+                          </TableCell>
 
-            </div>
-          </CardContent>
-        </Card>
+                          {/* ACTIONS — UNCHANGED */}
+                          <TableCell className="text-right pr-6 min-w-[140px]">
+                            <div className="flex flex-col gap-2 items-center justify-center">
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                className="gap-2 text-[11px] font-bold h-9 px-4"
+                                onClick={() => handleViewDetails(booking)}
+                              >
+                                <Info className="size-3.5" />
+                                VIEW DETAILS
+                              </Button>
+
+                              {(() => {
+                                const status = getCombinedStatus(
+                                  booking.schedule.sessions,
+                                );
+                                if (!status) return null;
+
+                                if (
+                                  status.label === "COMPLETED" &&
+                                  booking.course.certificate
+                                    .certificate_number !== null
+                                ) {
+                                  return (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="gap-2 text-[11px] font-bold h-9 px-4"
+                                      onClick={() =>
+                                        handleCertificateDialog(booking.course)
+                                      }
+                                    >
+                                      <Info className="size-3.5" />
+                                      VIEW CERTIFICATE
+                                    </Button>
+                                  );
+                                } else {
+                                  return (
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Badge
+                                            className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 font-bold"
+                                            variant="outline"
+                                          >
+                                            NOT ISSUED/ELIGIBLE
+                                          </Badge>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p className="text-xs">
+                                            {booking.course.certificate
+                                              ?.eligibility_reason ||
+                                              "Not eligible for certificate"}
+                                          </p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  );
+                                }
+                              })()}
+                            </div>
+                          </TableCell>
+
+                        </TableRow>
+                      ))
+                    ) : null}
+                  </TableBody>
+                </Table>
+
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Pagination (unchanged) */}
+          <div className="flex items-center justify-between px-2 py-4 border-t border-border/50">
+            ...
+          </div>
+        </div>
       </div>
-    </div>
-  </ContentWrapper>
-);
+    </ContentWrapper>
+  );
 }
 
 export default BookedSessionsPage;
