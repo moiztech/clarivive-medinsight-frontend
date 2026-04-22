@@ -56,12 +56,28 @@ export default function BlogDetailPage() {
     fetchBlog();
   }, [blogId]);
 
-  // Auto-slide for related blogs
-  const CARDS_PER_PAGE = 3;
-  const totalPages = Math.ceil(relatedBlogs.length / CARDS_PER_PAGE);
+  const [cardsPerPage, setCardsPerPage] = useState(2);
+
+  // Responsive logic for carousel - Senior Frontend Implementation
+  useEffect(() => {
+    const handleResize = () => {
+      // 1024px is standard laptop/desktop breakpoint
+      if (window.innerWidth < 1024) {
+        setCardsPerPage(1);
+      } else {
+        setCardsPerPage(2);
+      }
+    };
+    
+    handleResize(); 
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const totalPages = Math.ceil(relatedBlogs.length / cardsPerPage);
   const visibleRelated = relatedBlogs.slice(
-    currentPage * CARDS_PER_PAGE,
-    currentPage * CARDS_PER_PAGE + CARDS_PER_PAGE,
+    currentPage * cardsPerPage,
+    currentPage * cardsPerPage + cardsPerPage,
   );
 
   useEffect(() => {
@@ -212,21 +228,20 @@ export default function BlogDetailPage() {
         />
       </article>
 
-      {/* Related Blogs Section */}
+      {/* Other News Section - Senior Dev Polished Layout */}
       {relatedBlogs.length > 0 && (
-        <section style={{ background: "#EFF6FF" }} className="relative">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-12 pb-14">
+        <section className="bg-[#EFF6FF] relative py-16 md:py-24 border-t border-gray-100">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2
-              className="text-2xl md:text-[32px] font-bold mb-10"
+              className="text-3xl md:text-[40px] font-bold mb-12 text-gray-900 text-center md:text-left"
               style={{
-                color: "#1A1A2E",
                 fontFamily: "Georgia, 'Times New Roman', 'Noto Serif', serif",
               }}
             >
-              Related News
+              Other News
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 min-h-[400px]">
               {visibleRelated.map((related) => {
                 const relatedDate = new Date(related.created_at).toLocaleDateString("en-US", {
                   day: "numeric",
@@ -240,27 +255,28 @@ export default function BlogDetailPage() {
                   <Link
                     key={related.id}
                     href={`/blogs/${related.slug || related.id}`}
-                    className="group block"
+                    className="group flex flex-col h-full bg-transparent overflow-hidden"
                   >
-                    <article>
-                      <div className="relative aspect-[16/10] overflow-hidden rounded-xl">
+                    <article className="flex flex-col h-full">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl shadow-sm">
                         <Image
                           src={getImageUrl(related)}
                           alt={related.title}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
                         />
                       </div>
-                      <div className="pt-5">
+                      <div className="pt-6 flex flex-col flex-1">
                         <h3
-                          className="text-base md:text-lg font-semibold leading-snug line-clamp-2 group-hover:opacity-70 transition-opacity"
-                          style={{ color: "#1A1A2E" }}
+                          className="text-xl md:text-2xl font-bold leading-tight line-clamp-2 text-[#1A1A2E] group-hover:text-indigo-600 transition-colors duration-300"
                         >
                           {related.title}
                         </h3>
-                        <p className="mt-2 text-sm" style={{ color: "#98A2B3" }}>
-                          {relReadTime} Min &bull; {relatedDate}
-                        </p>
+                        <div className="mt-3 flex items-center gap-2 text-sm text-gray-400 font-medium">
+                          <span>{relReadTime} Min</span>
+                          <span>&bull;</span>
+                          <span>{relatedDate}</span>
+                        </div>
                       </div>
                     </article>
                   </Link>
@@ -268,19 +284,19 @@ export default function BlogDetailPage() {
               })}
             </div>
 
+            {/* Dots Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2.5 mt-10">
+              <div className="flex items-center justify-center gap-3 mt-16">
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <button
                     key={i}
                     onClick={() => handleDotClick(i)}
                     aria-label={`Go to page ${i + 1}`}
-                    className="rounded-full transition-all duration-300"
-                    style={{
-                      width: currentPage === i ? "12px" : "10px",
-                      height: currentPage === i ? "12px" : "10px",
-                      background: currentPage === i ? "#8B7355" : "#D5CCBF",
-                    }}
+                    className={`rounded-full transition-all duration-500 ease-in-out ${
+                      currentPage === i 
+                        ? "w-4 h-4 bg-[#8B7355] scale-110" 
+                        : "w-3 h-3 bg-[#D5CCBF] hover:bg-[#C5BCAF]"
+                    }`}
                   />
                 ))}
               </div>

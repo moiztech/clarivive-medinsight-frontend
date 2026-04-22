@@ -36,12 +36,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     tokenStore.set(res.data.access_token);
-    setUser(res.data.user ?? null);
+    const nextUser = res.data.user ?? null;
+    setUser(nextUser);
 
-    // Normalize role: can be object { id, name } or string
-    const role = res.data.user?.role;
-    const roleName = typeof role === "string" ? role : role?.name;
-    return roleName;
+    return nextUser;
   }
 
   async function signup(name: string, email: string, password: string) {

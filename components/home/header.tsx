@@ -46,6 +46,7 @@ const navigationItems: NavItem[] = [
       { label: "Face to Face", href: "/courses/face-to-face" },
     ],
   },
+  { label: "BUNDLES", href: "/bundles" },
   {
     label: "BRANCHES",
     href: "/branches",
