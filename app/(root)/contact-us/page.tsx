@@ -34,7 +34,7 @@ export default function ContactPage() {
     phone: "",
     department: "",
     doctor: "",
-    date: "",
+    training_type: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,7 +67,7 @@ export default function ContactPage() {
         phone: "",
         department: "",
         doctor: "",
-        date: "",
+        training_type: "",
         message: "",
       });
     } catch (error) {
@@ -303,40 +303,51 @@ export default function ContactPage() {
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Select
-                      value={formData.doctor}
-                      onValueChange={(value) =>
-                        handleInputChange("doctor", value)
-                      }
-                      required
-                    >
-                      <SelectTrigger className="h-12! w-full!">
-                        <SelectValue placeholder="Job Title / Role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="dr-smith">Dr. John Smith</SelectItem>
-                        <SelectItem value="dr-johnson">
-                          Dr. Sarah Johnson
-                        </SelectItem>
-                        <SelectItem value="dr-williams">
-                          Dr. Michael Williams
-                        </SelectItem>
-                        <SelectItem value="dr-brown">
-                          Dr. Emily Brown
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
                     <Input
-                      type="date"
-                      value={formData.date}
+                      type="text"
+                      placeholder="Job Title / Role"
+                      value={formData.doctor}
                       onChange={(e) =>
-                        handleInputChange("date", e.target.value)
+                        handleInputChange("doctor", e.target.value)
                       }
                       required
                       className="h-12"
                     />
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <label className="text-sm font-medium">Training Type</label>
+
+                    <div className="flex items-center gap-4">
+                      {/* Face-to-Face */}
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="training_type"
+                          value="face_to_face"
+                          checked={formData.training_type === "face_to_face"}
+                          onChange={(e) =>
+                            handleInputChange("training_type", e.target.value)
+                          }
+                          className="accent-primary-blue"
+                        />
+                        <span>Face-to-Face</span>
+                      </label>
+
+                      {/* E-Learning */}
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="training_type"
+                          value="e_learning"
+                          checked={formData.training_type === "e_learning"}
+                          onChange={(e) =>
+                            handleInputChange("training_type", e.target.value)
+                          }
+                          className="accent-primary-blue"
+                        />
+                        <span>E-Learning</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 

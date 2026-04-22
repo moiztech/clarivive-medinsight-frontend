@@ -403,8 +403,8 @@ function BookedSessionsPage() {
       <div className="flex flex-col xl:flex-row gap-6 items-stretch">
 
         {/* Left: Calendar Sidebar */}
-        <div className="w-full xl:w-auto">
-          <div className="xl:sticky xl:top-24 max-h-[calc(100vh-120px)] overflow-y-auto pr-1">
+        <div className="w-full xl:w-auto mb-5">
+          <div className="xl:sticky xl:top-24 max-h-[calc(100vh-120px)] overflow-y-auto pr-1 self-start">
             <div className="flex flex-col gap-4">
               <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest px-2">
                 Study Calendar

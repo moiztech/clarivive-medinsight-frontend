@@ -194,9 +194,9 @@ function AssignedTrainingsPage() {
       heading="Assigned Trainings"
       subHeading="View all assigned trainings with calendar and list view"
     >
-      <div className="flex flex-col xl:flex-row gap-6 items-start">
+      <div className="flex flex-col xl:flex-row gap-6 items-start w-full overflow-hidden">
         {/* Left: Calendar Sidebar */}
-        <div className="w-full xl:w-auto xl:sticky xl:top-24">
+        <div className="w-full xl:w-auto xl:sticky xl:top-24 self-start">
           <div className="flex flex-col gap-4">
             <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest px-2">
               Select date
@@ -220,7 +220,7 @@ function AssignedTrainingsPage() {
         </div>
 
         {/* Right: Table Content */}
-        <div className="flex-1 space-y-6 w-full">
+        <div className="flex-1 space-y-6 w-full min-w-0">
           {/* Actions Bar */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card/40 p-4 rounded-xl border border-border/50 backdrop-blur-sm">
             <div className="relative flex-1 max-w-md group">
@@ -246,180 +246,184 @@ function AssignedTrainingsPage() {
 
           {/* Table Card */}
           <Card className="border-none shadow-xl pt-0 bg-card/60 backdrop-blur-md ring-1 ring-border/50 overflow-hidden">
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow className="hover:bg-transparent border-border/50">
-                    <TableHead className="max-w-[300px]">
-                      <button
-                        onClick={() => handleSort("course_title")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Assigned Training
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
-                    <TableHead>
-                      <button
-                        onClick={() => handleSort("schedule_title")}
-                        className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
-                      >
-                        Schedule Info
-                        <ArrowUpDown className="size-3" />
-                      </button>
-                    </TableHead>
-                    <TableHead>Branch Details</TableHead>
-                    <TableHead className="text-right font-semibold pr-6">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {loading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell colSpan={4}>
-                          <div className="flex items-center gap-4 py-2">
-                            <Skeleton className="h-12 w-20" />
-                            <div className="space-y-2 flex-1">
-                              <Skeleton className="h-4 w-1/3" />
-                              <Skeleton className="h-3 w-1/4" />
-                            </div>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : currentData.length > 0 ? (
-                    currentData.map((training) => (
-                      <TableRow
-                        key={training.id}
-                        className="group border-border/40 hover:bg-muted/30 transition-colors"
-                      >
-                        <TableCell>
-                          <div className="flex items-center gap-4">
-                            <div className="relative w-22 h-14 rounded overflow-hidden shrink-0 bg-muted">
-                              <Image
-                                src={
-                                  training.image ||
-                                  training.course.icon ||
-                                  "/placeholder.jpg"
-                                }
-                                alt={training.course.title}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                            <div className="flex flex-col min-w-0">
-                              <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
-                                {training.course.title}
-                              </span>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs text-muted-foreground font-medium truncate max-w-[150px]">
-                                  {training.title}
-                                </span>
-                                {training.sessions && (
-                                  <Badge
-                                    variant="outline"
-                                    className="h-4 text-[9px] px-1.5 font-bold bg-primary-blue/5 text-primary-blue border-primary-blue/20"
-                                  >
-                                    {training.sessions.length} SESSION
-                                    {training.sessions.length !== 1 ? "S" : ""}
-                                  </Badge>
-                                )}
+            <CardContent className="p-0 overflow-x-auto">
+              <div className="min-w-full">
+                <Table>
+                  <TableHeader className="bg-muted/30">
+                    <TableRow className="hover:bg-transparent border-border/50">
+                      <TableHead className="w-[300px] min-w-[200px]">
+                        <button
+                          onClick={() => handleSort("course_title")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Assigned Training
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
+                      <TableHead>
+                        <button
+                          onClick={() => handleSort("schedule_title")}
+                          className="flex items-center gap-1 hover:text-primary-blue transition-colors font-semibold"
+                        >
+                          Schedule Info
+                          <ArrowUpDown className="size-3" />
+                        </button>
+                      </TableHead>
+                      <TableHead>Branch Details</TableHead>
+                      <TableHead className="text-right font-semibold pr-6">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {loading ? (
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell colSpan={4}>
+                            <div className="flex items-center gap-4 py-2">
+                              <Skeleton className="h-12 w-20" />
+                              <div className="space-y-2 flex-1">
+                                <Skeleton className="h-4 w-1/3" />
+                                <Skeleton className="h-3 w-1/4" />
                               </div>
                             </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            className="space-y-1 max-w-35 cursor-pointer group/info"
-                            onClick={() => handleViewSessions(training)}
-                          >
-                            <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue group-hover/info:underline underline-offset-4">
-                              <Calendar className="size-3.5" />
-                              {formatSessionDates(training.sessions)}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : currentData.length > 0 ? (
+                      currentData.map((training) => (
+                        <TableRow
+                          key={training.id}
+                          className="group border-border/40 hover:bg-muted/30 transition-colors"
+                        >
+                          <TableCell>
+                            <div className="flex items-center gap-4">
+                              <div className="relative w-[88px] h-14 rounded overflow-hidden shrink-0 bg-muted">
+                                <Image
+                                  src={
+                                    training.image ||
+                                    training.course.icon ||
+                                    "/placeholder.jpg"
+                                  }
+                                  alt={training.course.title}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <span className="font-bold text-foreground group-hover:text-primary-blue transition-colors line-clamp-1">
+                                  {training.course.title}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-muted-foreground font-medium truncate max-w-[150px]">
+                                    {training.title}
+                                  </span>
+                                  {training.sessions && (
+                                    <Badge
+                                      variant="outline"
+                                      className="h-4 text-[9px] px-1.5 font-bold bg-primary-blue/5 text-primary-blue border-primary-blue/20"
+                                    >
+                                      {training.sessions.length} SESSION
+                                      {training.sessions.length !== 1
+                                        ? "S"
+                                        : ""}
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground group-hover/info:text-foreground/70 transition-colors">
-                              <MapPin className="size-3" />
-                              {training.location}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col w-30">
-                            <span className="text-sm font-bold text-foreground">
-                              {training.branch.title}
-                            </span>
-                            <span
-                              title={training.branch.location}
-                              className="text-[10px] text-muted-foreground line-clamp-1"
-                            >
-                              {training.branch.location}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right pr-6">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="gap-2 text-[11px] font-bold h-9 px-4 border-primary-blue/30 text-primary-blue hover:bg-primary-blue/5"
+                          </TableCell>
+                          <TableCell>
+                            <div
+                              className="space-y-1 max-w-[140px] w-full cursor-pointer group/info"
                               onClick={() => handleViewSessions(training)}
                             >
-                              <Clock className="size-3.5" />
-                              SESSIONS
-                            </Button>
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              className="gap-2 text-[11px] font-bold h-9 px-4"
-                              onClick={() => handleViewLearners(training)}
-                            >
-                              <UserCheck className="size-3.5" />
-                              LEARNERS
-                            </Button>
+                              <div className="flex items-center gap-2 text-sm font-semibold text-primary-blue group-hover/info:underline underline-offset-4">
+                                <Calendar className="size-3.5" />
+                                {formatSessionDates(training.sessions)}
+                              </div>
+                              <div className="flex items-center gap-1.5 text-xs text-muted-foreground group-hover/info:text-foreground/70 transition-colors">
+                                <MapPin className="size-3" />
+                                {training.location}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col max-w-[140px] w-full">
+                              <span className="text-sm font-bold text-foreground">
+                                {training.branch.title}
+                              </span>
+                              <span
+                                title={training.branch.location}
+                                className="text-[10px] text-muted-foreground line-clamp-1"
+                              >
+                                {training.branch.location}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right pr-6">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-2 text-[11px] font-bold h-9 px-4 border-primary-blue/30 text-primary-blue hover:bg-primary-blue/5"
+                                onClick={() => handleViewSessions(training)}
+                              >
+                                <Clock className="size-3.5" />
+                                SESSIONS
+                              </Button>
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                className="gap-2 text-[11px] font-bold h-9 px-4"
+                                onClick={() => handleViewLearners(training)}
+                              >
+                                <UserCheck className="size-3.5" />
+                                LEARNERS
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={4}
+                          className="h-64 text-center text-muted-foreground"
+                        >
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="p-4 bg-muted/50 rounded-full">
+                              <Calendar className="size-8 opacity-40" />
+                            </div>
+                            <div>
+                              <p className="font-bold text-foreground">
+                                No trainings found
+                              </p>
+                              <p className="text-sm">
+                                {selectedDate
+                                  ? "Nothing scheduled for this specific date."
+                                  : "No results for your current search criteria."}
+                              </p>
+                            </div>
+                            {(searchTerm || selectedDate) && (
+                              <Button
+                                variant="link"
+                                onClick={() => {
+                                  setSearchTerm("");
+                                  setSelectedDate(undefined);
+                                }}
+                                className="text-primary-blue font-bold px-0"
+                              >
+                                Clear all filters
+                              </Button>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={4}
-                        className="h-64 text-center text-muted-foreground"
-                      >
-                        <div className="flex flex-col items-center gap-4">
-                          <div className="p-4 bg-muted/50 rounded-full">
-                            <Calendar className="size-8 opacity-40" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-foreground">
-                              No trainings found
-                            </p>
-                            <p className="text-sm">
-                              {selectedDate
-                                ? "Nothing scheduled for this specific date."
-                                : "No results for your current search criteria."}
-                            </p>
-                          </div>
-                          {(searchTerm || selectedDate) && (
-                            <Button
-                              variant="link"
-                              onClick={() => {
-                                setSearchTerm("");
-                                setSelectedDate(undefined);
-                              }}
-                              className="text-primary-blue font-bold px-0"
-                            >
-                              Clear all filters
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
 
