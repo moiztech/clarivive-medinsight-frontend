@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -50,22 +50,36 @@ export function TrainingSessionsSheet({
     typeof window !== "undefined"
       ? Intl.DateTimeFormat().resolvedOptions().timeZone
       : "";
+
+  useEffect(() => {
+    const handleFocus = () => {
+      router.refresh();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [router]);
+
   const handleStartSession = async (sessionId: number) => {
     try {
       setStartingSession(sessionId);
+
       const res = await protectedApi.post(
-        `/trainer/session/${sessionId}/start`,
+        `/trainer/session/${sessionId}/start`
       );
+
       toast.success(res.data?.message || "Session started successfully");
+
       setSchedules((prev) =>
         prev.map((s) => ({
           ...s,
           sessions: s.sessions?.map((ss) =>
-            ss.id === sessionId ? { ...ss, status: res.data?.data.status } : ss,
+            ss.id === sessionId
+              ? { ...ss, status: res.data?.data.status }
+              : ss
           ),
-        })),
+        }))
       );
-      // console.log(res.data?.data.status);
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to start session");
       console.error(error);
@@ -74,9 +88,6 @@ export function TrainingSessionsSheet({
     }
   };
 
-  /**
-   * Navigate to Attendance Page
-   */
   const handleMarkAttendance = (sessionId: number) => {
     router.push(`/dashboard/trainer/session/${sessionId}/attendance`);
   };
@@ -102,7 +113,7 @@ export function TrainingSessionsSheet({
 
         <ScrollArea className="h-[calc(100vh-200px)] px-4">
           <div className="space-y-6">
-            {/* Schedule Info */}
+            {/* Overview */}
             <div className="bg-primary-blue/5 border border-primary-blue/10 rounded-xl p-4">
               <h4 className="text-xs font-bold text-primary-blue uppercase tracking-widest mb-3">
                 Overview
@@ -153,7 +164,7 @@ export function TrainingSessionsSheet({
               </div>
             </div>
 
-            {/* Sessions List */}
+            {/* Sessions */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
@@ -168,10 +179,10 @@ export function TrainingSessionsSheet({
               {schedule?.sessions?.map((session, index) => (
                 <div
                   key={session.id}
-                  className="p-4 border border-border/50 rounded-xl bg-card/30 hover:bg-card/50 transition-colors"
+                  className="p-4 border border-border/50 rounded-xl bg-card/30"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue font-bold shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-primary-blue/10 flex items-center justify-center text-primary-blue font-bold">
                       {index + 1}
                     </div>
 
@@ -181,14 +192,18 @@ export function TrainingSessionsSheet({
                       </p>
 
                       <div className="flex items-center gap-3 mt-1">
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <Clock size={12} className="text-primary-blue" />
+                        <div className="text-xs text-muted-foreground">
                           {formatInLocalTime(
                             session.date,
-                            session.start_time,
+                            session.start_time
                           )}{" "}
-                          - {formatInLocalTime(session.date, session.end_time)}
+                          -{" "}
+                          {formatInLocalTime(
+                            session.date,
+                            session.end_time
+                          )}
                         </div>
+
                         <Badge
                           variant={
                             session.status === "completed"
@@ -202,16 +217,10 @@ export function TrainingSessionsSheet({
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
+                  {/* Buttons */}
                   <div className="flex gap-2 mt-4">
-                    {session?.status === "completed" ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="gap-2 text-[11px] font-bold"
-                        disabled={true}
-                        title="Session is completed"
-                      >
+                    {session.status === "completed" ? (
+                      <Button size="sm" variant="outline" disabled>
                         <CheckCheck size={14} />
                         Completed
                       </Button>
@@ -219,7 +228,6 @@ export function TrainingSessionsSheet({
                       <Button
                         size="sm"
                         variant="outline"
-                        className="gap-2 text-[11px] font-bold"
                         onClick={() => handleStartSession(session.id)}
                         disabled={
                           startingSession === session.id ||
@@ -230,48 +238,32 @@ export function TrainingSessionsSheet({
                         {startingSession === session.id
                           ? "Starting..."
                           : session.status === "in_progress"
-                            ? "Started"
-                            : "Start Session"}
+                          ? "Started"
+                          : "Start Session"}
                       </Button>
                     )}
 
                     <Button
                       size="sm"
-                      className="gap-2 text-[11px] font-bold"
+                      onClick={() => handleMarkAttendance(session.id)}
                       disabled={
                         session.status === "scheduled" || !session.status
                       }
-                      onClick={() => handleMarkAttendance(session.id)}
                     >
                       <UserCheck size={14} />
-                      {session.status !== "completed" ? "Mark" : "View"}{" "}
-                      Attendance
+                      {session.status !== "completed"
+                        ? "Mark Attendance"
+                        : "View Attendance"}
                     </Button>
                   </div>
                 </div>
               ))}
-
-              {userTimeZone && (
-                <p className="text-[9px] text-muted-foreground text-center italic mt-2">
-                  All times are shown in {userTimeZone}
-                </p>
-              )}
             </div>
 
-            {/* Instructions */}
-            {schedule?.instruction && (
-              <div className="bg-yellow-500/5 border border-yellow-500/10 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Info size={14} className="text-yellow-600" />
-                  <h4 className="text-xs font-bold text-yellow-600 uppercase tracking-widest">
-                    Pre-training Instructions
-                  </h4>
-                </div>
-
-                <p className="text-sm text-foreground/80 leading-relaxed italic">
-                  &ldquo;{schedule.instruction}&rdquo;
-                </p>
-              </div>
+            {userTimeZone && (
+              <p className="text-[9px] text-muted-foreground text-center italic mt-2">
+                All times are shown in {userTimeZone}
+              </p>
             )}
           </div>
         </ScrollArea>
