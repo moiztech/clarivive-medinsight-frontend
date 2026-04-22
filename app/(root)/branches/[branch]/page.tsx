@@ -6,7 +6,7 @@ import BranchCourse from "../_components/branches-course";
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches`);
     const branches = await res.json();
 
     return (branches.data || []).map((b: Branch) => ({
@@ -36,15 +36,15 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
   try {
     const [courseRes, branchRes, categoryRes] = await Promise.all([
       fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/branch/${branch}?page=1`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/branch/${branch}?page=1`,
         {
           next: { revalidate: 60 },
         },
       ),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches/${branch}`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches/${branch}`, {
         next: { revalidate: 90 },
       }),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`, {
         next: { revalidate: 300 },
       }),
     ]);

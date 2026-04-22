@@ -59,7 +59,7 @@ export const getBundles = async (params?: {
   page?: number;
 }): Promise<PaginatedBundles> => {
   try {
-    const response = await serverApi.get("/api/bundles", { params });
+    const response = await serverApi.get("/bundles", { params });
     return response.data.data;
   } catch (error: unknown) {
     console.error("Error fetching bundles:", error);
@@ -69,7 +69,7 @@ export const getBundles = async (params?: {
 
 export const getBundleById = async (id: number): Promise<Bundle> => {
   try {
-    const response = await serverApi.get(`/api/bundles/${id}`);
+    const response = await serverApi.get(`/bundles/${id}`);
     return response.data.data;
   } catch (error: unknown) {
     console.error(`Error fetching bundle ${id}:`, error);
@@ -83,7 +83,7 @@ export const getAdminBundles = async (params?: {
   page?: number;
 }): Promise<PaginatedBundles> => {
   try {
-    const response = await protectedApi.get("/api/admin/bundles", { params });
+    const response = await protectedApi.get("/admin/bundles", { params });
     return response.data.data;
   } catch (error: unknown) {
     console.error("Error fetching admin bundles:", error);
@@ -93,7 +93,7 @@ export const getAdminBundles = async (params?: {
 
 export const getAdminBundleById = async (id: number): Promise<Bundle> => {
   try {
-    const response = await protectedApi.get(`/api/admin/bundles/${id}`);
+    const response = await protectedApi.get(`/admin/bundles/${id}`);
     return response.data.data;
   } catch (error: unknown) {
     console.error(`Error fetching admin bundle ${id}:`, error);
@@ -103,7 +103,7 @@ export const getAdminBundleById = async (id: number): Promise<Bundle> => {
 
 export const createBundle = async (data: BundleFormData): Promise<Bundle> => {
   try {
-    const response = await protectedApi.post("/api/admin/bundles", buildBundlePayload(data));
+    const response = await protectedApi.post("/admin/bundles", buildBundlePayload(data));
     return response.data.data;
   } catch (error: unknown) {
     console.error("Error creating bundle:", error);
@@ -140,7 +140,7 @@ export const updateBundle = async (
 
     payload.append("_method", "PUT");
 
-    const response = await protectedApi.post(`/api/admin/bundles/${id}`, payload);
+    const response = await protectedApi.post(`/admin/bundles/${id}`, payload);
     return response.data.data;
   } catch (error: unknown) {
     console.error(`Error updating bundle ${id}:`, error);
@@ -150,7 +150,7 @@ export const updateBundle = async (
 
 export const deleteBundle = async (id: number) => {
   try {
-    const response = await protectedApi.delete(`/api/admin/bundles/${id}`);
+    const response = await protectedApi.delete(`/admin/bundles/${id}`);
     return response.data;
   } catch (error: unknown) {
     console.error(`Error deleting bundle ${id}:`, error);
@@ -163,7 +163,7 @@ export const updateBundleStatus = async (
   status: "published" | "draft" | "archived",
 ): Promise<Bundle> => {
   try {
-    const response = await protectedApi.patch(`/api/admin/bundles/${id}/status`, {
+    const response = await protectedApi.patch(`/admin/bundles/${id}/status`, {
       status,
     });
     return response.data.data;
@@ -175,7 +175,7 @@ export const updateBundleStatus = async (
 
 export const enrollInBundle = async (bundleId: number) => {
   try {
-    const response = await protectedApi.post(`/api/bundles/${bundleId}/enroll`);
+    const response = await protectedApi.post(`/bundles/${bundleId}/enroll`);
     return response.data.data;
   } catch (error: unknown) {
     console.error(`Error enrolling in bundle ${bundleId}:`, error);
@@ -187,7 +187,7 @@ export const getUserBundleEnrollments = async (params?: {
   page?: number;
 }): Promise<PaginatedEnrollments> => {
   try {
-    const response = await protectedApi.get("/api/my-bundle-enrollments", { params });
+    const response = await protectedApi.get("/my-bundle-enrollments", { params });
     return response.data.data;
   } catch (error: unknown) {
     console.error("Error fetching user enrollments:", error);
@@ -197,7 +197,7 @@ export const getUserBundleEnrollments = async (params?: {
 
 export const getAllCourses = async (): Promise<Course[]> => {
   try {
-    const response = await serverApi.get("/api/courses");
+    const response = await serverApi.get("/courses");
     return response.data.data?.data || response.data.data || [];
   } catch (error: unknown) {
     console.error("Error fetching courses:", error);
@@ -207,7 +207,7 @@ export const getAllCourses = async (): Promise<Course[]> => {
 
 export const getAllSchedules = async (): Promise<BundleSchedule[]> => {
   try {
-    const response = await protectedApi.get("/api/admin/bundle-schedules");
+    const response = await protectedApi.get("/admin/bundle-schedules");
     return response.data.data || [];
   } catch (error: unknown) {
     console.error("Error fetching schedules:", error);

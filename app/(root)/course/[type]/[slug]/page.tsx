@@ -20,8 +20,8 @@ export async function generateStaticParams() {
 
   try {
     const [faceToFaceRes, onlineRes] = await Promise.all([
-      fetch(`${baseUrl}/courses/type/face-to-face`),
-      fetch(`${baseUrl}/courses/type/online`),
+      fetch(`${baseUrl}/api/courses/type/face-to-face`),
+      fetch(`${baseUrl}/api/courses/type/online`),
     ]);
 
     const ftf = await faceToFaceRes.json();
@@ -53,7 +53,7 @@ export async function generateMetadata({
 
   try {
     const course = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${slug}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/${slug}`,
       {
         next: { revalidate: 60 },
       },
@@ -83,7 +83,7 @@ const page = async ({
 
   try {
     const course = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${slug}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/${slug}`,
       {
         next: { revalidate: 60 },
       },

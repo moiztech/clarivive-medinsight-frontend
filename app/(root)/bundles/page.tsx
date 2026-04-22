@@ -7,6 +7,7 @@ import { Bundle, PaginatedBundles } from '@/lib/types/bundle';
 import BundleCard from '@/components/bundles/BundleCard';
 import BundleFilters from '@/components/bundles/BundleFilters';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function PublicBundlesPage() {
   const [bundles, setBundles] = useState<Bundle[]>([]);
@@ -57,20 +58,13 @@ export default function PublicBundlesPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="bg-white border-b border-gray-200 pt-16 pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
-            Our Course Bundles
-          </h1>
-          <p className="mt-4 text-xl text-gray-500 max-w-3xl">
-            Save more by choosing our curated collections of related courses. 
-            Perfect for comprehensive learning paths.
-          </p>
-        </div>
+    <div className="bg-white min-h-screen">
+      {/* Main Banner Hero Section (Space kept as requested) */}
+      <div className="w-full bg-[#E5E5E5] h-[400px] flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/10 to-indigo-50/10" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 pb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <BundleFilters
           search={search}
           status=""
@@ -78,96 +72,119 @@ export default function PublicBundlesPage() {
           onStatusChange={() => {}}
           onReset={handleReset}
           showStatus={false}
+          total={pagination.total}
         />
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl h-80 animate-pulse border border-gray-100">
-                <div className="p-6 space-y-4">
-                  <div className="h-6 bg-gray-200 rounded w-1/4"></div>
-                  <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-                  <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                  </div>
-                  <div className="h-10 bg-gray-200 rounded w-1/3 mt-8"></div>
-                </div>
+              <div key={i} className="space-y-4 animate-pulse">
+                <div className="aspect-square bg-gray-100 rounded-lg"></div>
+                <div className="h-4 bg-gray-100 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-100 rounded w-1/4"></div>
               </div>
             ))}
           </div>
         ) : bundles.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center mt-8">
-            <h3 className="text-lg font-medium text-gray-900">No bundles found</h3>
-            <p className="text-gray-500 mt-1">We couldn&apos;t find any bundles matching your search.</p>
-            <button
-              onClick={handleReset}
-              className="mt-4 text-blue-600 font-medium hover:text-blue-500"
-            >
-              Clear all filters
-            </button>
+          <div className="py-24 text-center">
+            <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-50">
+               <span className="text-4xl opacity-20">📦</span>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">No bundles found</h3>
+            <p className="text-gray-500 mt-2">We couldn&apos;t find any bundles matching your search.</p>
+            <button onClick={handleReset} className="mt-6 text-blue-600 font-medium hover:underline">Clear all filters</button>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20">
               {bundles.map((bundle) => (
                 <BundleCard key={bundle.id} bundle={bundle} />
               ))}
             </div>
 
             {/* Pagination */}
-            {bundles.length > 0 && (
-              <div className="mt-12 flex items-center justify-between bg-white px-6 py-4 rounded-xl border border-gray-100 shadow-sm">
-                <div className="flex-1 flex justify-between sm:hidden">
+            {pagination.last_page > 1 && (
+              <div className="mt-24 flex justify-center border-t border-gray-100 pt-12">
+                <nav className="flex items-center gap-6">
                   <button
                     disabled={pagination.current_page === 1}
                     onClick={() => handlePageChange(pagination.current_page - 1)}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-500 hover:text-black disabled:opacity-30 transition-all"
                   >
-                    Previous
+                    <ChevronLeft className="h-5 w-5" /> Previous
                   </button>
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: pagination.last_page }).map((_, i) => (
+                       <button
+                         key={i+1}
+                         onClick={() => handlePageChange(i+1)}
+                         className={`w-10 h-10 rounded-full text-sm font-medium transition-all ${
+                           pagination.current_page === i + 1 
+                           ? "bg-[#1A1A2E] text-white shadow-lg" 
+                           : "text-gray-500 hover:bg-gray-100"
+                         }`}
+                       >
+                         {i+1}
+                       </button>
+                    ))}
+                  </div>
                   <button
                     disabled={pagination.current_page === pagination.last_page}
                     onClick={() => handlePageChange(pagination.current_page + 1)}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-500 hover:text-black disabled:opacity-30 transition-all"
                   >
-                    Next
+                    Next <ChevronRight className="h-5 w-5" />
                   </button>
-                </div>
-                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm text-gray-700">
-                      Showing <span className="font-medium">{(pagination.current_page - 1) * pagination.per_page + 1}</span> to{' '}
-                      <span className="font-medium">
-                        {Math.min(pagination.current_page * pagination.per_page, pagination.total)}
-                      </span>{' '}
-                      of <span className="font-medium">{pagination.total}</span> results
-                    </p>
-                  </div>
-                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                    <button
-                      disabled={pagination.current_page === 1}
-                      onClick={() => handlePageChange(pagination.current_page - 1)}
-                      className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
-                    >
-                      <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                    <div className="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700">
-                      Page {pagination.current_page} of {pagination.last_page}
-                    </div>
-                    <button
-                      disabled={pagination.current_page === pagination.last_page}
-                      onClick={() => handlePageChange(pagination.current_page + 1)}
-                      className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
-                    >
-                      <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                  </nav>
-                </div>
+                </nav>
               </div>
             )}
           </>
         )}
+      </div>
+
+      {/* Stats Section - Royal Blue Bar (Matches reference image perfectly) */}
+      <div className="bg-[#4D69DA] text-white py-20 mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-0 items-center">
+            {/* Appointments */}
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-5 px-8">
+              <div className="flex -space-x-3">
+                {[1, 2, 3, 4].map((i) => (
+                   <div key={i} className="w-11 h-11 rounded-full border-2 border-[#4D69DA] bg-white/20 overflow-hidden relative shadow-sm">
+                      <Image 
+                        src={`https://i.pravatar.cc/100?img=${i+10}`} 
+                        alt="User" 
+                        fill 
+                        className="object-cover" 
+                      />
+                   </div>
+                ))}
+              </div>
+              <div className="text-center lg:text-left">
+                <h4 className="text-xl font-bold leading-tight">300+ Appointments</h4>
+                <p className="text-blue-100/80 text-sm mt-0.5">Successfully</p>
+              </div>
+            </div>
+
+            {/* Specialists */}
+            <div className="flex flex-col items-center justify-center text-center lg:border-l lg:border-white/10 h-24 px-8">
+              <h4 className="text-4xl font-extrabold tracking-tight">200+</h4>
+              <p className="text-blue-100/80 text-[15px] font-medium mt-1">Specialists Doctors</p>
+            </div>
+
+            {/* Customers */}
+            <div className="flex flex-col items-center justify-center text-center lg:border-l lg:border-white/10 h-24 px-8">
+              <h4 className="text-4xl font-extrabold tracking-tight">50K</h4>
+              <p className="text-blue-100/80 text-[15px] font-medium mt-1">Happy Customer</p>
+            </div>
+
+            {/* Awards */}
+            <div className="flex flex-col items-center justify-center text-center lg:border-l lg:border-white/10 h-24 px-8">
+              <h4 className="text-4xl font-extrabold tracking-tight">152+</h4>
+              <p className="text-blue-100/80 text-[15px] font-medium mt-1">Winning Awards</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import axios from "axios";
 import { tokenStore } from "../auth/tokenStore";
 
 const protectedApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`,
   headers: {
     Accept: "application/json",
   },

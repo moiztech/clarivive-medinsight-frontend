@@ -62,12 +62,12 @@ async function page() {
   try {
     const [courseRes, categoryRes] = await Promise.all([
       fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/face-to-face?page=1`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/type/face-to-face?page=1`,
         {
           next: { revalidate: 60 },
         },
       ),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`, {
         next: { revalidate: 300 },
       }),
     ]);

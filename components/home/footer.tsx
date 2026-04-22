@@ -112,6 +112,7 @@ export function Footer() {
                   link: "/about-us",
                 },
                 { label: "Contact Us", link: "/contact-us" },
+                { label: "Bundles", link: "/bundles" },
                 { label: "Training Resources", link: "/training-resources" },
                 { label: "Accreditations", link: "/accreditations" },
                 { label: "Blogs", link: "/blogs" },

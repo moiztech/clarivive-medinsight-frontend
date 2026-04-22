@@ -36,12 +36,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     tokenStore.set(res.data.access_token);
-    setUser(res.data.user ?? null);
+    const nextUser = res.data.user ?? null;
+    setUser(nextUser);
 
-    // Normalize role: can be object { id, name } or string
-    const role = res.data.user?.role;
-    const roleName = typeof role === "string" ? role : role?.name;
-    return roleName;
+    return nextUser;
   }
 
   async function signup(name: string, email: string, password: string) {
@@ -55,16 +53,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function logout() {
     try {
-      // All roles use /auth/logout (AuthController@logout)
-      await protectedApi.post("/auth/logout");
+      // Attempt server-side logout, but don't let failures block the UI logout
+      // We try both common logout paths to be safe
+      await Promise.allSettled([
+        protectedApi.post("/auth/logout"),
+        protectedApi.post("/learner/logout")
+      ]);
       toast.success("Logout successful");
     } catch (error) {
-      console.log(error);
-      toast.error("Logout failed");
+      console.log("Server logout failed, clearing local session", error);
     } finally {
+      // Always clear local state regardless of server response
       tokenStore.clear();
       setUser(null);
       router.push("/");
+      // Force a window reload to clear any residual cache/state if needed
+      setTimeout(() => {
+        if (typeof window !== 'undefined') window.location.href = "/";
+      }, 100);
     }
   }
 

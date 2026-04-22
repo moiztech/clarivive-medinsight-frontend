@@ -20,7 +20,7 @@ export function AnnouncementBar() {
     const fetchAnnouncements = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses?page=1`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses?page=1`,
         );
 
         const json = await res.json();

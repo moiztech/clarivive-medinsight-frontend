@@ -211,3 +211,32 @@
   z-index: 1;
   box-shadow: 0 0 30px 15px rgba(255,255,255,0.95);
 } */
+.super-admin-sidebar-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-right: none !important;
+}
+
+.super-admin-sidebar-gradient .text-sidebar-foreground,
+.super-admin-sidebar-gradient span,
+.super-admin-sidebar-gradient p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.super-admin-sidebar-gradient svg {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.super-admin-sidebar-gradient .border-b,
+.super-admin-sidebar-gradient .border-t {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.super-admin-sidebar-gradient button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.super-admin-sidebar-gradient .bg-primary-blue {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}

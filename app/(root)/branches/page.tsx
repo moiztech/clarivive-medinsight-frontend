@@ -16,7 +16,7 @@ async function page() {
   let branches: Branch[] = [];
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches`, {
       next: { revalidate: 60 },
     });
 
