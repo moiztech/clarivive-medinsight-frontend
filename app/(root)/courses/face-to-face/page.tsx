@@ -26,6 +26,7 @@ const courseHeroContent: CoursesHeroProps = {
     "Certificates of Completion",
   ],
   showReadMore: false,
+  imageSrc: "/courses-about-us.jpg",
 };
 const processSectionProps: ProcessSectionProps = {
   headingMain: "How Our ",
