@@ -8,6 +8,8 @@ import { useState } from "react";
 import { ArrowDown } from "lucide-react";
 import SectionBadge from "@/components/SectionBadge";
 
+import { useSearchParams } from "next/navigation";
+
 export default function ClientCoursesGrid({
   initialData,
   initialMeta,
@@ -19,19 +21,25 @@ export default function ClientCoursesGrid({
   categories?: CategoryResponse[] | null;
   type: "online" | "face-to-face";
 }) {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
   const [category, setCategory] = useState<number | null>(null);
+  
   const changeCategory = (id: number | null) => {
     if (id === category) return;
     // setLoading(true);
     setCategory(id);
   };
+  
   const query = useInfiniteQuery({
-    queryKey: ["courses", type, category],
+    queryKey: ["courses", type, category, search],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/${type}?page=${pageParam}${category ? `&category=${category}` : ""}`,
-      );
+      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/type/${type}?page=${pageParam}`;
+      if (category) url += `&category=${category}`;
+      if (search) url += `&q=${encodeURIComponent(search)}`;
+      
+      const res = await fetch(url);
       return res.json();
     },
     getNextPageParam: (lastPage) => {
@@ -40,7 +48,7 @@ export default function ClientCoursesGrid({
         : undefined;
     },
     initialData:
-      category === null
+      category === null && !search
         ? {
             pages: [
               {

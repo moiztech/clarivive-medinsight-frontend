@@ -12,6 +12,11 @@ export async function getPublicBlogs(
   return res.data.data;
 }
 
+export async function getBlogCategories(): Promise<string[]> {
+  const res = await serverApi.get("/blogs/categories");
+  return res.data.data;
+}
+
 export async function getPublicBlogById(id: string): Promise<Blog> {
   const res = await serverApi.get(`/blogs/${id}`);
   // Backend wraps: { success, message, data: Blog }

@@ -8,6 +8,7 @@ import BundleCard from '@/components/bundles/BundleCard';
 import BundleFilters from '@/components/bundles/BundleFilters';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import { StatsBar } from '@/components/stats-bar';
 
 export default function PublicBundlesPage() {
   const [bundles, setBundles] = useState<Bundle[]>([]);
@@ -142,50 +143,7 @@ export default function PublicBundlesPage() {
         )}
       </div>
 
-      {/* Stats Section - Royal Blue Bar (Matches reference image perfectly) */}
-      <div className="bg-[#4D69DA] text-white py-20 mt-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-0 items-center">
-            {/* Appointments */}
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-5 px-8">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                   <div key={i} className="w-11 h-11 rounded-full border-2 border-[#4D69DA] bg-white/20 overflow-hidden relative shadow-sm">
-                      <Image 
-                        src={`https://i.pravatar.cc/100?img=${i+10}`} 
-                        alt="User" 
-                        fill 
-                        className="object-cover" 
-                      />
-                   </div>
-                ))}
-              </div>
-              <div className="text-center lg:text-left">
-                <h4 className="text-xl font-bold leading-tight">300+ Appointments</h4>
-                <p className="text-blue-100/80 text-sm mt-0.5">Successfully</p>
-              </div>
-            </div>
-
-            {/* Specialists */}
-            <div className="flex flex-col items-center justify-center text-center lg:border-l lg:border-white/10 h-24 px-8">
-              <h4 className="text-4xl font-extrabold tracking-tight">200+</h4>
-              <p className="text-blue-100/80 text-[15px] font-medium mt-1">Specialists Doctors</p>
-            </div>
-
-            {/* Customers */}
-            <div className="flex flex-col items-center justify-center text-center lg:border-l lg:border-white/10 h-24 px-8">
-              <h4 className="text-4xl font-extrabold tracking-tight">50K</h4>
-              <p className="text-blue-100/80 text-[15px] font-medium mt-1">Happy Customer</p>
-            </div>
-
-            {/* Awards */}
-            <div className="flex flex-col items-center justify-center text-center lg:border-l lg:border-white/10 h-24 px-8">
-              <h4 className="text-4xl font-extrabold tracking-tight">152+</h4>
-              <p className="text-blue-100/80 text-[15px] font-medium mt-1">Winning Awards</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <StatsBar />
     </div>
   );
 }

@@ -24,6 +24,7 @@ const courseHeroContent: CoursesHeroProps = {
     "Secure Records & Audit Support",
   ],
   showReadMore: false,
+  imageSrc: "/courses-about-us.jpg",
 };
 const processSectionContent: ProcessSectionProps = {
   headingMain: "How Our ",

@@ -31,7 +31,7 @@ export default function BranchCourse({
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/branch/${branch}?page=${pageParam}${category ? `&category=${category}` : ""}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/branch/${branch}?page=${pageParam}${category ? `&category=${category}` : ""}`,
       );
       return res.json();
     },
