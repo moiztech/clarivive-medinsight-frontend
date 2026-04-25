@@ -1,8 +1,9 @@
 import axios from "axios";
 import { tokenStore } from "../auth/tokenStore";
+import { apiBaseUrl, withApiPrefix } from "../api-url";
 
 const protectedApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: apiBaseUrl,
   headers: {
     Accept: "application/json",
   },
@@ -12,6 +13,10 @@ const protectedApi = axios.create({
 
 protectedApi.interceptors.request.use(
   (config) => {
+    if (typeof config.url === "string") {
+      config.url = withApiPrefix(config.url);
+    }
+
     const token = tokenStore.get();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

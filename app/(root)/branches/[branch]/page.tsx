@@ -1,12 +1,13 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import SectionBadge from "@/components/SectionBadge";
+import { buildApiUrl } from "@/lib/api-url";
 import { Branch, CategoryResponse } from "@/lib/types";
 import React from "react";
 import BranchCourse from "../_components/branches-course";
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`);
+    const res = await fetch(buildApiUrl("/branches"));
     const branches = await res.json();
 
     return (branches.data || []).map((b: Branch) => ({
@@ -36,15 +37,15 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
   try {
     const [courseRes, branchRes, categoryRes] = await Promise.all([
       fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/branch/${branch}?page=1`,
+        buildApiUrl(`/courses/branch/${branch}?page=1`),
         {
           next: { revalidate: 60 },
         },
       ),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/branches/${branch}`, {
+      fetch(buildApiUrl(`/branches/${branch}`), {
         next: { revalidate: 90 },
       }),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      fetch(buildApiUrl("/categories"), {
         next: { revalidate: 300 },
       }),
     ]);

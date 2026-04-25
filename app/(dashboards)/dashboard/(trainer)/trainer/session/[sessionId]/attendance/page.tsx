@@ -148,6 +148,16 @@ export default function AttendancePage() {
 
       if (res?.status) {
         setSavedAttendance(payload.length);
+        // Keep local learner state in sync with submitted payload so the
+        // "Complete Session" action enables immediately without a refresh.
+        setLearners((prev) =>
+          prev.map((learner) => {
+            const submitted = payload.find((p) => p.student_id === learner.id);
+            return submitted
+              ? { ...learner, attendance_status: submitted.status }
+              : learner;
+          }),
+        );
         toast.success("Attendance saved successfully");
         fetchSessionAttendance();
       }
@@ -176,7 +186,7 @@ export default function AttendancePage() {
       );
       if (res?.status) {
         toast.success("Session completed successfully");
-        router.back();
+        setSession((prev) => (prev ? { ...prev, status: "completed" } : prev));
       }
     } catch (error: any) {
       toast.error(

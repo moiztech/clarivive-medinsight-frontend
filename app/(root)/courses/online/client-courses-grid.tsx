@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ArrowDown } from "lucide-react";
 import SectionBadge from "@/components/SectionBadge";
+import { buildApiUrl } from "@/lib/api-url";
 
 export default function ClientCoursesGrid({
   initialData,
@@ -30,7 +31,9 @@ export default function ClientCoursesGrid({
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/${type}?page=${pageParam}${category ? `&category=${category}` : ""}`,
+        buildApiUrl(
+          `/courses/type/${type}?page=${pageParam}${category ? `&category=${category}` : ""}`,
+        ),
       );
       return res.json();
     },

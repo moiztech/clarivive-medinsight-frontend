@@ -2,6 +2,7 @@ import React from "react";
 import { CourseData, DetailCourse } from "@/lib/types";
 import BreadCrumb from "@/components/BreadCrumb";
 import CourseDetailSection from "@/components/courses/CourseDetailSection";
+import { buildApiUrl } from "@/lib/api-url";
 
 const fallbackCourse: DetailCourse = {
   id: 0,
@@ -16,12 +17,10 @@ const fallbackCourse: DetailCourse = {
 };
 
 export async function generateStaticParams() {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
   try {
     const [faceToFaceRes, onlineRes] = await Promise.all([
-      fetch(`${baseUrl}/courses/type/face-to-face`),
-      fetch(`${baseUrl}/courses/type/online`),
+      fetch(buildApiUrl("/courses/type/face-to-face")),
+      fetch(buildApiUrl("/courses/type/online")),
     ]);
 
     const ftf = await faceToFaceRes.json();
@@ -53,7 +52,7 @@ export async function generateMetadata({
 
   try {
     const course = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${slug}`,
+      buildApiUrl(`/courses/${slug}`),
       {
         next: { revalidate: 60 },
       },
@@ -83,7 +82,7 @@ const page = async ({
 
   try {
     const course = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${slug}`,
+      buildApiUrl(`/courses/${slug}`),
       {
         next: { revalidate: 60 },
       },

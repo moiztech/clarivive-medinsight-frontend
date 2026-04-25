@@ -6,6 +6,7 @@ import { CategoryResponse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ArrowDown } from "lucide-react";
+import { buildApiUrl } from "@/lib/api-url";
 
 export default function BranchCourse({
   initialData,
@@ -31,7 +32,9 @@ export default function BranchCourse({
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/branch/${branch}?page=${pageParam}${category ? `&category=${category}` : ""}`,
+        buildApiUrl(
+          `/courses/branch/${branch}?page=${pageParam}${category ? `&category=${category}` : ""}`,
+        ),
       );
       return res.json();
     },

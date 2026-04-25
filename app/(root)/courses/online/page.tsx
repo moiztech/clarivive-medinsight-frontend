@@ -9,6 +9,7 @@ import { StatsBar } from "@/components/stats-bar";
 import React from "react";
 import ClientCoursesGrid from "./client-courses-grid";
 import { CategoryResponse } from "@/lib/types";
+import { buildApiUrl } from "@/lib/api-url";
 
 const courseHeroContent: CoursesHeroProps = {
   headingPre: "Online Health & Social ",
@@ -60,12 +61,12 @@ async function page() {
   try {
     const [courseRes, categoryRes] = await Promise.all([
       fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/online?page=1`,
+        buildApiUrl("/courses/type/online?page=1"),
         {
           next: { revalidate: 60 },
         },
       ),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      fetch(buildApiUrl("/categories"), {
         next: { revalidate: 300 },
       }),
     ]);

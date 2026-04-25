@@ -10,6 +10,7 @@ import { StatsBar } from "@/components/stats-bar";
 import BreadCrumb from "@/components/BreadCrumb";
 import ClientCoursesGrid from "@/app/(root)/courses/online/client-courses-grid";
 import { CategoryResponse } from "@/lib/types";
+import { buildApiUrl } from "@/lib/api-url";
 
 const courseHeroContent: CoursesHeroProps = {
   headingPre: "",
@@ -62,12 +63,12 @@ async function page() {
   try {
     const [courseRes, categoryRes] = await Promise.all([
       fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/type/face-to-face?page=1`,
+        buildApiUrl("/courses/type/face-to-face?page=1"),
         {
           next: { revalidate: 60 },
         },
       ),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`, {
+      fetch(buildApiUrl("/categories"), {
         next: { revalidate: 300 },
       }),
     ]);

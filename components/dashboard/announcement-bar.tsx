@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Megaphone } from "lucide-react";
+import { buildApiUrl } from "@/lib/api-url";
 
 type CourseAnnouncement = {
   id: number;
@@ -20,7 +21,7 @@ export function AnnouncementBar() {
     const fetchAnnouncements = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses?page=1`,
+          buildApiUrl("/courses?page=1"),
         );
 
         const json = await res.json();
