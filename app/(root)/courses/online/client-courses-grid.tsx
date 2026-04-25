@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ArrowDown } from "lucide-react";
 import SectionBadge from "@/components/SectionBadge";
-
+import { buildApiUrl } from "@/lib/api-url";
 import { useSearchParams } from "next/navigation";
 
 export default function ClientCoursesGrid({
@@ -23,27 +23,28 @@ export default function ClientCoursesGrid({
 }) {
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";
+
   const [category, setCategory] = useState<number | null>(null);
-  
+
   const changeCategory = (id: number | null) => {
     if (id === category) return;
-    // setLoading(true);
     setCategory(id);
   };
-  
+
   const query = useInfiniteQuery({
     queryKey: ["courses", type, category, search],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
-      let url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/type/${type}?page=${pageParam}`;
-      if (category) url += `&category=${category}`;
-      if (search) url += `&q=${encodeURIComponent(search)}`;
-      
-      const res = await fetch(url);
+      let endpoint = `/courses/type/${type}?page=${pageParam}`;
+
+      if (category) endpoint += `&category=${category}`;
+      if (search) endpoint += `&q=${encodeURIComponent(search)}`;
+
+      const res = await fetch(buildApiUrl(endpoint));
       return res.json();
     },
     getNextPageParam: (lastPage) => {
-      return lastPage.meta.next_page_url
+      return lastPage.meta?.next_page_url
         ? lastPage.meta.current_page + 1
         : undefined;
     },
@@ -81,13 +82,14 @@ export default function ClientCoursesGrid({
           >
             All
           </Button>
+
           {categories &&
             categories.map((c) => (
               <Button
+                key={c.id}
                 variant={category === c.id ? "primary" : "outline"}
                 className="capitalize rounded-full"
                 onClick={() => changeCategory(c.id)}
-                key={c.id}
               >
                 {c.name}
               </Button>

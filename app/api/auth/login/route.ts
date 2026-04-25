@@ -21,28 +21,44 @@ export async function POST(req: Request) {
     );
   }
 
-  let backendRes;
-  try {
-    // Use the general /auth/login endpoint (works for all roles: super_admin, company_admin, trainer, learner)
-    backendRes = await serverApi.post("/auth/login", {
-      email: body.email,
-      password: body.password,
-    });
-  } catch (err: any) {
-    // Backend returned non-2xx (e.g. 401 invalid credentials)
-    const message = err?.response?.data?.message || "Invalid credentials";
+  let backendRes: any = null;
+  let lastError: any = null;
+  const loginEndpoints = ["/api/auth/login", "/api/learner/login"];
+
+  // Support both backend contracts: older `/api/auth/login` and current `/api/learner/login`.
+  for (const endpoint of loginEndpoints) {
+    try {
+      backendRes = await serverApi.post(endpoint, {
+        email: body.email,
+        password: body.password,
+      });
+      break;
+    } catch (err: any) {
+      lastError = err;
+      const status = err?.response?.status;
+      // If credentials are invalid, stop immediately instead of trying other endpoints.
+      if (status === 401 || status === 422) {
+        break;
+      }
+    }
+  }
+
+  if (!backendRes) {
+    const message = lastError?.response?.data?.message || "Invalid credentials";
     return NextResponse.json(
       { status: false, message },
-      { status: err?.response?.status || 401 },
+      { status: lastError?.response?.status || 401 },
     );
   }
 
-  // Backend /auth/login shape: { status: 200, message, token, data: user_object }
+  // Supported backend response shapes:
+  // 1) { status: true, message, data: { access_token, token_type, refresh_token, user } }
+  // 2) { status: 200, message, token, data: user }
   const payload = backendRes.data;
 
-  // The token is at top level from AuthController, user data is in payload.data
-  const accessToken = payload?.token || payload?.data?.access_token;
-  const userData = payload?.data;
+  const accessToken = payload?.data?.access_token || payload?.token;
+  const refreshToken = payload?.data?.refresh_token;
+  const userData = payload?.data?.user || payload?.data;
 
   if (accessToken) {
     (await cookies()).set("access_token", accessToken, {
@@ -53,9 +69,6 @@ export async function POST(req: Request) {
     });
   }
 
-  // /auth/login returns refresh_token via Set-Cookie header from backend if present
-  // Also check response body for refresh_token (learner login path)
-  const refreshToken = payload?.data?.refresh_token;
   if (refreshToken) {
     (await cookies()).set("refresh_token", refreshToken, {
       httpOnly: false,
@@ -65,7 +78,6 @@ export async function POST(req: Request) {
     });
   }
 
-  // /auth/login returns user with role as object { id, name }, normalize to consistent shape
   const user = userData
     ? {
         ...userData,

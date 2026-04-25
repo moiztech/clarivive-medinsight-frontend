@@ -2,6 +2,7 @@ import React from "react";
 import { CourseData, DetailCourse } from "@/lib/types";
 import BreadCrumb from "@/components/BreadCrumb";
 import CourseDetailSection from "@/components/courses/CourseDetailSection";
+import { buildApiUrl } from "@/lib/api-url";
 
 const fallbackCourse: DetailCourse = {
   id: 0,
@@ -16,12 +17,10 @@ const fallbackCourse: DetailCourse = {
 };
 
 export async function generateStaticParams() {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
   try {
     const [faceToFaceRes, onlineRes] = await Promise.all([
-      fetch(`${baseUrl}/api/courses/type/face-to-face`),
-      fetch(`${baseUrl}/api/courses/type/online`),
+      fetch(buildApiUrl("/courses/type/face-to-face")),
+      fetch(buildApiUrl("/courses/type/online")),
     ]);
 
     const ftf = await faceToFaceRes.json();
@@ -43,22 +42,22 @@ export async function generateStaticParams() {
     return [];
   }
 }
+
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
   let courseData: DetailCourse = fallbackCourse;
 
   try {
-    const course = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/${slug}`,
-      {
-        next: { revalidate: 60 },
-      },
-    );
-    courseData = (await course.json()).data || fallbackCourse;
+    const course = await fetch(buildApiUrl(`/courses/${slug}`), {
+      next: { revalidate: 60 },
+    });
+
+    const json = await course.json();
+    courseData = json?.data || fallbackCourse;
   } catch (error) {
     console.error(`Failed to build metadata for course ${slug}`, error);
   }
@@ -72,9 +71,10 @@ export async function generateMetadata({
 const page = async ({
   params,
 }: {
-  params: Promise<{ type: string; slug: string }>;
+  params: { type: string; slug: string };
 }) => {
-  const { slug, type } = await params;
+  const { slug, type } = params;
+
   let courseData: DetailCourse = {
     ...fallbackCourse,
     slug,
@@ -82,18 +82,16 @@ const page = async ({
   };
 
   try {
-    const course = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/${slug}`,
-      {
-        next: { revalidate: 60 },
-      },
-    );
-    courseData = (await course.json()).data || courseData;
+    const course = await fetch(buildApiUrl(`/courses/${slug}`), {
+      next: { revalidate: 60 },
+    });
+
+    const json = await course.json();
+    courseData = json?.data || courseData;
   } catch (error) {
     console.error(`Failed to load course page for ${slug}`, error);
   }
 
-  // console.log(courseData);
   return (
     <>
       <BreadCrumb

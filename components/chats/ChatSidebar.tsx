@@ -177,7 +177,7 @@ export default function ChatSidebar() {
           placeholder="Search..."
         />
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button
               variant="outline"
               size="icon"

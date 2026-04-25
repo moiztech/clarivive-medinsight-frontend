@@ -1,6 +1,7 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import SignupCTASection from "@/components/home/signup-cta-section";
 import { LogoBar } from "@/components/logo-bar";
+import { buildApiUrl } from "@/lib/api-url";
 import BranchesGrid from "./_components/branches-grid";
 
 export type Branch = {
@@ -16,7 +17,7 @@ async function page() {
   let branches: Branch[] = [];
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches`, {
+    const res = await fetch(buildApiUrl("/branches"), {
       next: { revalidate: 60 },
     });
 
@@ -30,7 +31,6 @@ async function page() {
       <BreadCrumb
         paths={[
           { label: "Branches", href: "/branches" },
-          //   { label: "Face to Face Courses", href: "/branches" },
         ]}
         title="Our Branches"
       />

@@ -1,12 +1,13 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import SectionBadge from "@/components/SectionBadge";
+import { buildApiUrl } from "@/lib/api-url";
 import { Branch, CategoryResponse } from "@/lib/types";
 import React from "react";
 import BranchCourse from "../_components/branches-course";
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches`);
+    const res = await fetch(buildApiUrl("/branches"));
     const branches = await res.json();
 
     return (branches.data || []).map((b: Branch) => ({
@@ -35,16 +36,13 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
 
   try {
     const [courseRes, branchRes, categoryRes] = await Promise.all([
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/branch/${branch}?page=1`,
-        {
-          next: { revalidate: 60 },
-        },
-      ),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches/${branch}`, {
+      fetch(buildApiUrl(`/courses/branch/${branch}?page=1`), {
+        next: { revalidate: 60 },
+      }),
+      fetch(buildApiUrl(`/branches/${branch}`), {
         next: { revalidate: 90 },
       }),
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories`, {
+      fetch(buildApiUrl("/categories"), {
         next: { revalidate: 300 },
       }),
     ]);
@@ -56,7 +54,7 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
   } catch (error) {
     console.error(`Failed to load branch page data for ${branch}`, error);
   }
-  // console.log(data);
+
   return (
     <>
       <BreadCrumb
@@ -78,6 +76,7 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
               We provide various courses in {branchData.title}
             </h2>
           </div>
+
           {courses.length > 0 ? (
             <BranchCourse
               initialData={courses}

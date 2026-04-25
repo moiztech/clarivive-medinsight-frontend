@@ -46,10 +46,10 @@ const CourseDetailSection = ({ course, type }: Props) => {
 
   return (
     <section className="bg-white py-12">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-10 overflow-x-hidden">
         {/* LEFT CONTENT */}
         <div
-          className={`lg:col-span-2 col-span-3 space-y-8 ${type === "face-to-face" ? "lg:order-2" : ""}`}
+          className={`lg:col-span-2 col-span-3 min-w-0 space-y-8 ${type === "face-to-face" ? "lg:order-2" : ""}`}
         >
           {/* Header */}
           <div>
@@ -76,7 +76,10 @@ const CourseDetailSection = ({ course, type }: Props) => {
               Watch Trailer
             </a>
           </div>
-          <div dangerouslySetInnerHTML={{ __html: course.content || "" }} />
+          <div
+            className="max-w-full overflow-x-auto break-words"
+            dangerouslySetInnerHTML={{ __html: course.content || "" }}
+          />
 
           {/* Coverage */}
           <div>
@@ -99,7 +102,7 @@ const CourseDetailSection = ({ course, type }: Props) => {
 
         {/* RIGHT SIDEBAR */}
         {type !== "face-to-face" ? (
-          <aside className="p-6 space-y-5 h-fit lg:sticky lg:top-20">
+          <aside className="p-6 space-y-5 h-fit lg:sticky lg:top-20 min-w-0">
             <div className="text-center">
               <p className="text-sm text-slate-500">From only</p>
               <p className="text-4xl mt-2 font-bold text-primary-blue">

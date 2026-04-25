@@ -25,6 +25,7 @@ import Image from "next/image";
 import protectedApi from "@/lib/axios/protected";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { buildApiUrl } from "@/lib/api-url";
 
 // Types
 export interface Branch {
@@ -115,7 +116,7 @@ function BookTrainingsPage() {
     try {
       // Trying public API first as requested
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/branches`,
+        buildApiUrl("/branches"),
       );
       if (res.ok) {
         const data = await res.json();
