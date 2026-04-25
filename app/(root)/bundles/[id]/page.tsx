@@ -20,7 +20,16 @@ interface BundleDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const STORAGE_BASE = API_BASE.replace(/\/api$/, "") + "/storage/";
+
 export default function BundleDetailPage({ params }: BundleDetailPageProps) {
+  const getImageUrl = (url: string | null | undefined) => {
+    if (!url) return null;
+    if (url.startsWith("http")) return url;
+    return STORAGE_BASE + url;
+  };
+
   const router = useRouter();
   const { id } = use(params);
   const bundleId = Number.parseInt(id, 10);
@@ -108,9 +117,9 @@ export default function BundleDetailPage({ params }: BundleDetailPageProps) {
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="border-b border-gray-200 bg-white pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {bundle.banner_url ? (
+          {getImageUrl(bundle.banner_url || bundle.banner_path) ? (
             <div className="mb-8 overflow-hidden rounded-3xl border border-gray-100 shadow-sm">
-              <img src={bundle.banner_url} alt={bundle.title} className="h-72 w-full object-cover" />
+              <img src={getImageUrl(bundle.banner_url || bundle.banner_path)!} alt={bundle.title} className="h-72 w-full object-cover" />
             </div>
           ) : null}
 

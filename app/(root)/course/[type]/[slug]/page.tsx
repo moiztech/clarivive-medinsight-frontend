@@ -42,22 +42,22 @@ export async function generateStaticParams() {
     return [];
   }
 }
+
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
   let courseData: DetailCourse = fallbackCourse;
 
   try {
-    const course = await fetch(
-      buildApiUrl(`/courses/${slug}`),
-      {
-        next: { revalidate: 60 },
-      },
-    );
-    courseData = (await course.json()).data || fallbackCourse;
+    const course = await fetch(buildApiUrl(`/courses/${slug}`), {
+      next: { revalidate: 60 },
+    });
+
+    const json = await course.json();
+    courseData = json?.data || fallbackCourse;
   } catch (error) {
     console.error(`Failed to build metadata for course ${slug}`, error);
   }
@@ -71,9 +71,10 @@ export async function generateMetadata({
 const page = async ({
   params,
 }: {
-  params: Promise<{ type: string; slug: string }>;
+  params: { type: string; slug: string };
 }) => {
-  const { slug, type } = await params;
+  const { slug, type } = params;
+
   let courseData: DetailCourse = {
     ...fallbackCourse,
     slug,
@@ -81,18 +82,16 @@ const page = async ({
   };
 
   try {
-    const course = await fetch(
-      buildApiUrl(`/courses/${slug}`),
-      {
-        next: { revalidate: 60 },
-      },
-    );
-    courseData = (await course.json()).data || courseData;
+    const course = await fetch(buildApiUrl(`/courses/${slug}`), {
+      next: { revalidate: 60 },
+    });
+
+    const json = await course.json();
+    courseData = json?.data || courseData;
   } catch (error) {
     console.error(`Failed to load course page for ${slug}`, error);
   }
 
-  // console.log(courseData);
   return (
     <>
       <BreadCrumb

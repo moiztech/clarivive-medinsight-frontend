@@ -14,8 +14,10 @@ function LoadingSkeleton({
   children,
 }: LoadingSkeletonProps) {
   const [visible, setVisible] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const ms = Math.max(0, minDuration ?? 0);
     const timer = setTimeout(() => {
       setVisible(false);
@@ -23,6 +25,19 @@ function LoadingSkeleton({
     }, ms);
     return () => clearTimeout(timer);
   }, [minDuration, onFinish]);
+
+  if (!mounted) {
+    return (
+      <div className="h-screen w-full bg-white flex justify-center items-center">
+        <Image
+          src={"/Clarivive medinsight logo-01.png"}
+          alt="logo"
+          width={220}
+          height={100}
+        />
+      </div>
+    );
+  }
 
   if (visible) {
     return (

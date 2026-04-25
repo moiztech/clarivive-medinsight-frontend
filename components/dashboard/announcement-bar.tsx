@@ -20,9 +20,7 @@ export function AnnouncementBar() {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const res = await fetch(
-          buildApiUrl("/courses?page=1"),
-        );
+        const res = await fetch(buildApiUrl("/courses?page=1"));
 
         const json = await res.json();
         setCourses((json?.data ?? []).slice(0, 3));
@@ -51,11 +49,14 @@ export function AnnouncementBar() {
             </p>
           </div>
         </div>
+
         <div className="flex flex-wrap gap-2">
           {courses.map((course) => (
             <Link
               key={course.id}
-              href={`/course/${course.type?.name === "online" ? "online" : "face-to-face"}/${course.slug}`}
+              href={`/course/${
+                course.type?.name === "online" ? "online" : "face-to-face"
+              }/${course.slug}`}
               className="rounded-full border border-primary-blue/15 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-primary-blue hover:text-primary-blue"
             >
               {course.title}

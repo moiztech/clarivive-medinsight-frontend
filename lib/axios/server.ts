@@ -13,5 +13,6 @@ serverApi.interceptors.request.use((config) => {
   if (typeof config.url === "string") {
     config.url = withApiPrefix(config.url);
   }
+
   return config;
 });

@@ -31,7 +31,6 @@ async function page() {
       <BreadCrumb
         paths={[
           { label: "Branches", href: "/branches" },
-          //   { label: "Face to Face Courses", href: "/branches" },
         ]}
         title="Our Branches"
       />

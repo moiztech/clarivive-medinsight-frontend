@@ -22,24 +22,27 @@ export default function BranchCourse({
   type: "online" | "face-to-face";
 }) {
   const [category, setCategory] = useState<number | null>(null);
+
   const changeCategory = (id: number | null) => {
     if (id === category) return;
-    // setLoading(true);
     setCategory(id);
   };
+
   const query = useInfiniteQuery({
     queryKey: ["courses", branch, category],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
       const res = await fetch(
         buildApiUrl(
-          `/courses/branch/${branch}?page=${pageParam}${category ? `&category=${category}` : ""}`,
-        ),
+          `/courses/branch/${branch}?page=${pageParam}${
+            category ? `&category=${category}` : ""
+          }`
+        )
       );
       return res.json();
     },
     getNextPageParam: (lastPage) => {
-      return lastPage.meta.next_page_url
+      return lastPage.meta?.next_page_url
         ? lastPage.meta.current_page + 1
         : undefined;
     },
@@ -69,13 +72,14 @@ export default function BranchCourse({
         >
           All
         </Button>
+
         {categories &&
           categories.map((c) => (
             <Button
+              key={c.id}
               variant={category === c.id ? "primary" : "outline"}
               className="capitalize rounded-full"
               onClick={() => changeCategory(c.id)}
-              key={c.id}
             >
               {c.name}
             </Button>

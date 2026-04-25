@@ -4,9 +4,8 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Loader2, Search } from "lucide-react";
-import { getPublicBlogs } from "@/lib/axios/blogs";
+import { getPublicBlogs, getBlogCategories } from "@/lib/axios/blogs";
 import type { Blog } from "@/lib/types/blog";
-import { BLOG_CATEGORIES } from "@/lib/types/blog";
 import BlogSearch from "@/components/blogs/BlogSearch";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
@@ -22,6 +21,7 @@ const categoryColors: Record<string, string> = {
 
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [categories, setCategories] = useState<string[]>(["Health", "Training", "Nutrition", "Medical", "General"]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,6 +72,21 @@ export default function BlogsPage() {
   useEffect(() => {
     fetchBlogs(1, false);
   }, [fetchBlogs]);
+
+  // Fetch unique categories
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const cats = await getBlogCategories();
+        if (cats && cats.length > 0) {
+          setCategories(cats);
+        }
+      } catch (err) {
+        console.error("Failed to fetch blog categories:", err);
+      }
+    };
+    fetchCats();
+  }, []);
 
   // Debounced search
   const handleSearchChange = (val: string) => {
@@ -161,7 +176,7 @@ export default function BlogsPage() {
 
           {/* Category Filter */}
           <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {["All", ...BLOG_CATEGORIES].map((cat) => (
+            {["All", ...categories].map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}

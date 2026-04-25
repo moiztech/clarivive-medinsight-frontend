@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 interface BundleFiltersProps {
   search: string;
@@ -8,6 +8,7 @@ interface BundleFiltersProps {
   onStatusChange: (value: string) => void;
   onReset: () => void;
   showStatus?: boolean;
+  total?: number;
 }
 
 const BundleFilters: React.FC<BundleFiltersProps> = ({
@@ -17,56 +18,40 @@ const BundleFilters: React.FC<BundleFiltersProps> = ({
   onStatusChange,
   onReset,
   showStatus = true,
+  total = 0,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100 items-end">
-      <div className="flex-grow w-full">
-        <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-          Search Bundles
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" aria-hidden="true" />
-          </div>
-          <input
-            type="text"
-            id="search"
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Search by title or description..."
-          />
+    <div className="flex flex-col md:flex-row items-center justify-between py-8 border-b border-gray-100 mb-16 gap-6">
+      {/* Left Filters */}
+      <div className="flex items-center gap-10">
+        <span className="text-[15px] font-medium text-gray-500">Filter:</span>
+        
+        <div className="flex items-center gap-8">
+          <button className="flex items-center gap-2 group">
+            <span className="text-[15px] text-gray-700 group-hover:text-black transition-colors font-medium">Availability</span>
+            <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-black transition-transform" />
+          </button>
+          
+          <button className="flex items-center gap-2 group">
+            <span className="text-[15px] text-gray-700 group-hover:text-black transition-colors font-medium">Price</span>
+            <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-black transition-transform" />
+          </button>
         </div>
       </div>
 
-      {showStatus && (
-        <div className="min-w-[150px] w-full md:w-auto">
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-            Status
-          </label>
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => onStatusChange(e.target.value)}
-            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg"
-          >
-            <option value="">All Statuses</option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
-            <option value="archived">Archived</option>
-          </select>
+      {/* Right Sort & Count */}
+      <div className="flex items-center gap-10">
+        <div className="flex items-center gap-3">
+          <span className="text-[15px] text-gray-500">Sort by:</span>
+          <button className="flex items-center gap-2 group">
+            <span className="text-[15px] font-bold text-gray-800">Featured</span>
+            <ChevronDown className="h-4 w-4 text-gray-400" />
+          </button>
         </div>
-      )}
-
-      <div className="flex shrink-0">
-        <button
-          type="button"
-          onClick={onReset}
-          className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 h-[38px]"
-        >
-          <X className="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
-          Reset
-        </button>
+        
+        <div className="text-[15px] font-medium text-gray-500 min-w-[80px] text-right">
+          {total} bundles
+        </div>
       </div>
     </div>
   );

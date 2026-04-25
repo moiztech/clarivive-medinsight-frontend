@@ -13,7 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Search, Menu, ArrowUpIcon, ChevronDown, User } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Search, Menu, ArrowUpIcon, ChevronDown, User, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -46,6 +54,7 @@ const navigationItems: NavItem[] = [
       { label: "Face to Face", href: "/courses/face-to-face" },
     ],
   },
+  { label: "BUNDLES", href: "/bundles" },
   {
     label: "BRANCHES",
     href: "/branches",
@@ -65,7 +74,20 @@ const navigationItems: NavItem[] = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const handleSearch = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/courses/online?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
+
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(
     null,
   );
@@ -89,7 +111,7 @@ export default function Header() {
   } else if (roleName === "company_admin" || roleName === "companyadmin") {
     dashboardLink = "/company";
     isLearner = false;
-  } else if (roleName === "super_admin" || roleName === "superadmin" || roleName === "admin") {
+  } else if (roleName === "super_admin" || roleName === "superadmin" || roleName === "super-admin" || roleName === "admin") {
     dashboardLink = "/super-admin";
     isLearner = false;
   }
@@ -167,9 +189,41 @@ export default function Header() {
 
           {/* Right side actions */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Search className="w-5 h-5" />
-            </Button>
+            <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="hidden md:flex cursor-pointer">
+                  <Search className="w-5 h-5" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px] top-[20%] translate-y-0">
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-bold mb-4">Search Courses</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSearch} className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Type to search for courses, bundles, or topics..."
+                    className="w-full pl-10 pr-4 py-3 bg-muted rounded-lg outline-none focus:ring-2 focus:ring-primary-blue transition-all"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <button 
+                      type="button" 
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-muted-foreground/10 rounded-full"
+                    >
+                      <X className="w-4 h-4 text-muted-foreground" />
+                    </button>
+                  )}
+                </form>
+                <div className="mt-4 flex flex-col gap-2">
+                  <p className="text-xs text-muted-foreground px-1">Press Enter to search</p>
+                </div>
+              </DialogContent>
+            </Dialog>
 
             <CartPopover />
             {user ? (
@@ -238,6 +292,15 @@ export default function Header() {
                 <NavOffcanvas />
               </div>
             )}
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => setIsSearchOpen(true)}
+            >
+              <Search className="w-5 h-5" />
+            </Button>
 
             <Button
               variant="ghost"

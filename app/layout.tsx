@@ -42,7 +42,7 @@ export default function RootLayout({
       className={`${geist.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans antialiased" id="root" suppressHydrationWarning>
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <NextTopLoader
           color="#000099"
           initialPosition={0.08}

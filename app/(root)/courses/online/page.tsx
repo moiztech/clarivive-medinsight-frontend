@@ -25,14 +25,16 @@ const courseHeroContent: CoursesHeroProps = {
     "Secure Records & Audit Support",
   ],
   showReadMore: false,
+  imageSrc: "/courses-about-us.jpg",
 };
+
 const processSectionContent: ProcessSectionProps = {
   headingMain: "How Our ",
   headingHighlight: "Training Platform",
   description:
     "Access compliant health and social care training through a clear, structured process. Follow the steps below to enrol, learn, and record your training securely.",
   imageSrc:
-    "https://images.unsplash.com/photo-1673865641073-4479f93a7776?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1673865641073-4479f93a7776?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0",
   steps: [
     {
       number: "1",
@@ -54,25 +56,25 @@ const processSectionContent: ProcessSectionProps = {
     },
   ],
 };
+
 async function page() {
   let courseJson: { data?: unknown[]; meta?: unknown } = {};
   let categoryJson: CategoryResponse[] = [];
 
   try {
     const [courseRes, categoryRes] = await Promise.all([
-      fetch(
-        buildApiUrl("/courses/type/online?page=1"),
-        {
-          next: { revalidate: 60 },
-        },
-      ),
+      fetch(buildApiUrl("/courses/type/online?page=1"), {
+        next: { revalidate: 60 },
+      }),
       fetch(buildApiUrl("/categories"), {
         next: { revalidate: 300 },
       }),
     ]);
 
     courseJson = await courseRes.json();
-    categoryJson = await categoryRes.json().then((res) => res.data || []);
+
+    const categoryData = await categoryRes.json();
+    categoryJson = categoryData?.data || [];
   } catch (error) {
     console.error("Failed to load online courses page data", error);
   }
@@ -84,13 +86,16 @@ async function page() {
         coverImg="/course/online-course-banner.jpg"
         title="Online Courses"
       />
+
       <AboutHero {...courseHeroContent} />
+
       <ClientCoursesGrid
         initialData={courseJson.data || []}
         initialMeta={courseJson.meta}
         categories={categoryJson}
         type="online"
       />
+
       <StatsBar />
       <ProcessSection {...processSectionContent} />
       <FaqSection />

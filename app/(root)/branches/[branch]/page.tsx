@@ -36,12 +36,9 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
 
   try {
     const [courseRes, branchRes, categoryRes] = await Promise.all([
-      fetch(
-        buildApiUrl(`/courses/branch/${branch}?page=1`),
-        {
-          next: { revalidate: 60 },
-        },
-      ),
+      fetch(buildApiUrl(`/courses/branch/${branch}?page=1`), {
+        next: { revalidate: 60 },
+      }),
       fetch(buildApiUrl(`/branches/${branch}`), {
         next: { revalidate: 90 },
       }),
@@ -57,7 +54,7 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
   } catch (error) {
     console.error(`Failed to load branch page data for ${branch}`, error);
   }
-  // console.log(data);
+
   return (
     <>
       <BreadCrumb
@@ -79,6 +76,7 @@ const page = async ({ params }: { params: Promise<{ branch: string }> }) => {
               We provide various courses in {branchData.title}
             </h2>
           </div>
+
           {courses.length > 0 ? (
             <BranchCourse
               initialData={courses}

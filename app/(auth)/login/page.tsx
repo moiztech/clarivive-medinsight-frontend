@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AuthCard from "@/components/auth/AuthCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,8 +23,22 @@ export default function LoginPage() {
     remember: false,
   });
 
-  const { login } = useAuth();
+  const { login, user: authenticatedUser, loading: authLoading } = useAuth();
   const router = useRouter();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!authLoading && authenticatedUser) {
+      const role = authenticatedUser.role;
+      const roleName = (typeof role === "string" ? role : role?.name || "").toLowerCase();
+      
+      if (roleName === "trainer") router.push("/dashboard/trainer");
+      else if (roleName === "learner" || roleName === "employee") router.push("/dashboard/lms");
+      else if (roleName === "company_admin" || roleName === "companyadmin") router.push("/company");
+      else if (roleName.includes("admin")) router.push("/super-admin/blogs");
+      else router.push("/");
+    }
+  }, [authenticatedUser, authLoading, router]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -47,25 +61,21 @@ export default function LoginPage() {
       if (callbackUrl) {
         router.push(callbackUrl);
       } else {
-        switch (user?.role?.name) {
-          case "employee":
-            router.push("/dashboard/lms");
-            break;
-          case "learner":
-            router.push("/dashboard/lms");
-            break;
-          case "trainer":
-            router.push("/dashboard/trainer");
-            break;
-          case "company_admin":
-            router.push("/company");
-            break;
-          case "super_admin":
-          case "superadmin":
-            router.push("/super-admin/blogs");
-            break;
-          default:
-            router.push("/");
+        const role = user?.role;
+        const roleName = (typeof role === "string" ? role : role?.name || "").toLowerCase();
+
+        console.log("Login Success - Role:", roleName);
+
+        if (roleName === "trainer") {
+          router.push("/dashboard/trainer");
+        } else if (roleName === "learner" || roleName === "employee") {
+          router.push("/dashboard/lms");
+        } else if (roleName === "company_admin" || roleName === "companyadmin") {
+          router.push("/company");
+        } else if (roleName === "super_admin" || roleName === "superadmin" || roleName === "admin" || roleName === "super-admin") {
+          router.push("/super-admin/blogs");
+        } else {
+          router.push("/");
         }
       }
     } catch (error) {

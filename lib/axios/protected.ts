@@ -21,6 +21,7 @@ protectedApi.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error),
@@ -31,17 +32,23 @@ protectedApi.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       tokenStore.clear();
+
       if (typeof window !== "undefined") {
         const requestUrl = String(error.config?.url || "");
         const isBootstrapCheck = requestUrl.includes("/verify-token");
         const isAuthPage = window.location.pathname.startsWith("/login");
+
         if (!isAuthPage && !isBootstrapCheck) {
           const callbackUrl =
             window.location.pathname + window.location.search;
-          window.location.href = `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+
+          window.location.href = `/login?callbackUrl=${encodeURIComponent(
+            callbackUrl
+          )}`;
         }
       }
     }
+
     return Promise.reject(error);
   },
 );

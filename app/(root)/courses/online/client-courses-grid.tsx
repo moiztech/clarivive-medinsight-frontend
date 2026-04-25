@@ -8,6 +8,7 @@ import { useState } from "react";
 import { ArrowDown } from "lucide-react";
 import SectionBadge from "@/components/SectionBadge";
 import { buildApiUrl } from "@/lib/api-url";
+import { useSearchParams } from "next/navigation";
 
 export default function ClientCoursesGrid({
   initialData,
@@ -20,30 +21,35 @@ export default function ClientCoursesGrid({
   categories?: CategoryResponse[] | null;
   type: "online" | "face-to-face";
 }) {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
+
   const [category, setCategory] = useState<number | null>(null);
+
   const changeCategory = (id: number | null) => {
     if (id === category) return;
-    // setLoading(true);
     setCategory(id);
   };
+
   const query = useInfiniteQuery({
-    queryKey: ["courses", type, category],
+    queryKey: ["courses", type, category, search],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await fetch(
-        buildApiUrl(
-          `/courses/type/${type}?page=${pageParam}${category ? `&category=${category}` : ""}`,
-        ),
-      );
+      let endpoint = `/courses/type/${type}?page=${pageParam}`;
+
+      if (category) endpoint += `&category=${category}`;
+      if (search) endpoint += `&q=${encodeURIComponent(search)}`;
+
+      const res = await fetch(buildApiUrl(endpoint));
       return res.json();
     },
     getNextPageParam: (lastPage) => {
-      return lastPage.meta.next_page_url
+      return lastPage.meta?.next_page_url
         ? lastPage.meta.current_page + 1
         : undefined;
     },
     initialData:
-      category === null
+      category === null && !search
         ? {
             pages: [
               {
@@ -76,13 +82,14 @@ export default function ClientCoursesGrid({
           >
             All
           </Button>
+
           {categories &&
             categories.map((c) => (
               <Button
+                key={c.id}
                 variant={category === c.id ? "primary" : "outline"}
                 className="capitalize rounded-full"
                 onClick={() => changeCategory(c.id)}
-                key={c.id}
               >
                 {c.name}
               </Button>

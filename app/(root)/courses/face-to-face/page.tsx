@@ -4,7 +4,6 @@ import SignupCTASection from "@/components/home/signup-cta-section";
 import ProcessSection, {
   ProcessSectionProps,
 } from "@/components/courses/process-section";
-// import ServicesGrid from "@/components/courses/services-grid";
 import { FaqSection } from "@/components/faq-section";
 import { StatsBar } from "@/components/stats-bar";
 import BreadCrumb from "@/components/BreadCrumb";
@@ -27,14 +26,16 @@ const courseHeroContent: CoursesHeroProps = {
     "Certificates of Completion",
   ],
   showReadMore: false,
+  imageSrc: "/courses-about-us.jpg",
 };
+
 const processSectionProps: ProcessSectionProps = {
   headingMain: "How Our ",
   headingHighlight: "Face-to-Face Training",
   description:
     "Access structured, in-person health and social care training through a clear and organised process. The steps below outline how face-to-face training is booked, delivered, and recorded.",
   imageSrc:
-    "https://images.unsplash.com/photo-1673865641073-4479f93a7776?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1673865641073-4479f93a7776?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0",
   steps: [
     {
       title: "Select Your Training",
@@ -56,25 +57,25 @@ const processSectionProps: ProcessSectionProps = {
     },
   ],
 };
+
 async function page() {
   let courseJson: { data?: unknown[]; meta?: unknown } = {};
   let categoryJson: CategoryResponse[] = [];
 
   try {
     const [courseRes, categoryRes] = await Promise.all([
-      fetch(
-        buildApiUrl("/courses/type/face-to-face?page=1"),
-        {
-          next: { revalidate: 60 },
-        },
-      ),
+      fetch(buildApiUrl("/courses/type/face-to-face?page=1"), {
+        next: { revalidate: 60 },
+      }),
       fetch(buildApiUrl("/categories"), {
         next: { revalidate: 300 },
       }),
     ]);
 
     courseJson = await courseRes.json();
-    categoryJson = await categoryRes.json().then((res) => res.data || []);
+
+    const categoryData = await categoryRes.json();
+    categoryJson = categoryData?.data || [];
   } catch (error) {
     console.error("Failed to load face-to-face courses page data", error);
   }
@@ -88,13 +89,16 @@ async function page() {
         coverImg="/course/face-to-face-banner.png"
         title="Face to Face Courses"
       />
+
       <AboutHero {...courseHeroContent} />
+
       <ClientCoursesGrid
         initialData={courseJson.data || []}
         type="face-to-face"
         initialMeta={courseJson.meta}
         categories={categoryJson}
       />
+
       <StatsBar />
       <ProcessSection {...processSectionProps} />
       <FaqSection />

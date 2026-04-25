@@ -12,9 +12,10 @@ export interface SidebarProps {
   navItems: NavItem[];
   header?: (isExpanded: boolean) => React.ReactNode;
   footer?: (isExpanded: boolean) => React.ReactNode;
+  className?: string;
 }
 
-export function Sidebar({ navItems, header, footer }: SidebarProps) {
+export function Sidebar({ navItems, header, footer, className }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const pathname = usePathname();
@@ -24,7 +25,7 @@ export function Sidebar({ navItems, header, footer }: SidebarProps) {
     <aside
       className={`${
         isExpanded ? "w-64" : "w-20"
-      } flex flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300 h-screen overflow-hidden sticky top-0`}
+      } flex flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300 h-screen overflow-hidden sticky top-0 ${className || ""}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-sidebar-border">
